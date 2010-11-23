@@ -3,24 +3,29 @@ require 'test/unit'
 class Context
   attr_reader :failures
 
-  def initialize(&block)
+  def initialize(parent=nil, &block)
     @block = block
     @passed = true
     @failures = []
     @subcontexts = []
+    @parent = parent
   end
   def run
     instance_eval(&@block)
     @subcontexts.each { |s| s.run }
   end
   def context(name, &block)
-    @subcontexts << self.class.new(&block)
+    @subcontexts << self.class.new(self, &block)
   end
   def setup(&setup_block)
     @setup_block = setup_block
   end
-  def should(name, &block)
+  def run_setups
+    @parent.run_setups if @parent
     instance_eval(&@setup_block) if @setup_block
+  end
+  def should(name, &block)
+    run_setups
     instance_eval(&block)
   end
   def assert(expression, message=nil)
