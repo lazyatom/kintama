@@ -11,10 +11,11 @@ class Context
   def run
     instance_eval(&@block)
   end
-  def setup(&block)
-    instance_eval(&block)
+  def setup(&setup_block)
+    @setup_block = setup_block
   end
   def should(name, &block)
+    instance_eval(&@setup_block) if @setup_block
     instance_eval(&block)
   end
   def assert(expression, message=nil)
