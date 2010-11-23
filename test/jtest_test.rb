@@ -1,11 +1,10 @@
 require 'test/unit'
 
 class Context
-  attr_reader :failures
+  attr_accessor :failures
 
   def initialize(parent=nil, &block)
     @block = block
-    @passed = true
     @failures = []
     @subcontexts = []
     @parent = parent
@@ -20,25 +19,31 @@ class Context
   def setup(&setup_block)
     @setup_block = setup_block
   end
-  def run_setups
-    @parent.run_setups if @parent
-    instance_eval(&@setup_block) if @setup_block
+  def run_setups(environment)
+    @parent.run_setups(environment) if @parent
+    environment.instance_eval(&@setup_block) if @setup_block
   end
   def should(name, &block)
-    run_setups
-    instance_eval(&block)
-  end
-  def assert(expression, message=nil)
-    unless expression
-      @failures << message
-    end
-    @passed = @passed && expression
-  end
-  def assert_equal(expected, actual)
-    assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
+    environment = TestEnvironment.new(self)
+    run_setups(environment)
+    environment.instance_eval(&block)
   end
   def passed?
-    @passed && @subcontexts.inject(true) { |result, s| result && s.passed? }
+    @failures.empty? && @subcontexts.inject(true) { |result, s| result && s.passed? }
+  end
+
+  class TestEnvironment
+    def initialize(context)
+      @context = context
+    end
+    def assert(expression, message=nil)
+      unless expression
+        @context.failures << message
+      end
+    end
+    def assert_equal(expected, actual)
+      assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
+    end
   end
 end
 
