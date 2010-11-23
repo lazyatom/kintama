@@ -1,5 +1,8 @@
 class Context
-  def initialize(parent=nil, &block)
+  attr_reader :name
+
+  def initialize(name, parent=nil, &block)
+    @name = name
     @block = block
     @subcontexts = {}
     @tests = {}
@@ -8,12 +11,13 @@ class Context
   end
 
   def run(runner=nil)
+    runner.started(self) if runner
     all_tests.each { |t| t.run(runner) }
     all_subcontexts.each { |s| s.run(runner) }
   end
 
   def context(name, &block)
-    @subcontexts[methodize(name)] = self.class.new(self, &block)
+    @subcontexts[methodize(name)] = self.class.new(name, self, &block)
   end
 
   def setup(&setup_block)
@@ -26,7 +30,8 @@ class Context
   end
 
   def should(name, &block)
-    @tests[methodize("should " + name)] = Test.new(self, &block)
+    full_name = "should " + name
+    @tests[methodize(full_name)] = Test.new(full_name, self, &block)
   end
 
   def passed?
@@ -42,15 +47,17 @@ class Context
   end
 
   class Test
-    attr_accessor :failure
+    attr_accessor :name, :failure
 
-    def initialize(context, &block)
+    def initialize(name, context, &block)
+      @name = name
       @context = context
       @test_block = block
       @failure = nil
     end
 
     def run(runner=nil)
+      runner.started(self) if runner
       environment = TestEnvironment.new(self)
       @context.run_setups(environment)
       environment.instance_eval(&@test_block)
