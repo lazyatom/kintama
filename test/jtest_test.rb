@@ -85,7 +85,7 @@ class JTestTest < Test::Unit::TestCase
           assert false
         end
       end
-      context "and another thing" do
+      context "and another different thing" do
         should "work" do
           assert true
         end

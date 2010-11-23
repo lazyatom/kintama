@@ -4,17 +4,17 @@ class Context
   def initialize(parent=nil, &block)
     @block = block
     @failures = []
-    @subcontexts = []
+    @subcontexts = {}
     @parent = parent
   end
 
   def run
     instance_eval(&@block)
-    @subcontexts.each { |s| s.run }
+    all_subcontexts.each { |s| s.run }
   end
 
   def context(name, &block)
-    @subcontexts << self.class.new(self, &block)
+    @subcontexts[methodize(name)] = self.class.new(self, &block)
   end
 
   def setup(&setup_block)
@@ -33,7 +33,11 @@ class Context
   end
 
   def passed?
-    @failures.empty? && @subcontexts.inject(true) { |result, s| result && s.passed? }
+    @failures.empty? && all_subcontexts.inject(true) { |result, s| result && s.passed? }
+  end
+
+  def method_missing(name, *args)
+    @subcontexts[name]
   end
 
   class TestEnvironment
@@ -51,4 +55,15 @@ class Context
       assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
     end
   end
+
+  private
+
+  def methodize(name)
+    name.gsub(" ", "_").to_sym
+  end
+
+  def all_subcontexts
+    @subcontexts.values
+  end
+
 end
