@@ -69,6 +69,24 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_run_setup_before_every_test
+    x = context "Given something" do
+      setup do
+        @name = "james"
+      end
+      should "work" do
+        @name += " is awesome"
+        assert @name == "james is awesome"
+      end
+      should "also work" do
+        @name += " is the best"
+        assert @name == "james is the best"
+      end
+    end
+    x.run
+    assert x.passed?
+  end
+
   private
 
   def context(name, &block)
