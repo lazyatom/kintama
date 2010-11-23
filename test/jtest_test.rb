@@ -1,9 +1,12 @@
 require 'test/unit'
 
 class Context
+  attr_reader :failures
+
   def initialize(&block)
     @block = block
     @passed = true
+    @failures = []
   end
   def run
     instance_eval(&@block)
@@ -15,8 +18,10 @@ class Context
     instance_eval(&block)
   end
   def assert(expression, message=nil)
+    unless expression
+      @failures << message
+    end
     @passed = @passed && expression
-    raise RuntimeError, message unless @passed
   end
   def assert_equal(expected, actual)
     assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
@@ -88,7 +93,7 @@ class JTestTest < Test::Unit::TestCase
       end
     end
     x.run
-    assert x.passed?
+    assert x.passed?, x.failures
   end
 
   private
