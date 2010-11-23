@@ -6,10 +6,10 @@ class Context
     @failures = []
     @subcontexts = {}
     @parent = parent
+    instance_eval(&@block)
   end
 
   def run
-    instance_eval(&@block)
     all_subcontexts.each { |s| s.run }
   end
 
