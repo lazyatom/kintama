@@ -127,6 +127,22 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_allow_running_of_specific_subcontexts
+    x = context "Given something" do
+      should "not be run" do
+        assert false
+      end
+      context "and another thing" do
+        should "pass" do
+          assert true
+        end
+      end
+    end
+    inner_context = x.and_another_thing
+    inner_context.run
+    assert inner_context.passed?
+  end
+
   private
 
   def context(name, &block)
