@@ -7,14 +7,14 @@ class Context
     @block = block
     @passed = true
     @failures = []
-    @subcontext = nil
+    @subcontexts = []
   end
   def run
     instance_eval(&@block)
-    @subcontext.run if @subcontext
+    @subcontexts.each { |s| s.run }
   end
   def context(name, &block)
-    @subcontext = self.class.new(&block)
+    @subcontexts << self.class.new(&block)
   end
   def setup(&setup_block)
     @setup_block = setup_block
@@ -33,7 +33,7 @@ class Context
     assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
   end
   def passed?
-    @passed && (@subcontext ? @subcontext.passed? : true)
+    @passed && @subcontexts.inject(true) { |result, s| result && s.passed? }
   end
 end
 
@@ -107,6 +107,23 @@ class JTestTest < Test::Unit::TestCase
       context "and another thing" do
         should "work" do
           assert false
+        end
+      end
+    end
+    x.run
+    assert !x.passed?
+  end
+
+  def test_should_allow_multiple_subcontexts
+    x = context "Given something" do
+      context "and another thing" do
+        should "work" do
+          assert false
+        end
+      end
+      context "and another thing" do
+        should "work" do
+          assert true
         end
       end
     end
