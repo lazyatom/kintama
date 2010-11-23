@@ -145,6 +145,24 @@ class JTestTest < Test::Unit::TestCase
     assert !x.passed?
   end
 
+  def test_should_allow_call_all_setup_methods_when_running_tests_in_a_nested_context
+    x = context "Given something" do
+      setup do
+        @name = "james"
+      end
+      context "and another thing" do
+        setup do
+          @name += " is amazing"
+        end
+        should "work" do
+          assert_equal "james is amazing", @name
+        end
+      end
+    end
+    x.run
+    assert x.passed?
+  end
+
   private
 
   def context(name, &block)
