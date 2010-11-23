@@ -131,6 +131,20 @@ class JTestTest < Test::Unit::TestCase
     assert !x.passed?
   end
 
+  def test_should_allow_deep_nesting_of_subcontexts
+    x = context "Given something" do
+      context "and another thing" do
+        context "and one more thing" do
+          should "work" do
+            assert false
+          end
+        end
+      end
+    end
+    x.run
+    assert !x.passed?
+  end
+
   private
 
   def context(name, &block)
