@@ -14,8 +14,12 @@ class Context
   def should(name, &block)
     instance_eval(&block)
   end
-  def assert(expression)
+  def assert(expression, message=nil)
     @passed = @passed && expression
+    raise RuntimeError, message unless @passed
+  end
+  def assert_equal(expected, actual)
+    assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
   end
   def passed?
     @passed
@@ -62,7 +66,7 @@ class JTestTest < Test::Unit::TestCase
         @name = "james"
       end
       should "work" do
-        assert @name == "james"
+        assert_equal "james", @name
       end
     end
     x.run
@@ -76,11 +80,11 @@ class JTestTest < Test::Unit::TestCase
       end
       should "work" do
         @name += " is awesome"
-        assert @name == "james is awesome"
+        assert_equal "james is awesome", @name
       end
       should "also work" do
         @name += " is the best"
-        assert @name == "james is the best"
+        assert_equal "james is the best", @name
       end
     end
     x.run
