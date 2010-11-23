@@ -8,6 +8,9 @@ class Context
   def run
     instance_eval(&@block)
   end
+  def setup(&block)
+    instance_eval(&block)
+  end
   def should(name, &block)
     instance_eval(&block)
   end
@@ -51,6 +54,19 @@ class JTestTest < Test::Unit::TestCase
     end
     x.run
     assert !x.passed?
+  end
+
+  def test_should_allow_setup_to_provide_instance_variables
+    x = context "Given something" do
+      setup do
+        @name = "james"
+      end
+      should "work" do
+        assert @name == "james"
+      end
+    end
+    x.run
+    assert x.passed?
   end
 
   private
