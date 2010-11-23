@@ -11,7 +11,7 @@ class Runner
     puts
   end
   def finished(test)
-    print "." if test.passed?
+    print(test.passed? ? "." : "F")
   end
 end
 
@@ -43,6 +43,20 @@ class RunnerTest < Test::Unit::TestCase
       end
     end
     assert_output("..\n") do
+      Runner.new(c).run
+    end
+  end
+
+  def test_should_print_out_Fs_as_tests_fail
+    c = context "given something" do
+      should "fail" do
+        assert false
+      end
+      should "pass" do
+        assert true
+      end
+    end
+    assert_output(".F\n") do
       Runner.new(c).run
     end
   end
