@@ -5,11 +5,13 @@ class Context
     @block = block
     @failures = []
     @subcontexts = {}
+    @tests = {}
     @parent = parent
     instance_eval(&@block)
   end
 
   def run
+    all_tests.each { |t| t.run }
     all_subcontexts.each { |s| s.run }
   end
 
@@ -27,9 +29,7 @@ class Context
   end
 
   def should(name, &block)
-    environment = TestEnvironment.new(self)
-    run_setups(environment)
-    environment.instance_eval(&block)
+    @tests[methodize(name)] = Test.new(self, &block)
   end
 
   def passed?
@@ -37,7 +37,20 @@ class Context
   end
 
   def method_missing(name, *args)
-    @subcontexts[name]
+    @subcontexts[name] || @tests[name]
+  end
+
+  class Test
+    def initialize(context, &block)
+      @context = context
+      @test_block = block
+    end
+
+    def run
+      environment = TestEnvironment.new(@context)
+      @context.run_setups(environment)
+      environment.instance_eval(&@test_block)
+    end
   end
 
   class TestEnvironment
@@ -64,6 +77,10 @@ class Context
 
   def all_subcontexts
     @subcontexts.values
+  end
+
+  def all_tests
+    @tests.values
   end
 
 end

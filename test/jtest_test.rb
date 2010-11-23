@@ -143,6 +143,16 @@ class JTestTest < Test::Unit::TestCase
     assert inner_context.passed?
   end
 
+  def test_should_allow_running_of_specific_tests
+    x = context "Given something" do
+      should "fail_when_run" do
+        assert false
+      end
+    end
+    x.should_fail_when_run.run
+    assert !x.passed?
+  end
+
   private
 
   def context(name, &block)
