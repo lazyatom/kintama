@@ -1,9 +1,6 @@
 class Context
-  attr_accessor :failures
-
   def initialize(parent=nil, &block)
     @block = block
-    @failures = []
     @subcontexts = {}
     @tests = {}
     @parent = parent
@@ -29,11 +26,15 @@ class Context
   end
 
   def should(name, &block)
-    @tests[methodize(name)] = Test.new(self, &block)
+    @tests[methodize("should " + name)] = Test.new(self, &block)
   end
 
   def passed?
-    @failures.empty? && all_subcontexts.inject(true) { |result, s| result && s.passed? }
+    failures.empty? && all_subcontexts.inject(true) { |result, s| result && s.passed? }
+  end
+
+  def failures
+    all_tests.select { |t| !t.passed? }
   end
 
   def method_missing(name, *args)
@@ -41,26 +42,33 @@ class Context
   end
 
   class Test
+    attr_accessor :failure
+
     def initialize(context, &block)
       @context = context
       @test_block = block
+      @failure = nil
     end
 
     def run
-      environment = TestEnvironment.new(@context)
+      environment = TestEnvironment.new(self)
       @context.run_setups(environment)
       environment.instance_eval(&@test_block)
+    end
+
+    def passed?
+      @failure.nil?
     end
   end
 
   class TestEnvironment
-    def initialize(context)
-      @context = context
+    def initialize(test)
+      @test = test
     end
 
-    def assert(expression, message=nil)
+    def assert(expression, message="failed")
       unless expression
-        @context.failures << message
+        @test.failure = message
       end
     end
 
