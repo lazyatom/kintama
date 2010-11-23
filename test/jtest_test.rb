@@ -7,9 +7,14 @@ class Context
     @block = block
     @passed = true
     @failures = []
+    @subcontext = nil
   end
   def run
     instance_eval(&@block)
+    @subcontext.run if @subcontext
+  end
+  def context(name, &block)
+    @subcontext = self.class.new(&block)
   end
   def setup(&setup_block)
     @setup_block = setup_block
@@ -28,7 +33,7 @@ class Context
     assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
   end
   def passed?
-    @passed
+    @passed && (@subcontext ? @subcontext.passed? : true)
   end
 end
 
@@ -95,6 +100,18 @@ class JTestTest < Test::Unit::TestCase
     end
     x.run
     assert x.passed?, x.failures
+  end
+
+  def test_should_allow_nesting_of_contexts
+    x = context "Given something" do
+      context "and another thing" do
+        should "work" do
+          assert false
+        end
+      end
+    end
+    x.run
+    assert !x.passed?
   end
 
   private
