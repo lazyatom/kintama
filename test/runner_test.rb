@@ -4,9 +4,14 @@ require 'stringio'
 
 class Runner
   def initialize(context)
+    @context = context
   end
   def run
-    puts "."
+    @context.run(self)
+    puts
+  end
+  def finished(test)
+    print "." if test.passed?
   end
 end
 
@@ -24,6 +29,20 @@ class RunnerTest < Test::Unit::TestCase
       end
     end
     assert_output(".\n") do
+      Runner.new(c).run
+    end
+  end
+
+  def test_should_print_out_many_dots_as_tests_run
+    c = context "given something" do
+      should "pass" do
+        assert true
+      end
+      should "also pass" do
+        assert true
+      end
+    end
+    assert_output("..\n") do
       Runner.new(c).run
     end
   end

@@ -7,9 +7,9 @@ class Context
     instance_eval(&@block)
   end
 
-  def run
-    all_tests.each { |t| t.run }
-    all_subcontexts.each { |s| s.run }
+  def run(runner=nil)
+    all_tests.each { |t| t.run(runner) }
+    all_subcontexts.each { |s| s.run(runner) }
   end
 
   def context(name, &block)
@@ -50,10 +50,11 @@ class Context
       @failure = nil
     end
 
-    def run
+    def run(runner=nil)
       environment = TestEnvironment.new(self)
       @context.run_setups(environment)
       environment.instance_eval(&@test_block)
+      runner.finished(self) if runner
     end
 
     def passed?
