@@ -15,7 +15,7 @@ class JTestTest < Test::Unit::TestCase
   def test_should_fail_when_all_tests_fail
     x = context "Given something" do
       should "work" do
-        assert false
+        flunk
       end
     end
     x.run
@@ -25,7 +25,7 @@ class JTestTest < Test::Unit::TestCase
   def test_should_fail_when_any_tests_fail
     x = context "Given something" do
       should "work" do
-        assert false
+        flunk
       end
       should "also work" do
         assert true
@@ -38,7 +38,7 @@ class JTestTest < Test::Unit::TestCase
   def test_should_fail_when_any_assertion_within_a_test_fails
     x = context "Given something" do
       should "ultimately not work" do
-        assert false
+        flunk
         assert true
       end
     end
@@ -49,7 +49,7 @@ class JTestTest < Test::Unit::TestCase
   def test_should_not_run_any_code_beyond_a_failing_assertion
     x = context "Given something" do
       should "ultimately not work" do
-        assert false
+        flunk
         raise "should not get here!"
       end
     end
@@ -92,7 +92,7 @@ class JTestTest < Test::Unit::TestCase
     x = context "Given something" do
       context "and another thing" do
         should "work" do
-          assert false
+          flunk
         end
       end
     end
@@ -104,7 +104,7 @@ class JTestTest < Test::Unit::TestCase
     x = context "Given something" do
       context "and another thing" do
         should "work" do
-          assert false
+          flunk
         end
       end
       context "and another different thing" do
@@ -122,7 +122,7 @@ class JTestTest < Test::Unit::TestCase
       context "and another thing" do
         context "and one more thing" do
           should "work" do
-            assert false
+            flunk
           end
         end
       end
@@ -173,7 +173,7 @@ class JTestTest < Test::Unit::TestCase
   def test_should_allow_running_of_specific_subcontexts
     x = context "Given something" do
       should "not be run" do
-        assert false
+        flunk
       end
       context "and another thing" do
         should "pass" do
@@ -189,7 +189,7 @@ class JTestTest < Test::Unit::TestCase
   def test_should_allow_running_of_specific_tests
     x = context "Given something" do
       should "fail_when_run" do
-        assert false
+        flunk
       end
     end
     x.should_fail_when_run.run

@@ -37,7 +37,7 @@ class RunnerTest < Test::Unit::TestCase
   def test_should_print_out_Fs_as_tests_fail
     c = context "given something" do
       should "fail" do
-        assert false
+        flunk
       end
       should "pass" do
         assert true

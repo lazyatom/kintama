@@ -92,6 +92,10 @@ class Context
       raise TestFailure, message unless expression
     end
 
+    def flunk
+      assert false
+    end
+
     def assert_equal(expected, actual)
       assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
     end
