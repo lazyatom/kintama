@@ -128,6 +128,7 @@ class Runner
   def run(verbose=false, colour=false)
     @verbose = verbose
     @colour = colour
+    @test_count = 0
     @contexts.each do |c|
       @current_indent = -1
       c.run(self)
@@ -146,6 +147,7 @@ class Runner
   end
 
   def test_started(test)
+    @test_count += 1
     print indent + INDENT + test.name + ": " if @verbose && !@colour
   end
 
@@ -169,13 +171,18 @@ class Runner
   end
 
   def show_results
+    if @verbose
+      puts
+    else
+      puts
+      puts
+    end
+    puts "#{@test_count} tests, #{failures.length} failures"
     if failures.any?
-      @colour ? puts : print("\n\n")
+      puts
       failures.each do |test|
         puts test.full_name + ":\n  " + test.failure_message
       end
-    else
-      puts unless @verbose
     end
   end
 

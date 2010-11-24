@@ -16,7 +16,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output(".\n") do
+    assert_output(".\n\n1 tests, 0 failures\n") do
       Runner.new(c).run
     end
   end
@@ -30,7 +30,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output("..\n") do
+    assert_output("..\n\n2 tests, 0 failures\n") do
       Runner.new(c).run
     end
   end
@@ -46,6 +46,8 @@ class RunnerTest < Test::Unit::TestCase
     end
     expected = <<-EOS
 F.
+
+2 tests, 1 failures
 
 given something should fail:
   failed
@@ -64,7 +66,7 @@ EOS
         assert true
       end
     end
-    assert_output("given something\n  should also pass: .\n  should pass: .\n") do
+    assert_output("given something\n  should also pass: .\n  should pass: .\n\n2 tests, 0 failures\n") do
       Runner.new(c).run(verbose=true)
     end
   end
@@ -80,7 +82,7 @@ EOS
         end
       end
     end
-    assert_output("given something\n  should pass: .\n  and something else\n    should pass: .\n") do
+    assert_output("given something\n  should pass: .\n  and something else\n    should pass: .\n\n2 tests, 0 failures\n") do
       Runner.new(c).run(verbose=true)
     end
   end
@@ -93,6 +95,8 @@ EOS
     end
     expected = <<-EOS
 F
+
+1 tests, 1 failures
 
 given something should fail:
   1 should equal 2
@@ -111,6 +115,8 @@ EOS
     expected = <<-EOS
 F
 
+1 tests, 1 failures
+
 given something and something else should fail:
   1 should equal 2
 EOS
@@ -128,7 +134,7 @@ EOS
         assert true
       end
     end
-    assert_output("..\n") do
+    assert_output("..\n\n2 tests, 0 failures\n") do
       Runner.new(c1, c2).run
     end
   end
@@ -150,6 +156,8 @@ given something
 
 given another thing
   should also pass: .
+
+2 tests, 0 failures
 EOS
     assert_output(expected.strip + "\n") do
       Runner.new(c1, c2).run(verbose=true)
@@ -169,6 +177,8 @@ EOS
 given something
 \e[31m  should fail\e[0m
 \e[32m  should pass\e[0m
+
+2 tests, 1 failures
 
 given something should fail:
   failed
