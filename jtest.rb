@@ -39,11 +39,11 @@ class Context
   end
 
   def passed?
-    failures.empty? && all_subcontexts.inject(true) { |result, s| result && s.passed? }
+    failures.empty?
   end
 
   def failures
-    all_tests.select { |t| !t.passed? }
+    all_tests.select { |t| !t.passed? } + all_subcontexts.map { |s| s.failures }.flatten
   end
 
   def method_missing(name, *args)

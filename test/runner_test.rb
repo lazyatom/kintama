@@ -99,6 +99,23 @@ EOS
     assert_output(expected.strip + "\n") { Runner.new(c).run }
   end
 
+  def test_should_print_out_a_summary_of_the_failing_tests_if_a_nested_test_fails
+    c = context "given something" do
+      context "and something else" do
+        should "fail" do
+          assert 1 == 2, "1 should equal 2"
+        end
+      end
+    end
+    expected = <<-EOS
+F
+
+given something and something else should fail:
+  1 should equal 2
+EOS
+    assert_output(expected.strip + "\n") { Runner.new(c).run }
+  end
+
   private
 
   def context(name, &block)
