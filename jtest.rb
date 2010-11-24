@@ -96,7 +96,7 @@ class Context
   end
 
   def all_tests
-    @tests.values
+    @tests.values.sort_by { |t| t.name }
   end
 
 end
