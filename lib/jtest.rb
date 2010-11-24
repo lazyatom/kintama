@@ -135,6 +135,11 @@ class Runner
       puts if @verbose && c != @contexts.last
     end
     show_results
+    passed?
+  end
+
+  def passed?
+    failures.empty?
   end
 
   def indent

@@ -188,6 +188,26 @@ EOS
     end
   end
 
+  def test_should_return_true_if_all_tests_pass
+    c = context "given something" do
+      should("pass") { assert true }
+      should("also pass") { assert true }
+    end
+    capture_stdout do
+      assert_equal true, Runner.new(c).run
+    end
+  end
+
+  def test_should_return_false_if_any_tests_fails
+    c = context "given something" do
+      should("pass") { assert true }
+      should("fail") { flunk }
+    end
+    capture_stdout do
+      assert_equal false, Runner.new(c).run
+    end
+  end
+
   private
 
   def context(name, &block)
