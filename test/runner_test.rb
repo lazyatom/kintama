@@ -208,6 +208,26 @@ EOS
     end
   end
 
+  def test_should_print_appropriate_test_names_when_given_and_it_aliases_are_used
+    c = context "In a world without hope" do
+      given "a massive gun" do
+        it "should work out well in the end" do
+          assert true
+        end
+      end
+    end
+    expected = <<-EOS
+In a world without hope
+  given a massive gun
+    it should work out well in the end: .
+
+1 tests, 0 failures
+EOS
+    assert_output(expected.strip + "\n") do
+      Runner.new(c).run(verbose=true)
+    end
+  end
+
   private
 
   def context(name, &block)

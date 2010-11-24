@@ -24,6 +24,10 @@ class Context
     @subcontexts[methodize(name)] = self.class.new(name, self, &block)
   end
 
+  def given(name, &block)
+    context("given " + name, &block)
+  end
+
   def setup(&setup_block)
     @setup_block = setup_block
   end
@@ -34,8 +38,11 @@ class Context
   end
 
   def should(name, &block)
-    full_name = "should " + name
-    @tests[methodize(full_name)] = Test.new(full_name, self, &block)
+    add_test("should " + name, &block)
+  end
+
+  def it(name, &block)
+    add_test("it " + name, &block)
   end
 
   def passed?
@@ -102,6 +109,10 @@ class Context
   end
 
   private
+
+  def add_test(name, &block)
+    @tests[methodize(name)] = Test.new(name, self, &block)
+  end
 
   def methodize(name)
     name.gsub(" ", "_").to_sym
