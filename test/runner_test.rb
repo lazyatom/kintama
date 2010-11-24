@@ -2,26 +2,6 @@ require 'test/unit'
 require '../jtest'
 require 'stringio'
 
-class Runner
-  def initialize(context, verbose=false)
-    @context = context
-    @verbose = verbose
-  end
-  def run
-    @context.run(self)
-    puts
-  end
-  def context_started(context)
-    print context.name if @verbose
-  end
-  def test_started(test)
-    print "\n\t" + test.name + ": " if @verbose
-  end
-  def test_finished(test)
-    print(test.passed? ? "." : "F")
-  end
-end
-
 class RunnerTest < Test::Unit::TestCase
   def test_assert_output_works
     assert_output("yes\n") do
