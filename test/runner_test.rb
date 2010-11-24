@@ -64,7 +64,7 @@ EOS
       end
     end
     assert_output("given something\n  should also pass: .\n  should pass: .\n") do
-      Runner.new(c, verbose=true).run
+      Runner.new(c).run(verbose=true)
     end
   end
 
@@ -80,7 +80,7 @@ EOS
       end
     end
     assert_output("given something\n  should pass: .\n  and something else\n    should pass: .\n") do
-      Runner.new(c, verbose=true).run
+      Runner.new(c).run(verbose=true)
     end
   end
 
@@ -114,6 +114,22 @@ given something and something else should fail:
   1 should equal 2
 EOS
     assert_output(expected.strip + "\n") { Runner.new(c).run }
+  end
+
+  def test_should_be_able_to_run_tests_from_several_contexts
+    c1 = context "given something" do
+      should "pass" do
+        assert true
+      end
+    end
+    c2 = context "given another thing" do
+      should "also pass" do
+        assert true
+      end
+    end
+    assert_output("..\n") do
+      Runner.new(c1, c2).run
+    end
   end
 
   private

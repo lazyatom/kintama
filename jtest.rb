@@ -116,14 +116,14 @@ end
 class Runner
   INDENT = "  "
 
-  def initialize(context, verbose=false)
-    @context = context
-    @verbose = verbose
+  def initialize(*contexts)
+    @contexts = contexts
     @current_indent = -1
   end
 
-  def run
-    @context.run(self)
+  def run(verbose=false)
+    @verbose = verbose
+    @contexts.each { |c| c.run(self) }
     show_results
   end
 
@@ -145,10 +145,14 @@ class Runner
     puts if @verbose
   end
 
+  def failures
+    @contexts.map { |c| c.failures }.flatten
+  end
+
   def show_results
-    if @context.failures.any?
+    if failures.any?
       print("\n\n")
-      @context.failures.each do |test|
+      failures.each do |test|
         puts test.full_name + ":\n  " + test.failure_message
       end
     else
