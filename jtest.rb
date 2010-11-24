@@ -46,6 +46,8 @@ class Context
     @subcontexts[name] || @tests[name]
   end
 
+  class TestFailure < StandardError; end
+
   class Test
     attr_accessor :name, :failure
 
@@ -58,9 +60,13 @@ class Context
 
     def run(runner=nil)
       runner.test_started(self) if runner
-      environment = TestEnvironment.new(self)
+      environment = TestEnvironment.new
       @context.run_setups(environment)
-      environment.instance_eval(&@test_block)
+      begin
+        environment.instance_eval(&@test_block)
+      rescue TestFailure => e
+        @failure = e.message
+      end
       runner.test_finished(self) if runner
     end
 
@@ -70,14 +76,8 @@ class Context
   end
 
   class TestEnvironment
-    def initialize(test)
-      @test = test
-    end
-
     def assert(expression, message="failed")
-      unless expression
-        @test.failure = message
-      end
+      raise TestFailure, message unless expression
     end
 
     def assert_equal(expected, actual)

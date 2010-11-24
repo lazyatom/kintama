@@ -35,6 +35,28 @@ class JTestTest < Test::Unit::TestCase
     assert !x.passed?
   end
 
+  def test_should_fail_when_any_assertion_within_a_test_fails
+    x = context "Given something" do
+      should "ultimately not work" do
+        assert false
+        assert true
+      end
+    end
+    x.run
+    assert !x.passed?
+  end
+
+  def test_should_not_run_any_code_beyond_a_failing_assertion
+    x = context "Given something" do
+      should "ultimately not work" do
+        assert false
+        raise "should not get here!"
+      end
+    end
+    x.run
+    assert !x.passed?
+  end
+
   def test_should_allow_setup_to_provide_instance_variables
     x = context "Given something" do
       setup do
