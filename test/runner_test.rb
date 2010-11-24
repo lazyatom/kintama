@@ -62,6 +62,22 @@ class RunnerTest < Test::Unit::TestCase
     end
   end
 
+  def test_should_nest_printed_context_and_test_names_if_verbose_is_set
+    c = context "given something" do
+      should "fail" do
+        assert false
+      end
+      context "and something else" do
+        should "pass" do
+          assert true
+        end
+      end
+    end
+    assert_output("given something\n\tshould fail: F\n\tand something_else\n\t\tshould pass: .\n") do
+      Runner.new(c, verbose=true).run
+    end
+  end
+
   private
 
   def context(name, &block)
