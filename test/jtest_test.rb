@@ -1,5 +1,6 @@
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require 'test/unit'
-require '../jtest'
+require 'jtest'
 
 class JTestTest < Test::Unit::TestCase
   def test_should_pass_when_all_tests_pass

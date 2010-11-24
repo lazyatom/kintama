@@ -1,5 +1,6 @@
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require 'test/unit'
-require '../jtest'
+require 'jtest'
 require 'stringio'
 
 class RunnerTest < Test::Unit::TestCase
