@@ -149,6 +149,27 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_only_run_necessary_setups_where_tests_at_different_nestings_exist
+    x = context "Given something" do
+      setup do
+        @name = "james"
+      end
+      context "and another thing" do
+        setup do
+          @name += " is amazing"
+        end
+        should "work" do
+          assert_equal "james is amazing", @name
+        end
+      end
+      should "work" do
+        assert_equal "james", @name
+      end
+    end
+    x.run
+    assert x.passed?
+  end
+
   def test_should_allow_running_of_specific_subcontexts
     x = context "Given something" do
       should "not be run" do
