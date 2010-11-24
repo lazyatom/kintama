@@ -125,8 +125,9 @@ class Runner
     @current_indent = -1
   end
 
-  def run(verbose=false)
+  def run(verbose=false, colour=false)
     @verbose = verbose
+    @colour = colour
     @contexts.each do |c|
       @current_indent = -1
       c.run(self)
@@ -145,11 +146,21 @@ class Runner
   end
 
   def test_started(test)
-    print indent + INDENT + test.name + ": " if @verbose
+    print indent + INDENT + test.name + ": " if @verbose && !@colour
   end
 
   def test_finished(test)
-    print(test.passed? ? "." : "F")
+    if @verbose
+      if @colour
+        test_name = indent + INDENT + test.name
+        if test.passed?
+          print green(test_name)
+        else
+          print red(test_name)
+        end
+      end
+    end
+    print(test.passed? ? "." : "F") unless @colour
     puts if @verbose
   end
 
@@ -159,12 +170,24 @@ class Runner
 
   def show_results
     if failures.any?
-      print("\n\n")
+      @colour ? puts : print("\n\n")
       failures.each do |test|
         puts test.full_name + ":\n  " + test.failure_message
       end
     else
       puts unless @verbose
     end
+  end
+
+  def color(text, color_code)
+    "#{color_code}#{text}\e[0m"
+  end
+
+  def green(text)
+    color(text, "\e[32m")
+  end
+
+  def red(text)
+    color(text, "\e[31m")
   end
 end

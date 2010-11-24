@@ -155,6 +155,28 @@ EOS
     end
   end
 
+  def test_should_print_out_test_names_in_colour_if_verbose_is_set_and_colour_is_set
+    c = context "given something" do
+      should "fail" do
+        flunk
+      end
+      should "pass" do
+        assert true
+      end
+    end
+    expected = <<-EOS
+given something
+\e[31m  should fail\e[0m
+\e[32m  should pass\e[0m
+
+given something should fail:
+  failed
+EOS
+    assert_output(expected.strip + "\n") do
+      Runner.new(c).run(verbose=true, colour=true)
+    end
+  end
+
   private
 
   def context(name, &block)
