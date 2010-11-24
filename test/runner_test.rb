@@ -57,7 +57,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output("given something\n\tshould fail: F\n\tshould pass: .\n") do
+    assert_output("given something\n  should fail: F\n  should pass: .\n") do
       Runner.new(c, verbose=true).run
     end
   end
@@ -73,7 +73,7 @@ class RunnerTest < Test::Unit::TestCase
         end
       end
     end
-    assert_output("given something\n\tshould fail: F\n\tand something else\n\t\tshould pass: .\n") do
+    assert_output("given something\n  should fail: F\n  and something else\n    should pass: .\n") do
       Runner.new(c, verbose=true).run
     end
   end

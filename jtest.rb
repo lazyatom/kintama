@@ -102,6 +102,8 @@ class Context
 end
 
 class Runner
+  INDENT = "  "
+
   def initialize(context, verbose=false)
     @context = context
     @verbose = verbose
@@ -113,7 +115,7 @@ class Runner
   end
 
   def indent
-    "\t" * @current_indent
+    INDENT * @current_indent
   end
 
   def context_started(context)
@@ -122,7 +124,7 @@ class Runner
   end
 
   def test_started(test)
-    print indent + "\t" + test.name + ": " if @verbose
+    print indent + INDENT + test.name + ": " if @verbose
   end
 
   def test_finished(test)
