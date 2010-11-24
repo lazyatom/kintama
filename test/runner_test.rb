@@ -132,6 +132,29 @@ EOS
     end
   end
 
+  def test_should_nest_verbose_output_properly_when_running_tests_from_several_contexts
+    c1 = context "given something" do
+      should "pass" do
+        assert true
+      end
+    end
+    c2 = context "given another thing" do
+      should "also pass" do
+        assert true
+      end
+    end
+    expected = <<-EOS
+given something
+  should pass: .
+
+given another thing
+  should also pass: .
+EOS
+    assert_output(expected.strip + "\n") do
+      Runner.new(c1, c2).run(verbose=true)
+    end
+  end
+
   private
 
   def context(name, &block)

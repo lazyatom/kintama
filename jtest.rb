@@ -123,7 +123,11 @@ class Runner
 
   def run(verbose=false)
     @verbose = verbose
-    @contexts.each { |c| c.run(self) }
+    @contexts.each do |c|
+      @current_indent = -1
+      c.run(self)
+      puts if @verbose && c != @contexts.last
+    end
     show_results
   end
 
