@@ -15,7 +15,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output(".\n") do
+    assert_output(".") do
       Runner.new(c).run
     end
   end
@@ -29,7 +29,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output("..\n") do
+    assert_output("..") do
       Runner.new(c).run
     end
   end
@@ -43,7 +43,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output("F.\n") do
+    assert_output("F.") do
       Runner.new(c).run
     end
   end
@@ -73,7 +73,7 @@ class RunnerTest < Test::Unit::TestCase
         end
       end
     end
-    assert_output("given something\n\tshould fail: F\n\tand something_else\n\t\tshould pass: .\n") do
+    assert_output("given something\n\tshould fail: F\n\tand something else\n\t\tshould pass: .\n") do
       Runner.new(c, verbose=true).run
     end
   end

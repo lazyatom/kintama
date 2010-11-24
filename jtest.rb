@@ -105,22 +105,28 @@ class Runner
   def initialize(context, verbose=false)
     @context = context
     @verbose = verbose
+    @current_indent = -1
   end
 
   def run
     @context.run(self)
-    puts
+  end
+
+  def indent
+    "\t" * @current_indent
   end
 
   def context_started(context)
-    print context.name if @verbose
+    @current_indent += 1
+    print indent + context.name + "\n" if @verbose
   end
 
   def test_started(test)
-    print "\n\t" + test.name + ": " if @verbose
+    print indent + "\t" + test.name + ": " if @verbose
   end
 
   def test_finished(test)
     print(test.passed? ? "." : "F")
+    puts if @verbose
   end
 end
