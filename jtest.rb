@@ -11,7 +11,7 @@ class Context
   end
 
   def run(runner=nil)
-    runner.started(self) if runner
+    runner.context_started(self) if runner
     all_tests.each { |t| t.run(runner) }
     all_subcontexts.each { |s| s.run(runner) }
   end
@@ -57,11 +57,11 @@ class Context
     end
 
     def run(runner=nil)
-      runner.started(self) if runner
+      runner.test_started(self) if runner
       environment = TestEnvironment.new(self)
       @context.run_setups(environment)
       environment.instance_eval(&@test_block)
-      runner.finished(self) if runner
+      runner.test_finished(self) if runner
     end
 
     def passed?

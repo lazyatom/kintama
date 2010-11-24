@@ -11,16 +11,13 @@ class Runner
     @context.run(self)
     puts
   end
-  def started(test_or_context)
-    if @verbose
-      if test_or_context.is_a?(Context)
-        print test_or_context.name
-      else
-        print "\n\t" + test_or_context.name + ": "
-      end
-    end
+  def context_started(context)
+    print context.name if @verbose
   end
-  def finished(test)
+  def test_started(test)
+    print "\n\t" + test.name + ": " if @verbose
+  end
+  def test_finished(test)
     print(test.passed? ? "." : "F")
   end
 end
