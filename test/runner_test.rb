@@ -15,7 +15,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output(".") do
+    assert_output(".\n") do
       Runner.new(c).run
     end
   end
@@ -29,7 +29,7 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output("..") do
+    assert_output("..\n") do
       Runner.new(c).run
     end
   end
@@ -43,29 +43,35 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output("F.") do
+    expected = <<-EOS
+F.
+
+given something should fail:
+  failed
+EOS
+    assert_output(expected.strip + "\n") do
       Runner.new(c).run
     end
   end
 
   def test_should_print_out_test_names_if_verbose_is_set
     c = context "given something" do
-      should "fail" do
-        assert false
+      should "also pass" do
+        assert true
       end
       should "pass" do
         assert true
       end
     end
-    assert_output("given something\n  should fail: F\n  should pass: .\n") do
+    assert_output("given something\n  should also pass: .\n  should pass: .\n") do
       Runner.new(c, verbose=true).run
     end
   end
 
   def test_should_nest_printed_context_and_test_names_if_verbose_is_set
     c = context "given something" do
-      should "fail" do
-        assert false
+      should "pass" do
+        assert true
       end
       context "and something else" do
         should "pass" do
@@ -73,9 +79,24 @@ class RunnerTest < Test::Unit::TestCase
         end
       end
     end
-    assert_output("given something\n  should fail: F\n  and something else\n    should pass: .\n") do
+    assert_output("given something\n  should pass: .\n  and something else\n    should pass: .\n") do
       Runner.new(c, verbose=true).run
     end
+  end
+
+  def test_should_print_out_a_summary_of_the_failing_tests_if_some_fail
+    c = context "given something" do
+      should "fail" do
+        assert 1 == 2, "1 should equal 2"
+      end
+    end
+    expected = <<-EOS
+F
+
+given something should fail:
+  1 should equal 2
+EOS
+    assert_output(expected.strip + "\n") { Runner.new(c).run }
   end
 
   private

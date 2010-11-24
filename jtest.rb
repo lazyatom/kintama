@@ -10,6 +10,10 @@ class Context
     instance_eval(&@block)
   end
 
+  def full_name
+    [@parent ? @parent.full_name : nil, @name].compact.join(" ")
+  end
+
   def run(runner=nil)
     runner.context_started(self) if runner
     all_tests.each { |t| t.run(runner) }
@@ -65,13 +69,21 @@ class Context
       begin
         environment.instance_eval(&@test_block)
       rescue TestFailure => e
-        @failure = e.message
+        @failure = e
       end
       runner.test_finished(self) if runner
     end
 
     def passed?
       @failure.nil?
+    end
+
+    def full_name
+      @context.full_name + " " + @name
+    end
+
+    def failure_message
+      @failure.message
     end
   end
 
@@ -112,6 +124,7 @@ class Runner
 
   def run
     @context.run(self)
+    show_results
   end
 
   def indent
@@ -130,5 +143,16 @@ class Runner
   def test_finished(test)
     print(test.passed? ? "." : "F")
     puts if @verbose
+  end
+
+  def show_results
+    if @context.failures.any?
+      print("\n\n")
+      @context.failures.each do |test|
+        puts test.full_name + ":\n  " + test.failure_message
+      end
+    else
+      puts unless @verbose
+    end
   end
 end
