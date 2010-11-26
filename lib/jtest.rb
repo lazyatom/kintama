@@ -52,8 +52,22 @@ class Context
     all_tests.select { |t| !t.passed? } + all_subcontexts.map { |s| s.failures }.flatten
   end
 
-  def method_missing(name, *args)
-    @subcontexts[name] || @tests[name]
+  def method_missing(name, *args, &block)
+    if @subcontexts[name]
+      @subcontexts[name]
+    elsif @tests[name]
+      @tests[name]
+    elsif @parent
+      @parent.send(name, *args, &block)
+    else
+      super
+    end
+  end
+
+  def respond_to?(name)
+    @subcontexts[name] != nil || 
+    @tests[name] != nil || 
+    (@parent ? @parent.respond_to?(name) : super)
   end
 
   class TestFailure < StandardError; end
