@@ -309,6 +309,25 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_be_able_to_compose_shoulds_into_methods
+    $ran = false
+    x = context "Given a context" do
+      def should_create_a_should_from_a_method
+        should "have created this test" do
+          $ran = true
+          assert true
+        end
+      end
+
+      should_create_a_should_from_a_method
+    end
+    x.run
+    assert x.passed?
+    assert $ran
+
+    assert_not_nil x.should_have_created_this_test
+  end
+
   private
 
   def context(name, &block)
