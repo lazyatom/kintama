@@ -328,6 +328,19 @@ class JTestTest < Test::Unit::TestCase
     assert_not_nil x.should_have_created_this_test
   end
 
+  def test_should_stash_all_defined_contexts_so_they_can_be_accessed_later
+    JTest.reset
+    c1 = context "Given some context" do
+      should "stash this" do
+      end
+    end
+    c2 = context "Given some other context" do
+      should "also stash this" do
+      end
+    end
+    assert_equal [c1, c2], JTest.contexts
+  end
+
   private
 
   def context(name, &block)

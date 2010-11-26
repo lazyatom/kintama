@@ -6,4 +6,12 @@ module JTest
   autoload :TestEnvironment, 'jtest/test_environment'
   autoload :Runner, 'jtest/runner'
   autoload :Assertions, 'jtest/assertions'
+
+  def self.reset
+    @contexts = []
+  end
+
+  def self.contexts
+    (@contexts ||= [])
+  end
 end

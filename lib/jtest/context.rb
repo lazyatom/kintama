@@ -7,6 +7,7 @@ module JTest
       @subcontexts = {}
       @tests = {}
       @parent = parent
+      JTest.contexts << self
       instance_eval(&block)
     end
 
