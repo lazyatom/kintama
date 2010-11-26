@@ -8,8 +8,20 @@ module JTest
       assert false
     end
 
-    def assert_equal(expected, actual)
-      assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
+    def assert_equal(expected, actual, message="Expected #{expected.inspect} but got #{actual.inspect}")
+      assert actual == expected, message
+    end
+
+    def assert_not_equal(expected, actual, message)
+      assert actual != expected, message
+    end
+
+    def assert_nil(object, message="#{object.inspect} was not nil")
+      assert_equal nil, object, message
+    end
+
+    def assert_not_nil(object, message="should not be nil")
+      assert_not_equal nil, object, message
     end
 
     def assert_raises(message="should raise an exception", &block)
