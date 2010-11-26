@@ -3,11 +3,10 @@ class Context
 
   def initialize(name, parent=nil, &block)
     @name = name
-    @block = block
     @subcontexts = {}
     @tests = {}
     @parent = parent
-    instance_eval(&@block)
+    instance_eval(&block)
   end
 
   def full_name
