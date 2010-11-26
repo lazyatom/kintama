@@ -209,6 +209,20 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_allow_methods_defined_in_the_context_to_be_called_in_tests
+    x = context "Given I ran a method" do
+      should "set something" do
+        assert self.respond_to?(:do_something)
+        assert_equal 123, do_something
+      end
+      def do_something
+        123
+      end
+    end
+    x.run
+    assert x.passed?
+  end
+
   private
 
   def context(name, &block)

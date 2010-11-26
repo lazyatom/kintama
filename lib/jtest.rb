@@ -70,7 +70,7 @@ class Context
 
     def run(runner=nil)
       runner.test_started(self) if runner
-      environment = TestEnvironment.new
+      environment = TestEnvironment.new(@context)
       @context.run_setups(environment)
       begin
         environment.instance_eval(&@test_block)
@@ -94,6 +94,10 @@ class Context
   end
 
   class TestEnvironment
+    def initialize(context)
+      @__context = context
+    end
+
     def assert(expression, message="failed")
       raise TestFailure, message unless expression
     end
@@ -104,6 +108,14 @@ class Context
 
     def assert_equal(expected, actual)
       assert actual == expected, "Expected #{expected.inspect} but got #{actual.inspect}"
+    end
+
+    def method_missing(*args, &block)
+      @__context.send(*args, &block)
+    end
+
+    def respond_to?(name)
+      @__context.respond_to?(name)
     end
   end
 
