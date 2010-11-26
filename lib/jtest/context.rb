@@ -37,6 +37,15 @@ module JTest
       environment.instance_eval(&@setup_block) if @setup_block
     end
 
+    def teardown(&teardown_block)
+      @teardown_block = teardown_block
+    end
+
+    def run_teardowns(environment)
+      environment.instance_eval(&@teardown_block) if @teardown_block
+      @parent.run_teardowns(environment) if @parent
+    end
+
     def should(name, &block)
       add_test("should " + name, &block)
     end

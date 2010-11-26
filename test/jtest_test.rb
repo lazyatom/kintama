@@ -171,6 +171,44 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_run_teardown_after_the_test_finishes
+    $called = false
+    x = context "Given a teardown" do
+      teardown do
+        raise "Argh" unless @result == 123
+        $called = true
+      end
+      should "run teardown after this test" do
+        @result = 123
+      end
+    end
+    x.run
+    assert x.passed?
+    assert $called
+  end
+
+  def test_should_run_all_teardowns_in_proximity_of_nesting_order_after_a_nested_test_finishes
+    $called = false
+    x = context "Given a teardown" do
+      teardown do
+        raise "Argh" unless @result == 123
+        $called = true
+      end
+      context "with a subcontext with another teardown" do
+        teardown do
+          raise "Oh no" unless @result == 456
+          @result = 123
+        end
+        should "run teardown after this test" do
+          @result = 456
+        end
+      end
+    end
+    x.run
+    assert x.passed?
+    assert $called
+  end
+
   def test_should_allow_running_of_specific_subcontexts
     x = context "Given something" do
       should "not be run" do

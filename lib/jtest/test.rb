@@ -18,6 +18,7 @@ module JTest
       rescue TestFailure => e
         @failure = e
       end
+      @context.run_teardowns(environment)
       runner.test_finished(self) if runner
     end
 
