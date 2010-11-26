@@ -17,7 +17,7 @@ class RunnerTest < Test::Unit::TestCase
       end
     end
     assert_output(".\n\n1 tests, 0 failures\n") do
-      Runner.new(c).run
+      runner(c).run
     end
   end
 
@@ -31,7 +31,7 @@ class RunnerTest < Test::Unit::TestCase
       end
     end
     assert_output("..\n\n2 tests, 0 failures\n") do
-      Runner.new(c).run
+      runner(c).run
     end
   end
 
@@ -53,7 +53,7 @@ given something should fail:
   failed
 EOS
     assert_output(expected.strip + "\n") do
-      Runner.new(c).run
+      runner(c).run
     end
   end
 
@@ -67,7 +67,7 @@ EOS
       end
     end
     assert_output("given something\n  should also pass: .\n  should pass: .\n\n2 tests, 0 failures\n") do
-      Runner.new(c).run(verbose=true)
+      runner(c).run(verbose=true)
     end
   end
 
@@ -83,7 +83,7 @@ EOS
       end
     end
     assert_output("given something\n  should pass: .\n  and something else\n    should pass: .\n\n2 tests, 0 failures\n") do
-      Runner.new(c).run(verbose=true)
+      runner(c).run(verbose=true)
     end
   end
 
@@ -101,7 +101,7 @@ F
 given something should fail:
   1 should equal 2
 EOS
-    assert_output(expected.strip + "\n") { Runner.new(c).run }
+    assert_output(expected.strip + "\n") { runner(c).run }
   end
 
   def test_should_print_out_a_summary_of_the_failing_tests_if_a_nested_test_fails
@@ -120,7 +120,7 @@ F
 given something and something else should fail:
   1 should equal 2
 EOS
-    assert_output(expected.strip + "\n") { Runner.new(c).run }
+    assert_output(expected.strip + "\n") { runner(c).run }
   end
 
   def test_should_be_able_to_run_tests_from_several_contexts
@@ -135,7 +135,7 @@ EOS
       end
     end
     assert_output("..\n\n2 tests, 0 failures\n") do
-      Runner.new(c1, c2).run
+      runner(c1, c2).run
     end
   end
 
@@ -160,7 +160,7 @@ given another thing
 2 tests, 0 failures
 EOS
     assert_output(expected.strip + "\n") do
-      Runner.new(c1, c2).run(verbose=true)
+      runner(c1, c2).run(verbose=true)
     end
   end
 
@@ -184,7 +184,7 @@ given something should fail:
   failed
 EOS
     assert_output(expected.strip + "\n") do
-      Runner.new(c).run(verbose=true, colour=true)
+      runner(c).run(verbose=true, colour=true)
     end
   end
 
@@ -194,7 +194,7 @@ EOS
       should("also pass") { assert true }
     end
     capture_stdout do
-      assert_equal true, Runner.new(c).run
+      assert_equal true, runner(c).run
     end
   end
 
@@ -204,7 +204,7 @@ EOS
       should("fail") { flunk }
     end
     capture_stdout do
-      assert_equal false, Runner.new(c).run
+      assert_equal false, runner(c).run
     end
   end
 
@@ -224,14 +224,18 @@ In a world without hope
 1 tests, 0 failures
 EOS
     assert_output(expected.strip + "\n") do
-      Runner.new(c).run(verbose=true)
+      runner(c).run(verbose=true)
     end
   end
 
   private
 
   def context(name, &block)
-    Context.new(name, nil, &block)
+    JTest::Context.new(name, nil, &block)
+  end
+
+  def runner(*args)
+    JTest::Runner.new(*args)
   end
 
   module ::Kernel

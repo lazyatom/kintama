@@ -274,6 +274,6 @@ class JTestTest < Test::Unit::TestCase
   private
 
   def context(name, &block)
-    Context.new(name, nil, &block)
+    JTest::Context.new(name, nil, &block)
   end
 end
