@@ -5,4 +5,5 @@ module JTest
   autoload :Test, 'jtest/test'
   autoload :TestEnvironment, 'jtest/test_environment'
   autoload :Runner, 'jtest/runner'
+  autoload :Assertions, 'jtest/assertions'
 end
