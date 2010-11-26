@@ -235,6 +235,46 @@ class JTestTest < Test::Unit::TestCase
     assert !x.passed?
   end
 
+  def test_should_return_true_if_running_a_subcontext_passes
+    x = context "Given something" do
+      context "and another thing" do
+        should "pass" do
+          assert true
+        end
+      end
+    end
+    assert_equal true, x.and_another_thing.run
+  end
+
+  def test_should_return_true_if_running_a_test_passes
+    x = context "Given something" do
+      should "pass when run" do
+        assert true
+      end
+    end
+    assert_equal true, x.should_pass_when_run.run
+  end
+
+  def test_should_return_false_if_running_a_subcontext_fails
+    x = context "Given something" do
+      context "and another thing" do
+        should "fail" do
+          flunk
+        end
+      end
+    end
+    assert_equal false, x.and_another_thing.run
+  end
+
+  def test_should_return_false_if_running_a_test_fails
+    x = context "Given something" do
+      should "fail when run" do
+        flunk
+      end
+    end
+    assert_equal false, x.should_fail_when_run.run
+  end
+
   def test_should_provide_given_and_it_aliases_for_context_and_should
     x = context "In a world without hope" do
       given "a massive gun" do

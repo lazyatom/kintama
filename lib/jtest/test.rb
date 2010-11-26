@@ -20,6 +20,7 @@ module JTest
       end
       @context.run_teardowns(environment)
       runner.test_finished(self) if runner
+      passed?
     end
 
     def passed?
