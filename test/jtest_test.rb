@@ -340,10 +340,4 @@ class JTestTest < Test::Unit::TestCase
     end
     assert_equal [c1, c2], JTest.contexts
   end
-
-  private
-
-  def context(name, &block)
-    JTest::Context.new(name, nil, &block)
-  end
 end

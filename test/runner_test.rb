@@ -230,10 +230,6 @@ EOS
 
   private
 
-  def context(name, &block)
-    JTest::Context.new(name, nil, &block)
-  end
-
   def runner(*args)
     JTest::Runner.new(*args)
   end

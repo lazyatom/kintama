@@ -11,7 +11,17 @@ module JTest
     @contexts = []
   end
 
+  def self.context(name, &block)
+    Context.new(name, nil, &block)
+  end
+
   def self.contexts
     (@contexts ||= [])
+  end
+end
+
+unless respond_to?(:context)
+  def context(*args, &block)
+    JTest.context(*args, &block)
   end
 end
