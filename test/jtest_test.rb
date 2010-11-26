@@ -239,6 +239,23 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  module MyStuff
+    def do_something
+      456
+    end
+  end
+
+  def test_should_be_able_to_call_methods_from_included_modules_in_tests
+    x = context "Given I include a module" do
+      include MyStuff
+      should "allow calling methods from that module" do
+        assert_equal 456, do_something
+      end
+    end
+    x.run
+    assert x.passed?
+  end
+
   private
 
   def context(name, &block)

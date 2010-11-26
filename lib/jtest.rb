@@ -52,6 +52,10 @@ class Context
     all_tests.select { |t| !t.passed? } + all_subcontexts.map { |s| s.failures }.flatten
   end
 
+  def include(mod)
+    extend(mod)
+  end
+
   def method_missing(name, *args, &block)
     if @subcontexts[name]
       @subcontexts[name]
