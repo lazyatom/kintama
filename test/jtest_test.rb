@@ -256,6 +256,21 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_not_allow_methods_from_one_context_to_bleed_into_another
+    context "Given I define a method in one context" do
+      def do_another_thing
+      end
+    end
+    x = context "And I define another context" do
+      it "should not be possible to call that method" do
+        assert !self.respond_to?(:do_another_thing)
+        assert_raises("should not be able to call this") { do_another_thing }
+      end
+    end
+    x.run
+    assert x.passed?
+  end
+
   private
 
   def context(name, &block)
