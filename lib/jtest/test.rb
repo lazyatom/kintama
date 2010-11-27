@@ -6,10 +6,10 @@ module JTest
       @name = name
       @context = context
       @test_block = block
-      @failure = nil
     end
 
     def run(runner=nil)
+      @failure = nil
       runner.test_started(self) if runner
       environment = JTest::TestEnvironment.new(@context)
       @context.run_setups(environment)

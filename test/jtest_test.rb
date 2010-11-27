@@ -301,6 +301,18 @@ class JTestTest < Test::Unit::TestCase
     assert_equal false, x.should_fail_when_run.run
   end
 
+  def test_should_clear_previous_failure_when_running_test_again
+    $thing = 456
+    x = context "Given something" do
+      should "work" do
+        assert_equal 123, $thing
+      end
+    end
+    assert_equal false, x.run
+    $thing = 123
+    assert_equal true, x.run
+  end
+
   def test_should_provide_given_and_it_aliases_for_context_and_should
     x = context "In a world without hope" do
       given "a massive gun" do
