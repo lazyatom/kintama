@@ -23,7 +23,9 @@ module JTest
     end
 
     def context(name, &block)
-      @subcontexts[methodize(name)] = self.class.new(name, self, &block)
+      c = self.class.new(name, self, &block)
+      @subcontexts[name] = c
+      @subcontexts[methodize(name)] = c
     end
 
     def given(name, &block)
@@ -68,6 +70,10 @@ module JTest
       extend(mod)
     end
 
+    def [](name)
+      @subcontexts[name] || @tests[name]
+    end
+
     def method_missing(name, *args, &block)
       if @subcontexts[name]
         @subcontexts[name]
@@ -89,7 +95,9 @@ module JTest
     private
 
     def add_test(name, &block)
-      @tests[methodize(name)] = Test.new(name, self, &block)
+      test = Test.new(name, self, &block)
+      @tests[methodize(name)] = test
+      @tests[name] = test
     end
 
     def methodize(name)
@@ -97,11 +105,11 @@ module JTest
     end
 
     def all_subcontexts
-      @subcontexts.values
+      @subcontexts.values.uniq
     end
 
     def all_tests
-      @tests.values.sort_by { |t| t.name }
+      @tests.values.uniq.sort_by { |t| t.name }
     end
   end
 end

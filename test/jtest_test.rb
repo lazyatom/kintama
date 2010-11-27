@@ -227,11 +227,37 @@ class JTestTest < Test::Unit::TestCase
 
   def test_should_allow_running_of_specific_tests
     x = context "Given something" do
-      should "fail_when_run" do
+      should "fail when run" do
         flunk
       end
     end
     x.should_fail_when_run.run
+    assert !x.passed?
+  end
+
+  def test_should_allow_running_of_specific_subcontexts_using_hashblue_syntax
+    x = context "Given something" do
+      should "not be run" do
+        flunk
+      end
+      context "and another thing" do
+        should "pass" do
+          assert true
+        end
+      end
+    end
+    inner_context = x["and another thing"]
+    inner_context.run
+    assert inner_context.passed?
+  end
+
+  def test_should_allow_running_of_specific_tests_using_hashlike_syntax
+    x = context "Given something" do
+      should "fail when run" do
+        flunk
+      end
+    end
+    x["should fail when run"].run
     assert !x.passed?
   end
 
