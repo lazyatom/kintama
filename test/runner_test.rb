@@ -200,6 +200,7 @@ class RunnerTest < Test::Unit::TestCase
   end
 
   def test_should_only_run_each_context_once_with_the_default_runner
+    JTest.reset
     $already_run = false
     c = context "Given something" do
       context "and a thing" do
@@ -212,6 +213,17 @@ class RunnerTest < Test::Unit::TestCase
     capture_stdout do
       assert JTest::Runner.default.run, "should not have run the context twice"
     end
+  end
+
+  def test_should_include_line_in_test_of_error_in_failure_message
+    c = context "given jazz" do
+      should "tapdance" do
+        $line = __LINE__; flunk
+      end
+    end
+    r = runner(c)
+    capture_stdout { r.run }
+    assert_match /at #{Regexp.escape(__FILE__)}:#{$line}/, r.failure_messages.first
   end
 
   private

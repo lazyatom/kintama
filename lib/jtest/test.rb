@@ -32,7 +32,12 @@ module JTest
     end
 
     def failure_message
-      @failure.message
+      "#{@failure.message} (at #{failure_line})"
+    end
+
+    def failure_line
+      base_dir = File.expand_path("../..", __FILE__)
+      @failure.backtrace.find { |line| File.expand_path(line).index(base_dir).nil? }
     end
   end
 end
