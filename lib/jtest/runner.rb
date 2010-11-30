@@ -69,12 +69,21 @@ module JTest
         puts
         puts
       end
-      puts "#{@test_count} tests, #{failures.length} failures"
+      puts test_summary
       if failures.any?
-        puts
-        failures.each do |test|
-          puts test.full_name + ":\n  " + test.failure_message
-        end
+        puts "\n" + failure_messages.join("\n\n")
+      end
+    end
+
+    def test_summary
+      "#{@test_count} tests, #{failures.length} failures"
+    end
+
+    def failure_messages
+      x = 0
+      failures.map do |test|
+        x += 1
+        "#{x}) #{test.full_name}:\n  #{test.failure_message}"
       end
     end
 

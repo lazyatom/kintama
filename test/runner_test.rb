@@ -19,9 +19,11 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output(".\n\n1 tests, 0 failures\n") do
-      runner(c).run
+    r = runner(c)
+    assert_output(/^\.\n/) do
+      r.run
     end
+    assert_equal "1 tests, 0 failures", r.test_summary
   end
 
   def test_should_print_out_many_dots_as_tests_run
@@ -33,9 +35,11 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output("..\n\n2 tests, 0 failures\n") do
-      runner(c).run
+    r = runner(c)
+    assert_output(/^\.\.\n/) do
+      r.run
     end
+    assert_equal "2 tests, 0 failures", r.test_summary
   end
 
   def test_should_print_out_Fs_as_tests_fail
@@ -47,17 +51,12 @@ class RunnerTest < Test::Unit::TestCase
         assert true
       end
     end
-    expected = <<-EOS
-F.
-
-2 tests, 1 failures
-
-given something should fail:
-  failed
-EOS
-    assert_output(expected.strip + "\n") do
-      runner(c).run
+    r = runner(c)
+    assert_output(/^F\./) do
+      r.run
     end
+    assert_equal "2 tests, 1 failures", r.test_summary
+    assert_match /^1\) given something should fail:\n  failed/, r.failure_messages[0]
   end
 
   def test_should_print_out_test_names_if_verbose_is_set
@@ -69,7 +68,7 @@ EOS
         assert true
       end
     end
-    assert_output("given something\n  should also pass: .\n  should pass: .\n\n2 tests, 0 failures\n") do
+    assert_output(/^given something\n  should also pass: \.\n  should pass: \./) do
       runner(c).run(verbose=true, false)
     end
   end
@@ -85,7 +84,7 @@ EOS
         end
       end
     end
-    assert_output("given something\n  should pass: .\n  and something else\n    should pass: .\n\n2 tests, 0 failures\n") do
+    assert_output(/^given something\n  should pass: \.\n  and something else\n    should pass: \./) do
       runner(c).run(verbose=true, false)
     end
   end
@@ -96,15 +95,7 @@ EOS
         assert 1 == 2, "1 should equal 2"
       end
     end
-    expected = <<-EOS
-F
-
-1 tests, 1 failures
-
-given something should fail:
-  1 should equal 2
-EOS
-    assert_output(expected.strip + "\n") { runner(c).run }
+    assert_output(/given something should fail:\n  1 should equal 2/) { runner(c).run }
   end
 
   def test_should_print_out_a_summary_of_the_failing_tests_if_an_exception_occurs_in_a_test
@@ -113,15 +104,7 @@ EOS
         raise "unexpected issue!"
       end
     end
-    expected = <<-EOS
-F
-
-1 tests, 1 failures
-
-given something should fail:
-  unexpected issue!
-EOS
-    assert_output(expected.strip + "\n") { runner(c).run }
+    assert_output(/given something should fail:\n  unexpected issue!/) { runner(c).run }
   end
 
   def test_should_print_out_a_summary_of_the_failing_tests_if_a_nested_test_fails
@@ -132,15 +115,7 @@ EOS
         end
       end
     end
-    expected = <<-EOS
-F
-
-1 tests, 1 failures
-
-given something and something else should fail:
-  1 should equal 2
-EOS
-    assert_output(expected.strip + "\n") { runner(c).run }
+    assert_output(/given something and something else should fail:\n  1 should equal 2/) { runner(c).run }
   end
 
   def test_should_be_able_to_run_tests_from_several_contexts
@@ -154,9 +129,11 @@ EOS
         assert true
       end
     end
-    assert_output("..\n\n2 tests, 0 failures\n") do
-      runner(c1, c2).run
+    r = runner(c1, c2)
+    assert_output(/^\.\.\n/) do
+      r.run
     end
+    assert_equal "2 tests, 0 failures", r.test_summary
   end
 
   def test_should_nest_verbose_output_properly_when_running_tests_from_several_contexts
@@ -170,16 +147,7 @@ EOS
         assert true
       end
     end
-    expected = <<-EOS
-given something
-  should pass: .
-
-given another thing
-  should also pass: .
-
-2 tests, 0 failures
-EOS
-    assert_output(expected.strip + "\n") do
+    assert_output(/^given something\n  should pass: \.\n\ngiven another thing\n  should also pass: \./) do
       runner(c1, c2).run(verbose=true, false)
     end
   end
@@ -193,17 +161,7 @@ EOS
         assert true
       end
     end
-    expected = <<-EOS
-given something
-\e[31m  should fail\e[0m
-\e[32m  should pass\e[0m
-
-2 tests, 1 failures
-
-given something should fail:
-  failed
-EOS
-    assert_output(expected.strip + "\n") do
+    assert_output(/^given something\n\e\[31m  should fail\e\[0m\n\e\[32m  should pass\e\[0m/) do
       runner(c).run(verbose=true, colour=true)
     end
   end
@@ -236,14 +194,7 @@ EOS
         end
       end
     end
-    expected = <<-EOS
-In a world without hope
-  given a massive gun
-    it should work out well in the end: .
-
-1 tests, 0 failures
-EOS
-    assert_output(expected.strip + "\n") do
+    assert_output(/^In a world without hope\n  given a massive gun\n    it should work out well in the end: \./) do
       runner(c).run(verbose=true, false)
     end
   end
@@ -282,6 +233,11 @@ EOS
   end
 
   def assert_output(expected, &block)
-    assert_equal expected, capture_stdout(&block).read
+    output = capture_stdout(&block).read
+    if expected.is_a?(Regexp)
+      assert_match expected, output
+    else
+      assert_equal expected, output
+    end
   end
 end
