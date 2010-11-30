@@ -34,9 +34,15 @@ module JTest
   end
 end
 
-[:context, :given].each do |top_level_method|
-  unless self.respond_to?(top_level_method)
-    eval "def #{top_level_method}(*args, &block); JTest.context(*args, &block); end"
+unless self.respond_to?(:context)
+  def context(name, &block)
+    JTest.context(name, &block)
+  end
+end
+
+unless self.respond_to?(:given)
+  def given(name, &block)
+    JTest.context("given " + name, &block)
   end
 end
 
