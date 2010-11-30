@@ -14,7 +14,7 @@ module JTest
 
     def run(verbose=false, colour=$stdin.tty?)
       @verbose = verbose
-      @colour = colour
+      @colour = verbose && colour
       @test_count = 0
       @contexts.each do |c|
         @current_indent = -1

@@ -67,7 +67,7 @@ EOS
       end
     end
     assert_output("given something\n  should also pass: .\n  should pass: .\n\n2 tests, 0 failures\n") do
-      runner(c).run(verbose=true)
+      runner(c).run(verbose=true, false)
     end
   end
 
@@ -83,7 +83,7 @@ EOS
       end
     end
     assert_output("given something\n  should pass: .\n  and something else\n    should pass: .\n\n2 tests, 0 failures\n") do
-      runner(c).run(verbose=true)
+      runner(c).run(verbose=true, false)
     end
   end
 
@@ -160,7 +160,7 @@ given another thing
 2 tests, 0 failures
 EOS
     assert_output(expected.strip + "\n") do
-      runner(c1, c2).run(verbose=true)
+      runner(c1, c2).run(verbose=true, false)
     end
   end
 
@@ -224,7 +224,7 @@ In a world without hope
 1 tests, 0 failures
 EOS
     assert_output(expected.strip + "\n") do
-      runner(c).run(verbose=true)
+      runner(c).run(verbose=true, false)
     end
   end
 
