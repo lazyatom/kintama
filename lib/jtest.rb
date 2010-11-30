@@ -18,10 +18,33 @@ module JTest
   def self.contexts
     (@contexts ||= [])
   end
+
+  def self.run(*args)
+    Runner.default.run(*args)
+  end
+
+  def self.add_exit_hook
+    return if @__added_exit_hook
+    at_exit { exit(run(true) ? 0 : 1) }
+    @__added_exit_hook = true
+  end
+
+  def self.should_run_on_exit
+    caller[1].split(":").first == $0 && (ENV["JTEST_EXPLICITLY_DONT_RUN"] != "true")
+  end
 end
 
-unless respond_to?(:context)
+unless self.respond_to?(:context)
   def context(*args, &block)
     JTest.context(*args, &block)
   end
 end
+
+unless self.respond_to?(:given)
+  def given(*args, &block)
+    JTest.context(*args, &block)
+  end
+end
+
+JTest.add_exit_hook if JTest.should_run_on_exit
+
