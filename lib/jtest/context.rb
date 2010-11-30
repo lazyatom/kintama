@@ -92,6 +92,12 @@ module JTest
       (@parent ? @parent.respond_to?(name) : super)
     end
 
+    def inspect
+      test_names = all_tests.map { |t| t.name }
+      context_names = all_subcontexts.map { |c| c.name }
+      "<Context:#{@name.inspect} @tests=#{test_names.inspect} @subcontexts=#{context_names.inspect}>"
+    end
+
     private
 
     def add_test(name, &block)
