@@ -15,7 +15,7 @@ module JTest
       @context.run_setups(environment)
       begin
         environment.instance_eval(&@test_block)
-      rescue TestFailure => e
+      rescue Exception => e
         @failure = e
       end
       @context.run_teardowns(environment)

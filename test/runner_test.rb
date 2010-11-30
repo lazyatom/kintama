@@ -107,6 +107,23 @@ EOS
     assert_output(expected.strip + "\n") { runner(c).run }
   end
 
+  def test_should_print_out_a_summary_of_the_failing_tests_if_an_exception_occurs_in_a_test
+    c = context "given something" do
+      should "fail" do
+        raise "unexpected issue!"
+      end
+    end
+    expected = <<-EOS
+F
+
+1 tests, 1 failures
+
+given something should fail:
+  unexpected issue!
+EOS
+    assert_output(expected.strip + "\n") { runner(c).run }
+  end
+
   def test_should_print_out_a_summary_of_the_failing_tests_if_a_nested_test_fails
     c = context "given something" do
       context "and something else" do
