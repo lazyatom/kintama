@@ -12,7 +12,7 @@ module JTest
       @current_indent = -1
     end
 
-    def run(verbose=false, colour=false)
+    def run(verbose=false, colour=$stdin.tty?)
       @verbose = verbose
       @colour = colour
       @test_count = 0
