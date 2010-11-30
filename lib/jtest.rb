@@ -34,17 +34,10 @@ module JTest
   end
 end
 
-unless self.respond_to?(:context)
-  def context(*args, &block)
-    JTest.context(*args, &block)
-  end
-end
-
-unless self.respond_to?(:given)
-  def given(*args, &block)
-    JTest.context(*args, &block)
+[:context, :given].each do |top_level_method|
+  unless self.respond_to?(top_level_method)
+    eval "def #{top_level_method}(*args, &block); JTest.context(*args, &block); end"
   end
 end
 
 JTest.add_exit_hook if JTest.should_run_on_exit
-
