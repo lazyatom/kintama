@@ -7,7 +7,7 @@ module JTest
       @subcontexts = {}
       @tests = {}
       @parent = parent
-      JTest.contexts << self
+      JTest.contexts << self unless @parent
       instance_eval(&block)
     end
 

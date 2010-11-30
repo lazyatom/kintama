@@ -1,5 +1,10 @@
 module JTest
   class Runner
+
+    def self.default
+      new(*JTest.contexts)
+    end
+
     INDENT = "  "
 
     def initialize(*contexts)

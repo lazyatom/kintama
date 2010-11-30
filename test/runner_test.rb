@@ -228,6 +228,21 @@ EOS
     end
   end
 
+  def test_should_only_run_each_context_once_with_the_default_runner
+    $already_run = false
+    c = context "Given something" do
+      context "and a thing" do
+        should "only run this once" do
+          flunk if $already_run
+          $already_run = true
+        end
+      end
+    end
+    capture_stdout do
+      assert JTest::Runner.default.run, "should not have run the context twice"
+    end
+  end
+
   private
 
   def runner(*args)
