@@ -391,7 +391,7 @@ class JTestTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup
+  def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup_when_included_via_modules
     c = context "Given I define an instance variable in my setup" do
       include MoreMyStuff
       setup do
@@ -399,6 +399,24 @@ class JTestTest < Test::Unit::TestCase
       end
       should "be able to call a method that refers to that variable in a test" do
         assert_equal 123, get_thing
+      end
+    end
+    c.run
+    assert c.passed?, "Thing was not defined!"
+  end
+
+  def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup_when_defined_in_helper_blocks
+    c = context "Given I define an instance variable in my setup" do
+      setup do
+        @thing = 456
+      end
+      should "be able to call a method that refers to that variable in a test" do
+        assert_equal 456, get_thing
+      end
+      helpers do
+        def get_thing
+          @thing
+        end
       end
     end
     c.run

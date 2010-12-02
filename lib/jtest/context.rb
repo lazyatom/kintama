@@ -76,6 +76,12 @@ module JTest
       @modules << mod
     end
 
+    def helpers(&block)
+      mod = Module.new
+      mod.class_eval(&block)
+      @modules << mod
+    end
+
     def include_modules(environment)
       @modules.each { |mod| environment.extend(mod) }
     end
