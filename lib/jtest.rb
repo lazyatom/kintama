@@ -28,8 +28,17 @@ module JTest
     @__added_exit_hook = true
   end
 
+  def self.test_file_was_run?
+    caller[2].split(":").first == $0
+  end
+
+  def self.run_via_rake?
+    caller.find { |line| File.basename(line.split(":").first) == "rake_test_loader.rb" } != nil
+  end
+
   def self.should_run_on_exit
-    caller[1].split(":").first == $0 && (ENV["JTEST_EXPLICITLY_DONT_RUN"] != "true")
+    return false if ENV["JTEST_EXPLICITLY_DONT_RUN"]
+    return test_file_was_run? || run_via_rake?
   end
 end
 
