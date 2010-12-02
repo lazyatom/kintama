@@ -1,5 +1,4 @@
-require 'test/unit'
-require 'jtest'
+require 'test_helper'
 
 class AssertionsTest < Test::Unit::TestCase
   class PseudoTest

@@ -1,8 +1,4 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require 'test/unit'
-
-ENV["JTEST_EXPLICITLY_DONT_RUN"] = "true"
-require 'jtest'
+require 'test_helper'
 
 class JTestTest < Test::Unit::TestCase
   def test_should_pass_when_all_tests_pass
