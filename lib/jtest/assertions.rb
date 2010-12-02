@@ -5,7 +5,7 @@ module JTest
     end
 
     def flunk
-      assert false
+      assert false, "flunked."
     end
 
     def assert_equal(expected, actual, message="Expected #{expected.inspect} but got #{actual.inspect}")

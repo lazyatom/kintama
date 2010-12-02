@@ -56,7 +56,7 @@ class RunnerTest < Test::Unit::TestCase
       r.run
     end
     assert_equal "2 tests, 1 failures", r.test_summary
-    assert_match /^1\) given something should fail:\n  failed/, r.failure_messages[0]
+    assert_match /^1\) given something should fail:\n  flunked\./, r.failure_messages[0]
   end
 
   def test_should_print_out_test_names_if_verbose_is_set
