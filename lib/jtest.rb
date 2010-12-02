@@ -29,7 +29,7 @@ module JTest
   end
 
   def self.test_file_was_run?
-    caller[2].split(":").first == $0
+    caller.last.split(":").first == $0
   end
 
   def self.run_via_rake?
