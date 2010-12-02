@@ -385,6 +385,22 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup
+    c = context "Given I define an instance variable in my setup" do
+      setup do
+        @thing = 123
+      end
+      should "be able to call a method that refers to that variable in a test" do
+        assert_equal 123, get_thing
+      end
+      def get_thing
+        @thing
+      end
+    end
+    c.run
+    assert c.passed?, "Thing was not defined!"
+  end
+
   def test_should_be_able_to_compose_shoulds_into_methods
     $ran = false
     x = context "Given a context" do
