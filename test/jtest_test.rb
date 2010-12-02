@@ -385,16 +385,20 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  module MoreMyStuff
+    def get_thing
+      @thing
+    end
+  end
+
   def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup
     c = context "Given I define an instance variable in my setup" do
+      include MoreMyStuff
       setup do
         @thing = 123
       end
       should "be able to call a method that refers to that variable in a test" do
         assert_equal 123, get_thing
-      end
-      def get_thing
-        @thing
       end
     end
     c.run

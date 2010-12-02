@@ -14,6 +14,7 @@ module JTest
       else
         JTest.contexts << self
       end
+      @modules = []
       instance_eval(&block)
     end
 
@@ -72,7 +73,11 @@ module JTest
     end
 
     def include(mod)
-      extend(mod)
+      @modules << mod
+    end
+
+    def include_modules(environment)
+      @modules.each { |mod| environment.extend(mod) }
     end
 
     def [](name)
