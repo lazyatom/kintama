@@ -26,6 +26,7 @@ module JTest
       runner.context_started(self) if runner
       all_tests.each { |t| t.run(runner) }
       all_subcontexts.each { |s| s.run(runner) }
+      runner.context_finished(self) if runner
       passed?
     end
 

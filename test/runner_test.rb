@@ -79,8 +79,13 @@ class RunnerTest < Test::Unit::TestCase
           assert true
         end
       end
+      context "and then this" do
+        should "also pass" do
+          assert true
+        end
+      end
     end
-    assert_output(/^given something\n  should pass: \.\n  and something else\n    should pass: \./) do
+    assert_output(/^given something\n  should pass: \.\n  and then this\n    should also pass: \.\n  and something else\n    should pass: \./) do
       runner(c).run(verbose=true, false)
     end
   end

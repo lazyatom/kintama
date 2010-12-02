@@ -38,6 +38,10 @@ module JTest
       print indent + context.name + "\n" if @verbose
     end
 
+    def context_finished(context)
+      @current_indent -= 1
+    end
+
     def test_started(test)
       @test_count += 1
       print indent + INDENT + test.name + ": " if @verbose && !@colour
