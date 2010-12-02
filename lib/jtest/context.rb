@@ -1,5 +1,7 @@
 module JTest
   class Context
+    include Aliases::Context
+
     attr_reader :name
 
     def initialize(name, parent=nil, &block)
@@ -7,7 +9,11 @@ module JTest
       @subcontexts = {}
       @tests = {}
       @parent = parent
-      JTest.contexts << self unless @parent
+      if @parent
+        @parent.add_subcontext(self)
+      else
+        JTest.contexts << self
+      end
       instance_eval(&block)
     end
 
@@ -22,14 +28,9 @@ module JTest
       passed?
     end
 
-    def context(name, &block)
-      c = self.class.new(name, self, &block)
-      @subcontexts[name] = c
-      @subcontexts[methodize(name)] = c
-    end
-
-    def given(name, &block)
-      context("given " + name, &block)
+    def add_subcontext(subcontext)
+      @subcontexts[subcontext.name] = subcontext
+      @subcontexts[methodize(subcontext.name)] = subcontext
     end
 
     def setup(&setup_block)
@@ -56,6 +57,10 @@ module JTest
 
     def it(name, &block)
       add_test("it " + name, &block)
+    end
+
+    def test(name, &block)
+      add_test(name, &block)
     end
 
     def passed?

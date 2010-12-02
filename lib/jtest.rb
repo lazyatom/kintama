@@ -6,14 +6,13 @@ module JTest
   autoload :TestEnvironment, 'jtest/test_environment'
   autoload :Runner, 'jtest/runner'
   autoload :Assertions, 'jtest/assertions'
+  autoload :Aliases, 'jtest/aliases'
 
   def self.reset
     @contexts = []
   end
 
-  def self.context(name, &block)
-    Context.new(name, nil, &block)
-  end
+  extend Aliases::Context
 
   def self.contexts
     (@contexts ||= [])
@@ -34,15 +33,9 @@ module JTest
   end
 end
 
-unless self.respond_to?(:context)
-  def context(name, &block)
-    JTest.context(name, &block)
-  end
-end
-
-unless self.respond_to?(:given)
-  def given(name, &block)
-    JTest.context("given " + name, &block)
+JTest::Aliases::Context.instance_methods.each do |method|
+  unless self.respond_to?(method)
+    eval %|def #{method}(name, &block); JTest.#{method}(name, nil, &block); end|
   end
 end
 
