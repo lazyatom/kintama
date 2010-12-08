@@ -1,4 +1,4 @@
-module JTest
+module Testicle
   class Context
     include Aliases::Context
 
@@ -12,7 +12,7 @@ module JTest
       if @parent
         @parent.add_subcontext(self)
       else
-        JTest.contexts << self
+        Testicle.contexts << self
       end
       @modules = []
       instance_eval(&block)
@@ -84,7 +84,7 @@ module JTest
     end
 
     def include_modules(environment)
-      (JTest.modules + all_modules).each { |mod| environment.extend(mod) }
+      (Testicle.modules + all_modules).each { |mod| environment.extend(mod) }
     end
 
     def all_modules

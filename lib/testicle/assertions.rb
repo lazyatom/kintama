@@ -1,7 +1,7 @@
-module JTest
+module Testicle
   module Assertions
     def assert(expression, message="failed")
-      raise JTest::TestFailure, message unless expression
+      raise Testicle::TestFailure, message unless expression
     end
 
     def flunk
@@ -30,7 +30,7 @@ module JTest
 
     def assert_raises(message="should raise an exception", &block)
       yield
-      raise JTest::TestFailure, message
+      raise Testicle::TestFailure, message
     rescue
       # do nothing, we expected this, but now no TestFailure was raised.
     end

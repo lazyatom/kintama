@@ -1,8 +1,8 @@
-module JTest
+module Testicle
   class Runner
 
     def self.default
-      new(*JTest.contexts)
+      new(*Testicle.contexts)
     end
 
     INDENT = "  "

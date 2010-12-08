@@ -3,7 +3,7 @@ require 'test_helper'
 class AssertionsTest < Test::Unit::TestCase
 
   class PseudoTest
-    include JTest::Assertions
+    include Testicle::Assertions
   end
 
   def setup
@@ -36,7 +36,7 @@ class AssertionsTest < Test::Unit::TestCase
   def assert_assertion_fails
     yield
     raise "assertion did not fail!"
-  rescue JTest::TestFailure
+  rescue Testicle::TestFailure
     # nothing
   end
 end

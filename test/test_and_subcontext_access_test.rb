@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class TestAndSubcontextAccessTest < JTest_TestUnit_TestCase
+class TestAndSubcontextAccessTest < Testicle_TestUnit_TestCase
 
   def test_should_stash_all_defined_contexts_so_they_can_be_accessed_later
-    JTest.reset
+    Testicle.reset
     c1 = context "Given some context" do
       should "stash this" do
       end
@@ -12,7 +12,7 @@ class TestAndSubcontextAccessTest < JTest_TestUnit_TestCase
       should "also stash this" do
       end
     end
-    assert_equal [c1, c2], JTest.contexts
+    assert_equal [c1, c2], Testicle.contexts
   end
 
   def test_should_allow_running_of_specific_subcontexts

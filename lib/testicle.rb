@@ -1,11 +1,11 @@
-module JTest
-  autoload :Context, 'jtest/context'
-  autoload :Test, 'jtest/test'
-  autoload :TestFailure, 'jtest/test'
-  autoload :TestEnvironment, 'jtest/test_environment'
-  autoload :Runner, 'jtest/runner'
-  autoload :Assertions, 'jtest/assertions'
-  autoload :Aliases, 'jtest/aliases'
+module Testicle
+  autoload :Context, 'testicle/context'
+  autoload :Test, 'testicle/test'
+  autoload :TestFailure, 'testicle/test'
+  autoload :TestEnvironment, 'testicle/test_environment'
+  autoload :Runner, 'testicle/runner'
+  autoload :Assertions, 'testicle/assertions'
+  autoload :Aliases, 'testicle/aliases'
 
   extend Aliases::Context
 
@@ -41,11 +41,11 @@ module JTest
     #     def blah
     #     end
     #   end
-    #   JTest.add SomeModule
+    #   Testicle.add SomeModule
     #
     # or a block:
     #
-    #   JTest.add do
+    #   Testicle.add do
     #     def blah
     #     end
     #   end
@@ -117,10 +117,10 @@ module JTest
   end
 end
 
-JTest::Aliases::Context.instance_methods.each do |method|
+Testicle::Aliases::Context.instance_methods.each do |method|
   unless self.respond_to?(method)
-    eval %|def #{method}(name, &block); JTest.#{method}(name, nil, &block); end|
+    eval %|def #{method}(name, &block); Testicle.#{method}(name, nil, &block); end|
   end
 end
 
-JTest.add_exit_hook if JTest.should_run_on_exit?
+Testicle.add_exit_hook if Testicle.should_run_on_exit?

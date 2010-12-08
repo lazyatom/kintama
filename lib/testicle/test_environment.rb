@@ -1,4 +1,4 @@
-module JTest
+module Testicle
   class TestEnvironment
     include Assertions
 

@@ -1,4 +1,4 @@
-module JTest
+module Testicle
   class TestFailure < StandardError; end
 
   class Test
@@ -13,14 +13,14 @@ module JTest
     def run(runner=nil)
       @failure = nil
       runner.test_started(self) if runner
-      environment = JTest::TestEnvironment.new(@context)
+      environment = Testicle::TestEnvironment.new(@context)
       @context.include_modules(environment)
       begin
-        JTest.run_global_setups(environment)
+        Testicle.run_global_setups(environment)
         @context.run_setups(environment)
         environment.instance_eval(&@test_block)
         @context.run_teardowns(environment)
-        JTest.run_global_teardowns(environment)
+        Testicle.run_global_teardowns(environment)
       rescue Exception => e
         @failure = e
       end

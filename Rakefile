@@ -20,7 +20,7 @@ task :default => ["test"]
 spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
-  s.name              = "jtest"
+  s.name              = "testicle"
   s.version           = "0.1.0"
   s.summary           = "It's for writing tests."
   s.author            = "James Adam"

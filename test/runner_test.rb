@@ -2,7 +2,7 @@ require 'test_helper'
 
 require 'stringio'
 
-class RunnerTest < JTest_TestUnit_TestCase
+class RunnerTest < Testicle_TestUnit_TestCase
 
   def test_assert_output_works
     assert_output("yes\n") do
@@ -202,7 +202,7 @@ class RunnerTest < JTest_TestUnit_TestCase
   end
 
   def test_should_only_run_each_context_once_with_the_default_runner
-    JTest.reset
+    Testicle.reset
     $already_run = false
     c = context "Given something" do
       context "and a thing" do
@@ -213,7 +213,7 @@ class RunnerTest < JTest_TestUnit_TestCase
       end
     end
     capture_stdout do
-      assert JTest::Runner.default.run, "should not have run the context twice"
+      assert Testicle::Runner.default.run, "should not have run the context twice"
     end
   end
 
@@ -231,7 +231,7 @@ class RunnerTest < JTest_TestUnit_TestCase
   private
 
   def runner(*args)
-    JTest::Runner.new(*args)
+    Testicle::Runner.new(*args)
   end
 
   module ::Kernel

@@ -1,8 +1,8 @@
-module JTest
+module Testicle
   module Aliases
     module Context
       def context(name, parent=self, &block)
-        JTest::Context.new(name, parent, &block)
+        Testicle::Context.new(name, parent, &block)
       end
 
       def given(name, parent=self, &block)
