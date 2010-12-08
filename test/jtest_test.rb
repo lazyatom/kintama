@@ -61,6 +61,16 @@ class JTestTest < Test::Unit::TestCase
     assert !x.passed?
   end
 
+  def test_should_capture_exceptions_in_tests_as_failing_tests
+    x = context "Given a test" do
+      should "that raises an exception" do
+        raise "aaargh"
+      end
+    end
+    x.run
+    assert !x.passed?
+  end
+
   def test_should_allow_setup_to_provide_instance_variables
     x = context "Given something" do
       setup do
