@@ -480,13 +480,17 @@ class JTestTest < Test::Unit::TestCase
     assert c.passed?, "something was not defined!"
   end
 
-  def test_should_run_setup_defined_on_jtest_itself
+  def test_should_run_setup_defined_on_jtest_itself_before_other_setups
     JTest.setup do
-      @thing = 'hello'
+      @thing = 'well then'
     end
     c = context "Given a context" do
+      setup do
+        assert_equal 'well then', @thing
+        @thing = 'now then'
+      end
       should "have run the setup defined in the default behaviour" do
-        assert_equal 'hello', @thing
+        assert_equal 'now then', @thing
       end
     end
     c.run
