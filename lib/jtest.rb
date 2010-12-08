@@ -13,6 +13,8 @@ module JTest
   class << self
     def reset
       @contexts = []
+      @modules = []
+      @setup_blocks = []
     end
 
     def contexts
