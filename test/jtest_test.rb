@@ -445,6 +445,21 @@ class JTestTest < Test::Unit::TestCase
     assert c.passed?, "something was not defined!"
   end
 
+  def test_should_allow_including_default_behaviour_in_all_contexts_via_a_block
+    JTest.add do
+      def something
+        'hij'
+      end
+    end
+    c = context "Given a context" do
+      should "be able to call a method from the globally shared behaviour" do
+        assert_equal 'hij', something
+      end
+    end
+    c.run
+    assert c.passed?, "something was not defined!"
+  end
+
   def test_should_run_setup_defined_on_jtest_itself
     JTest.setup do
       @thing = 'hello'
