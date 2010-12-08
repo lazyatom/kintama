@@ -1,4 +1,6 @@
 module JTest
+  class TestFailure < StandardError; end
+
   class Test
     attr_accessor :name, :failure
 
