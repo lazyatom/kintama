@@ -8,23 +8,37 @@ Huh? Really? Another one?
 
 ... Yeah, I know. To be honest, I'm not 100% sure why I'm doing this. Here are some guesses though:
 
-My testing tools of choice, at the moment, are [test/unit][] with [shoulda][] to provide nested contexts, but not really it's macros.
+My testing tools of choice, at the moment, are [Test::Unit][] with [shoulda][] to provide nested contexts, but not really it's macros.
 
-I'm not a huge fan of [test/unit][]. Whenever I've tried to extend its behaviour I've hit snags, and found its code difficult to understand (particularly as lots of it don't seem to be regularly used - I'm looking at you, [TkRunner][] and friends). I also don't really love [RSpec][], but I think that's just a personal preference (I learned with test/unit, and I didn't want to relearn all of the matcher stuff).
+I'm not a huge fan of [Test::Unit][]. Whenever I've tried to extend its behaviour I've hit snags, and found its code difficult to understand (particularly as lots of it don't seem to be regularly used - I'm looking at you, [TkRunner][] and friends). I also don't really love [RSpec][], but I think that's just a personal preference (I learned with test/unit, and I didn't want to relearn all of the matcher stuff).
 
 I like [shoulda][], because like [RSpec][], it lets me nest groups of tests in ways that help remove duplication in setups. However, [I don't have a lot of confidence that shoulda is going to stick around in its current, useful-for-stuff-that-isnt-RSpec form](http://robots.thoughtbot.com/post/701863189/shoulda-rails3-and-beyond).
 
-I like some of the more verbose output that [Cucumber][] and [RSpec][] produce, but as I mentioned above, I don't care for [RSpec][]'s matcher-heavy syntax. It's basically impossible to reproduce that output on anything that uses [test/unit][] as a base (see [MonkeySpecDoc][] for an example, which fails because it cannot support any more than one level of nesting)
+I like some of the more verbose output that [Cucumber][] and [RSpec][] produce, but as I mentioned above, I don't care for [RSpec][]'s matcher-heavy syntax. It's basically impossible to reproduce that output on anything that uses [Test::Unit][] as a base (see [MonkeySpecDoc][] for an example, which fails because it cannot support any more than one level of nesting)
 
-I also like things like [`before(:all)`][before_all], and [`fast_context`][fast_context], but don't like having to hack around inside [test/unit][] to implement them (I already have with [`test_startup`][test_startup]; it works but who knows for how long).
+I also like things like [`before(:all)`][before_all], and [`fast_context`][fast_context], but don't like having to hack around inside [Test::Unit][] to implement them (I already have with [`test_startup`][test_startup]; it works but who knows for how long).
 
 
 Related work
 ------------
 
+In the spirit of [shoulda][], a small library called [context][] adds the simple nested context structures to [Test::Unit][], but that's the problem - we can't build anything on top of [Test::Unit][].
+
+Ditto for [contest][].
+
 Probably the closest thing I've seen is [baretest][]. If you look around the code, some of the implementation details are quite similar to those that have evolved in this code (context-ish objects with parents). However, in many ways baretest is more complex, and the final API that it provides is quite foreign compared to [shoulda][].
 
+Another alternative test framework is [riot][], which claims to be fast, but also appears to constrain the way that tests are written by avoiding instance variables in setups, for example.
 
+[Testy][] is interesting - it looks like its output is YAML!. [Tryouts][] is thinking outside the box, using comment examples.
+
+[Zebra][] addresses the apparent duplication of the test name and the test body, but does it by introducing an [RSpec][]-esque method on every object. Wild. Also, it's an extension of [Test::Unit][], so that's strike two for me, personally.
+
+I have no idea what to make of [Shindo][].
+
+[Exemplor][]... oh my god why am I contributing to this mess.
+
+Erm.
 
 Exploring future testing
 ------------------------
@@ -213,7 +227,7 @@ Well... TO BE CONTINUED.
 
 
 
-[test/unit]: http://ruby-doc.org/stdlib/libdoc/test/unit/rdoc/
+[Test::Unit]: http://ruby-doc.org/stdlib/libdoc/test/unit/rdoc/
 [TkRunner]: http://ruby-doc.org/stdlib/libdoc/test/unit/rdoc/classes/Test/Unit/UI/Tk/TestRunner.html
 [RSpec]: http://rspec.info
 [Cucumber]: http://cukes.info
@@ -223,3 +237,11 @@ Well... TO BE CONTINUED.
 [test_startup]: https://github.com/freerange/test_startup
 [shoulda]: https://github.com/thoughtbot/shoulda
 [baretest]: https://github.com/apeiros/baretest
+[riot]: https://github.com/thumblemonks/riot
+[context]: https://github.com/jm/context
+[contest]: https://github.com/citrusbyte/contest
+[Testy]: https://github.com/ahoward/testy
+[Tryouts]: https://github.com/delano/tryouts
+[Zebra]: https://github.com/jamesgolick/zebra
+[Shindo]: https://github.com/geemus/shindo
+[Exemplor]: https://github.com/quackingduck/exemplor
