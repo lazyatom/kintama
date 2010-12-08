@@ -136,7 +136,7 @@ module JTest
     end
 
     def all_subcontexts
-      @subcontexts.values.uniq
+      @subcontexts.values.uniq.sort_by { |c| c.name }.reverse
     end
 
     def all_tests

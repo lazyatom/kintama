@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class AssertionsTest < Test::Unit::TestCase
+
   class PseudoTest
     include JTest::Assertions
   end

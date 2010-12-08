@@ -2,10 +2,7 @@ require 'test_helper'
 
 require 'stringio'
 
-class RunnerTest < Test::Unit::TestCase
-  def setup
-    JTest.reset
-  end
+class RunnerTest < JTest_TestUnit_TestCase
 
   def test_assert_output_works
     assert_output("yes\n") do
