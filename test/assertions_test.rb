@@ -19,6 +19,13 @@ class AssertionsTest < Test::Unit::TestCase
     assert_assertion_fails { @test.assert_not_nil nil }
   end
 
+  def test_should_provide_assert_kind_of
+    assert_assertion_passes { @test.assert_kind_of Fixnum, 1 }
+    assert_assertion_passes { @test.assert_kind_of Object, 1 }
+    assert_assertion_passes { @test.assert_kind_of String, "hello" }
+    assert_assertion_fails { @test.assert_kind_of String, 1 }
+  end
+
   private
 
   def assert_assertion_passes

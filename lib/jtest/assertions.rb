@@ -24,6 +24,10 @@ module JTest
       assert_not_equal nil, object, message
     end
 
+    def assert_kind_of(klass, thing, message="should be a kind of #{klass}")
+      assert thing.is_a?(klass)
+    end
+
     def assert_raises(message="should raise an exception", &block)
       yield
       raise JTest::TestFailure, message
