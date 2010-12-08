@@ -19,6 +19,13 @@ I like some of the more verbose output that [Cucumber][] and [RSpec][] produce, 
 I also like things like [`before(:all)`][before_all], and [`fast_context`][fast_context], but don't like having to hack around inside [test/unit][] to implement them (I already have with [`test_startup`][test_startup]; it works but who knows for how long).
 
 
+Related work
+------------
+
+Probably the closest thing I've seen is [baretest][]. If you look around the code, some of the implementation details are quite similar to those that have evolved in this code (context-ish objects with parents). However, in many ways baretest is more complex, and the final API that it provides is quite foreign compared to [shoulda][].
+
+
+
 Exploring future testing
 ------------------------
 
@@ -215,3 +222,4 @@ Well... TO BE CONTINUED.
 [fast_context]: https://github.com/lifo/fast_context
 [test_startup]: https://github.com/freerange/test_startup
 [shoulda]: https://github.com/thoughtbot/shoulda
+[baretest]: https://github.com/apeiros/baretest
