@@ -17,11 +17,11 @@ module JTest
         JTest.run_global_setups(environment)
         @context.run_setups(environment)
         environment.instance_eval(&@test_block)
+        @context.run_teardowns(environment)
+        JTest.run_global_teardowns(environment)
       rescue Exception => e
         @failure = e
       end
-      @context.run_teardowns(environment)
-      JTest.run_global_teardowns(environment)
       runner.test_finished(self) if runner
       passed?
     end

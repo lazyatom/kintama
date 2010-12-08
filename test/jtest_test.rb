@@ -213,6 +213,19 @@ class JTestTest < Test::Unit::TestCase
     assert $called
   end
 
+  def test_should_capture_exceptions_in_teardowns_as_failing_tests
+    x = context "Given a test with teardown that fails" do
+      teardown do
+        raise "aargh"
+      end
+      should "that would otherwise pass" do
+        assert true
+      end
+    end
+    x.run
+    assert !x.passed?
+  end
+
   def test_should_run_all_teardowns_in_proximity_of_nesting_order_after_a_nested_test_finishes
     $called = false
     x = context "Given a teardown" do
