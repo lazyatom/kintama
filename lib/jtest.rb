@@ -29,6 +29,10 @@ module JTest
       (@setup_blocks ||= [])
     end
 
+    def teardown_blocks
+      (@teardown_blocks ||= [])
+    end
+
     def add(mod=nil, &block)
       if mod.nil?
         mod = Module.new
@@ -43,6 +47,14 @@ module JTest
 
     def run_global_setups(environment)
       setup_blocks.each { |b| environment.instance_eval(&b) }
+    end
+
+    def teardown(&block)
+      teardown_blocks << block
+    end
+
+    def run_global_teardowns(environment)
+      teardown_blocks.reverse.each { |b| environment.instance_eval(&b) }
     end
 
     def run(*args)

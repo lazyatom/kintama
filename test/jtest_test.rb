@@ -497,6 +497,25 @@ class JTestTest < Test::Unit::TestCase
     assert c.passed?, "@thing was not defined!"
   end
 
+  def test_should_run_teardown_defined_on_jtest_itself_after_other_teardowns
+    ran = false
+    JTest.teardown do
+      ran = true
+      assert_equal 'blah', @thing
+    end
+    c = context "Given a context" do
+      should "have run the setup defined in the default behaviour" do
+        # nothing
+      end
+      teardown do
+        @thing = 'blah'
+      end
+    end
+    c.run
+    assert c.passed?, "@thing was not redefined!"
+    assert ran
+  end
+
   def test_should_be_able_to_compose_shoulds_into_methods
     $ran = false
     x = context "Given a context" do

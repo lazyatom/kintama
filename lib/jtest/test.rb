@@ -21,6 +21,7 @@ module JTest
         @failure = e
       end
       @context.run_teardowns(environment)
+      JTest.run_global_teardowns(environment)
       runner.test_finished(self) if runner
       passed?
     end
