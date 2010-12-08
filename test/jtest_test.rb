@@ -248,7 +248,7 @@ class JTestTest < Test::Unit::TestCase
     assert !x.passed?
   end
 
-  def test_should_allow_running_of_specific_subcontexts_using_hashblue_syntax
+  def test_should_allow_running_of_specific_subcontexts_using_hashlike_syntax
     x = context "Given something" do
       should "not be run" do
         flunk
