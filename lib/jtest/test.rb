@@ -13,9 +13,9 @@ module JTest
       runner.test_started(self) if runner
       environment = JTest::TestEnvironment.new(@context)
       @context.include_modules(environment)
-      JTest.run_global_setups(environment)
-      @context.run_setups(environment)
       begin
+        JTest.run_global_setups(environment)
+        @context.run_setups(environment)
         environment.instance_eval(&@test_block)
       rescue Exception => e
         @failure = e

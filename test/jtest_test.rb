@@ -102,6 +102,19 @@ class JTestTest < Test::Unit::TestCase
     assert x.passed?, x.failures
   end
 
+  def test_should_capture_exceptions_in_setups_as_failing_tests
+    x = context "Given a test with setup that fails" do
+      setup do
+        raise "aargh"
+      end
+      should "that would otherwise pass" do
+        assert true
+      end
+    end
+    x.run
+    assert !x.passed?
+  end
+
   def test_should_allow_nesting_of_contexts
     x = context "Given something" do
       context "and another thing" do
