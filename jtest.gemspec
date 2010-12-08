@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Adam"]
-  s.date = %q{2010-11-26}
+  s.date = %q{2010-12-02}
   s.email = %q{james@lazyatom.com}
   s.extra_rdoc_files = ["README.md"]
-  s.files = ["README.md", "test/assertions_test.rb", "test/jtest_test.rb", "test/runner_test.rb", "lib/jtest/assertions.rb", "lib/jtest/context.rb", "lib/jtest/run.rb", "lib/jtest/runner.rb", "lib/jtest/test.rb", "lib/jtest/test_environment.rb", "lib/jtest.rb"]
+  s.files = ["README.md", "test/assertions_test.rb", "test/jtest_test.rb", "test/runner_test.rb", "test/test_helper.rb", "lib/jtest", "lib/jtest/aliases.rb", "lib/jtest/assertions.rb", "lib/jtest/context.rb", "lib/jtest/runner.rb", "lib/jtest/test.rb", "lib/jtest/test_environment.rb", "lib/jtest.rb"]
   s.homepage = %q{http://github.com/lazyatom}
   s.rdoc_options = ["--main", "README.md"]
   s.require_paths = ["lib"]

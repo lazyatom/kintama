@@ -18,6 +18,18 @@ module JTest
     (@contexts ||= [])
   end
 
+  def self.modules
+    (@modules ||= [])
+  end
+
+  def self.add(mod=nil, &block)
+    if mod.nil?
+      mod = Module.new
+      mod.class_eval(&block)
+    end
+    modules << mod
+  end
+
   def self.run(*args)
     Runner.default.run(*args)
   end

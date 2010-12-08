@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class JTestTest < Test::Unit::TestCase
+
+  def setup
+    JTest.reset
+  end
+
   def test_should_pass_when_all_tests_pass
     x = context "Given something" do
       should "work" do
@@ -421,6 +426,23 @@ class JTestTest < Test::Unit::TestCase
     end
     c.run
     assert c.passed?, "Thing was not defined!"
+  end
+
+  module DefaultBehaviour
+    def something
+      'abc'
+    end
+  end
+
+  def test_should_allow_including_default_behaviour_in_all_contexts
+    JTest.add DefaultBehaviour
+    c = context "Given a context" do
+      should "be able to call a method from the globally shared behaviour" do
+        assert_equal 'abc', something
+      end
+    end
+    c.run
+    assert c.passed?, "something was not defined!"
   end
 
   def test_should_be_able_to_compose_shoulds_into_methods
