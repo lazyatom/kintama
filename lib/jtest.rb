@@ -8,61 +8,63 @@ module JTest
   autoload :Assertions, 'jtest/assertions'
   autoload :Aliases, 'jtest/aliases'
 
-  def self.reset
-    @contexts = []
-  end
-
   extend Aliases::Context
 
-  def self.contexts
-    (@contexts ||= [])
-  end
-
-  def self.modules
-    (@modules ||= [])
-  end
-
-  def self.setup_blocks
-    (@setup_blocks ||= [])
-  end
-
-  def self.add(mod=nil, &block)
-    if mod.nil?
-      mod = Module.new
-      mod.class_eval(&block)
+  class << self
+    def reset
+      @contexts = []
     end
-    modules << mod
-  end
 
-  def self.setup(&block)
-    setup_blocks << block
-  end
+    def contexts
+      (@contexts ||= [])
+    end
 
-  def self.run_global_setups(environment)
-    setup_blocks.each { |b| environment.instance_eval(&b) }
-  end
+    def modules
+      (@modules ||= [])
+    end
 
-  def self.run(*args)
-    Runner.default.run(*args)
-  end
+    def setup_blocks
+      (@setup_blocks ||= [])
+    end
 
-  def self.add_exit_hook
-    return if @__added_exit_hook
-    at_exit { exit(run(true) ? 0 : 1) }
-    @__added_exit_hook = true
-  end
+    def add(mod=nil, &block)
+      if mod.nil?
+        mod = Module.new
+        mod.class_eval(&block)
+      end
+      modules << mod
+    end
 
-  def self.test_file_was_run?
-    caller.last.split(":").first == $0
-  end
+    def setup(&block)
+      setup_blocks << block
+    end
 
-  def self.run_via_rake?
-    caller.find { |line| File.basename(line.split(":").first) == "rake_test_loader.rb" } != nil
-  end
+    def run_global_setups(environment)
+      setup_blocks.each { |b| environment.instance_eval(&b) }
+    end
 
-  def self.should_run_on_exit
-    return false if ENV["JTEST_EXPLICITLY_DONT_RUN"]
-    return test_file_was_run? || run_via_rake?
+    def run(*args)
+      Runner.default.run(*args)
+    end
+
+    def add_exit_hook
+      return if @__added_exit_hook
+      at_exit { exit(run(true) ? 0 : 1) }
+      @__added_exit_hook = true
+    end
+
+    def test_file_was_run?
+      caller.last.split(":").first == $0
+    end
+
+    def run_via_rake?
+      caller.find { |line| File.basename(line.split(":").first) == "rake_test_loader.rb" } != nil
+    end
+
+    def should_run_on_exit
+      return false if ENV["JTEST_EXPLICITLY_DONT_RUN"]
+      return test_file_was_run? || run_via_rake?
+    end
   end
 end
 
