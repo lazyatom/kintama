@@ -428,6 +428,26 @@ class JTestTest < Test::Unit::TestCase
     assert c.passed?, "Thing was not defined!"
   end
 
+  def test_should_be_able_to_access_helpers_from_tests_in_nested_contexts
+    c = context "Withing a nested context" do
+      context "Given I define an instance variable in my setup" do
+        setup do
+          @thing = 456
+        end
+        should "be able to call a method from the outer context helpers" do
+          assert_equal 456, get_thing
+        end
+      end
+      helpers do
+        def get_thing
+          @thing
+        end
+      end
+    end
+    c.run
+    assert c.passed?, "Thing was not defined!"
+  end
+
   module DefaultBehaviour
     def something
       'abc'

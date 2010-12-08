@@ -84,7 +84,15 @@ module JTest
     end
 
     def include_modules(environment)
-      (JTest.modules + @modules).each { |mod| environment.extend(mod) }
+      (JTest.modules + all_modules).each { |mod| environment.extend(mod) }
+    end
+
+    def all_modules
+      if @parent
+        (@parent.all_modules + @modules).flatten
+      else
+        @modules
+      end
     end
 
     def [](name)
