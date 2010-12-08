@@ -22,12 +22,24 @@ module JTest
     (@modules ||= [])
   end
 
+  def self.setup_blocks
+    (@setup_blocks ||= [])
+  end
+
   def self.add(mod=nil, &block)
     if mod.nil?
       mod = Module.new
       mod.class_eval(&block)
     end
     modules << mod
+  end
+
+  def self.setup(&block)
+    setup_blocks << block
+  end
+
+  def self.run_global_setups(environment)
+    setup_blocks.each { |b| environment.instance_eval(&b) }
   end
 
   def self.run(*args)
