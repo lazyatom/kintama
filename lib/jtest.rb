@@ -15,6 +15,7 @@ module JTest
       @contexts = []
       @modules = []
       @setup_blocks = []
+      @teardown_blocks = []
     end
 
     def contexts
