@@ -16,11 +16,9 @@ module Kintama
       environment = Kintama::TestEnvironment.new(@context)
       @context.include_modules(environment)
       begin
-        Kintama.run_global_setups(environment)
         @context.run_setups(environment)
         environment.instance_eval(&@test_block)
         @context.run_teardowns(environment)
-        Kintama.run_global_teardowns(environment)
       rescue Exception => e
         @failure = e
       end

@@ -40,7 +40,11 @@ module Kintama
     end
 
     def run_setups(environment)
-      @parent.run_setups(environment) if @parent
+      if @parent
+        @parent.run_setups(environment)
+      else
+        Kintama.run_global_setups(environment)
+      end
       environment.instance_eval(&@setup_block) if @setup_block
     end
 
@@ -50,7 +54,11 @@ module Kintama
 
     def run_teardowns(environment)
       environment.instance_eval(&@teardown_block) if @teardown_block
-      @parent.run_teardowns(environment) if @parent
+      if @parent
+        @parent.run_teardowns(environment)
+      else
+        Kintama.run_global_teardowns(environment)
+      end
     end
 
     def should(name, &block)
