@@ -62,7 +62,7 @@ module Kintama
     # line or from within an editor
     def add_exit_hook
       return if @__added_exit_hook
-      at_exit { exit(Runner.default.run(true) ? 0 : 1) }
+      at_exit { exit(Runner.default.run ? 0 : 1) }
       @__added_exit_hook = true
     end
 
