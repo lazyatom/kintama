@@ -54,7 +54,7 @@ module Kintama
 
     # Runs all of the known contexts and tests using the default Runner
     def run(*args)
-      Runner.default.run(*args)
+      default_context.run(*args)
     end
 
     # Adds the hook to automatically run all known tests using #run when
@@ -62,7 +62,7 @@ module Kintama
     # line or from within an editor
     def add_exit_hook
       return if @__added_exit_hook
-      at_exit { exit(run(true) ? 0 : 1) }
+      at_exit { exit(Runner.default.run(true) ? 0 : 1) }
       @__added_exit_hook = true
     end
 
