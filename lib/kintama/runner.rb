@@ -60,11 +60,21 @@ module Kintama
           "#{x}) #{test.full_name}:\n  #{test.failure_message}"
         end
       end
+
+      def character_status_of(test)
+        character = if test.pending?
+          'P'
+        elsif test.passed?
+          '.'
+        else
+          'F'
+        end
+      end
     end
 
     class Inline < Base
       def test_finished(test)
-        print(test.passed? ? "." : "F")
+        print character_status_of(test)
       end
 
       def show_results
@@ -108,7 +118,7 @@ module Kintama
             print red(test_name)
           end
         end
-        print(test.passed? ? "." : "F") unless @colour
+        print(character_status_of(test)) unless @colour
         puts
       end
 

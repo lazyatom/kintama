@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class VerboseRunnerTest < Kintama_TestUnit_TestCase
-  def test_should_print_out_test_names_if_verbose_is_set
+  def test_should_print_out_test_names
     c = context "given something" do
       should "also pass" do
         assert true
@@ -15,7 +15,19 @@ class VerboseRunnerTest < Kintama_TestUnit_TestCase
     end
   end
 
-  def test_should_nest_printed_context_and_test_names_if_verbose_is_set
+  def test_should_print_out_Ps_beside_pending_test_names
+    c = context "given something" do
+      should "not be implemented"
+      should "pass" do
+        assert true
+      end
+    end
+    assert_output(/^given something\n  should not be implemented: P\n  should pass: \./) do
+      runner(c).run(false)
+    end
+  end
+
+  def test_should_nest_printed_context_and_test_names
     c = context "given something" do
       should "pass" do
         assert true
@@ -81,7 +93,7 @@ class VerboseRunnerTest < Kintama_TestUnit_TestCase
     end
   end
 
-  def test_should_print_out_test_names_in_colour_if_verbose_is_set_and_colour_is_set
+  def test_should_print_out_test_names_in_colour_if_colour_is_set
     c = context "given something" do
       should "fail" do
         flunk

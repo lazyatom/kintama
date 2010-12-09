@@ -43,6 +43,19 @@ class InlineRunnerTest < Kintama_TestUnit_TestCase
     end
   end
 
+  def test_should_print_out_Ps_for_pending_tests
+    c = context "given something" do
+      should "not be implemented yet"
+      should "pass" do
+        assert true
+      end
+    end
+    r = runner(c)
+    assert_output(/^P\./) do
+      r.run
+    end
+  end
+
   private
 
   def runner(*args)
