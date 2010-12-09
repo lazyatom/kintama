@@ -26,17 +26,17 @@ module Kintama
     #     def blah
     #     end
     #   end
-    #   Kintama.add SomeModule
+    #   Kintama.include SomeModule
     #
     # or a block:
     #
-    #   Kintama.add do
+    #   Kintama.include do
     #     def blah
     #     end
     #   end
     #
     # Any methods will then be available within setup, teardown or tests.
-    def add(mod=nil, &block)
+    def include(mod=nil, &block)
       default_context.include(mod, &block)
     end
 

@@ -129,7 +129,7 @@ class MethodBehaviourTest < Kintama_TestUnit_TestCase
   end
 
   def test_should_allow_including_default_behaviour_in_all_contexts
-    Kintama.add DefaultBehaviour
+    Kintama.include DefaultBehaviour
     c = context "Given a context" do
       should "be able to call a method from the globally shared behaviour" do
         assert_equal 'abc', something
@@ -140,7 +140,7 @@ class MethodBehaviourTest < Kintama_TestUnit_TestCase
   end
 
   def test_should_allow_including_default_behaviour_in_all_contexts_via_a_block
-    Kintama.add do
+    Kintama.include do
       def something
         'hij'
       end
