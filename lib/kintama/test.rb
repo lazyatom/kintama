@@ -14,15 +14,21 @@ module Kintama
       @failure = nil
       runner.test_started(self) if runner
       environment = Kintama::TestEnvironment.new(@context)
-      begin
-        @context.run_setups(environment)
-        environment.instance_eval(&@test_block)
-        @context.run_teardowns(environment)
-      rescue Exception => e
-        @failure = e
+      unless pending?
+        begin
+          @context.run_setups(environment)
+          environment.instance_eval(&@test_block)
+          @context.run_teardowns(environment)
+        rescue Exception => e
+          @failure = e
+        end
       end
       runner.test_finished(self) if runner
       passed?
+    end
+
+    def pending?
+      @test_block.nil?
     end
 
     def passed?
