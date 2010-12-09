@@ -2,7 +2,7 @@ module Kintama
   class Runner
 
     def self.default
-      new(Kintama.default_context)
+      new(*Kintama.default_context.subcontexts)
     end
 
     INDENT = "  "
