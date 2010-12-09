@@ -14,7 +14,6 @@ module Kintama
       @failure = nil
       runner.test_started(self) if runner
       environment = Kintama::TestEnvironment.new(@context)
-      @context.include_modules(environment)
       begin
         @context.run_setups(environment)
         environment.instance_eval(&@test_block)
@@ -31,7 +30,7 @@ module Kintama
     end
 
     def full_name
-      @context.full_name + " " + @name
+      [@context.full_name, @name].compact.join(" ")
     end
 
     def failure_message

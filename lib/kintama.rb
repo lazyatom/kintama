@@ -13,26 +13,11 @@ module Kintama
     # Resets the global state of the test system, removing all contexts, setups,
     # teardowns and included modules
     def reset
-      @contexts = []
-      @modules = []
-      @setup_blocks = []
-      @teardown_blocks = []
+      @default_context = Context.new(nil) {}
     end
 
-    def contexts
-      (@contexts ||= [])
-    end
-
-    def modules
-      (@modules ||= [])
-    end
-
-    def setup_blocks
-      (@setup_blocks ||= [])
-    end
-
-    def teardown_blocks
-      (@teardown_blocks ||= [])
+    def default_context
+      @default_context ||= Context.new(nil) {}
     end
 
     # Makes behaviour available within tests. You can either pass a module:
@@ -52,31 +37,19 @@ module Kintama
     #
     # Any methods will then be available within setup, teardown or tests.
     def add(mod=nil, &block)
-      if mod.nil?
-        mod = Module.new
-        mod.class_eval(&block)
-      end
-      modules << mod
+      default_context.include(mod, &block)
     end
 
     # Add a setup which will run at the start of every test. Multiple global
     # setup blocks can be added, and will be run in order of adding.
     def setup(&block)
-      setup_blocks << block
-    end
-
-    def run_global_setups(environment)
-      setup_blocks.each { |b| environment.instance_eval(&b) }
+      default_context.setup(&block)
     end
 
     # Add a teardown which will be run at the end of every test. Multiple global
     # teardown blocks can be added, and will be run in reverse order of adding.
     def teardown(&block)
-      teardown_blocks << block
-    end
-
-    def run_global_teardowns(environment)
-      teardown_blocks.reverse.each { |b| environment.instance_eval(&b) }
+      default_context.teardown(&block)
     end
 
     # Runs all of the known contexts and tests using the default Runner
@@ -119,7 +92,7 @@ end
 
 Kintama::Aliases::Context.instance_methods.each do |method|
   unless self.respond_to?(method)
-    eval %|def #{method}(name, &block); Kintama.#{method}(name, nil, &block); end|
+    eval %|def #{method}(name, &block); Kintama.#{method}(name, Kintama.default_context, &block); end|
   end
 end
 

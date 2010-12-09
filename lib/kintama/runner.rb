@@ -2,7 +2,7 @@ module Kintama
   class Runner
 
     def self.default
-      new(*Kintama.contexts)
+      new(Kintama.default_context)
     end
 
     INDENT = "  "
@@ -35,7 +35,7 @@ module Kintama
 
     def context_started(context)
       @current_indent += 1
-      print indent + context.name + "\n" if @verbose
+      print indent + context.name + "\n" if @verbose && context.name
     end
 
     def context_finished(context)

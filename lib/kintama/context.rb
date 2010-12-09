@@ -9,23 +9,23 @@ module Kintama
       @subcontexts = {}
       @tests = {}
       @parent = parent
-      if @parent
-        @parent.add_subcontext(self)
-      else
-        Kintama.contexts << self
-      end
+      @parent.add_subcontext(self) if @parent
       @modules = []
       instance_eval(&block)
     end
 
     def full_name
-      [@parent ? @parent.full_name : nil, @name].compact.join(" ")
+      if @name
+        [@parent ? @parent.full_name : nil, @name].compact.join(" ")
+      else
+        nil
+      end
     end
 
     def run(runner=nil)
       runner.context_started(self) if runner
       all_tests.each { |t| t.run(runner) }
-      all_subcontexts.each { |s| s.run(runner) }
+      subcontexts.each { |s| s.run(runner) }
       runner.context_finished(self) if runner
       passed?
     end
@@ -40,11 +40,8 @@ module Kintama
     end
 
     def run_setups(environment)
-      if @parent
-        @parent.run_setups(environment)
-      else
-        Kintama.run_global_setups(environment)
-      end
+      @parent.run_setups(environment) if @parent
+      include_modules(environment)
       environment.instance_eval(&@setup_block) if @setup_block
     end
 
@@ -54,11 +51,7 @@ module Kintama
 
     def run_teardowns(environment)
       environment.instance_eval(&@teardown_block) if @teardown_block
-      if @parent
-        @parent.run_teardowns(environment)
-      else
-        Kintama.run_global_teardowns(environment)
-      end
+      @parent.run_teardowns(environment) if @parent
     end
 
     def should(name, &block)
@@ -78,10 +71,14 @@ module Kintama
     end
 
     def failures
-      all_tests.select { |t| !t.passed? } + all_subcontexts.map { |s| s.failures }.flatten
+      all_tests.select { |t| !t.passed? } + subcontexts.map { |s| s.failures }.flatten
     end
 
-    def include(mod)
+    def include(mod=nil, &block)
+      if mod.nil?
+        mod = Module.new
+        mod.class_eval(&block)
+      end
       @modules << mod
     end
 
@@ -92,15 +89,7 @@ module Kintama
     end
 
     def include_modules(environment)
-      (Kintama.modules + all_modules).each { |mod| environment.extend(mod) }
-    end
-
-    def all_modules
-      if @parent
-        (@parent.all_modules + @modules).flatten
-      else
-        @modules
-      end
+      @modules.each { |mod| environment.extend(mod) }
     end
 
     def [](name)
@@ -112,23 +101,34 @@ module Kintama
         @subcontexts[name]
       elsif @tests[name]
         @tests[name]
-      elsif @parent
-        @parent.send(name, *args, &block)
       else
-        super
+        begin
+          super
+        rescue NoMethodError => e
+          if @parent
+            @parent.send(name, *args, &block)
+          else
+            raise e
+          end
+        end
       end
     end
 
     def respond_to?(name)
       @subcontexts[name] != nil || 
       @tests[name] != nil || 
-      (@parent ? @parent.respond_to?(name) : super)
+      super ||
+      (@parent ? @parent.respond_to?(name) : false)
     end
 
     def inspect
       test_names = all_tests.map { |t| t.name }
-      context_names = all_subcontexts.map { |c| c.name }
+      context_names = subcontexts.map { |c| c.name }
       "<Context:#{@name.inspect} @tests=#{test_names.inspect} @subcontexts=#{context_names.inspect}>"
+    end
+
+    def subcontexts
+      @subcontexts.values.uniq.sort_by { |c| c.name }
     end
 
     private
@@ -141,10 +141,6 @@ module Kintama
 
     def methodize(name)
       name.gsub(" ", "_").to_sym
-    end
-
-    def all_subcontexts
-      @subcontexts.values.uniq.sort_by { |c| c.name }.reverse
     end
 
     def all_tests

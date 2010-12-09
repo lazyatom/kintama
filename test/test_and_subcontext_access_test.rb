@@ -3,7 +3,6 @@ require 'test_helper'
 class TestAndSubcontextAccessTest < Kintama_TestUnit_TestCase
 
   def test_should_stash_all_defined_contexts_so_they_can_be_accessed_later
-    Kintama.reset
     c1 = context "Given some context" do
       should "stash this" do
       end
@@ -12,7 +11,7 @@ class TestAndSubcontextAccessTest < Kintama_TestUnit_TestCase
       should "also stash this" do
       end
     end
-    assert_equal [c1, c2], Kintama.contexts
+    assert_equal [c1, c2], Kintama.default_context.subcontexts
   end
 
   def test_should_allow_running_of_specific_subcontexts
