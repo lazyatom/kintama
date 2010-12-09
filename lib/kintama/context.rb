@@ -36,11 +36,6 @@ module Kintama
       @modules << mod
     end
 
-    # An alias for include - I'll probably remove this.
-    def helpers(&block)
-      self.include(nil, &block)
-    end
-
     # Define a test to run in this context. The test name will start with "should "
     def should(name, &block)
       add_test("should " + name, &block)

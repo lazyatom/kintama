@@ -84,7 +84,7 @@ class MethodBehaviourTest < Kintama_TestUnit_TestCase
     assert c.passed?, "Thing was not defined!"
   end
 
-  def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup_when_defined_in_helper_blocks
+  def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup_when_defined_in_include_blocks
     c = context "Given I define an instance variable in my setup" do
       setup do
         @thing = 456
@@ -92,7 +92,7 @@ class MethodBehaviourTest < Kintama_TestUnit_TestCase
       should "be able to call a method that refers to that variable in a test" do
         assert_equal 456, get_thing
       end
-      helpers do
+      include do
         def get_thing
           @thing
         end
@@ -112,7 +112,7 @@ class MethodBehaviourTest < Kintama_TestUnit_TestCase
           assert_equal 456, get_thing
         end
       end
-      helpers do
+      include do
         def get_thing
           @thing
         end
