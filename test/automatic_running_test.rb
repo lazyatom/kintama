@@ -28,10 +28,10 @@ class AutomaticRunningTest < Kintama_TestUnit_TestCase
   end
 
   def run_test(path)
-    prev = ENV["JTEST_EXPLICITLY_DONT_RUN"]
-    ENV["JTEST_EXPLICITLY_DONT_RUN"] = nil
+    prev = ENV["KINTAMA_EXPLICITLY_DONT_RUN"]
+    ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = nil
     output = `ruby #{path}`
-    ENV["JTEST_EXPLICITLY_DONT_RUN"] = prev
+    ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = prev
     $?
   end
 

@@ -99,9 +99,9 @@ module Kintama
     # - the test file was run as the top-level ruby script
     #
     # This method will always return false if the environment variable
-    # JTEST_EXPLICITLY_DONT_RUN is not nil.
+    # KINTAMA_EXPLICITLY_DONT_RUN is not nil.
     def should_run_on_exit?
-      return false if ENV["JTEST_EXPLICITLY_DONT_RUN"]
+      return false if ENV["KINTAMA_EXPLICITLY_DONT_RUN"]
       return test_file_was_run? || run_via_rake?
     end
 
