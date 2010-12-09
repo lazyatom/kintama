@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AutomaticRunningTest < Testicle_TestUnit_TestCase
+class AutomaticRunningTest < Kintama_TestUnit_TestCase
 
   def test_should_be_able_to_run_tests_automatically_when_file_is_loaded
     assert_passes write_test %{
@@ -20,11 +20,11 @@ class AutomaticRunningTest < Testicle_TestUnit_TestCase
   private
 
   def write_test(string)
-    f = File.open("/tmp/testicle_tmp_test.rb", "w") do |f|
-      f.puts %|$LOAD_PATH.unshift "#{File.expand_path("../../lib", __FILE__)}"; require "testicle"|
+    f = File.open("/tmp/kintama_tmp_test.rb", "w") do |f|
+      f.puts %|$LOAD_PATH.unshift "#{File.expand_path("../../lib", __FILE__)}"; require "kintama"|
       f.puts string
     end
-    "/tmp/testicle_tmp_test.rb"
+    "/tmp/kintama_tmp_test.rb"
   end
 
   def run_test(path)

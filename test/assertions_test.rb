@@ -3,7 +3,7 @@ require 'test_helper'
 class AssertionsTest < Test::Unit::TestCase
 
   class PseudoTest
-    include Testicle::Assertions
+    include Kintama::Assertions
   end
 
   def setup
@@ -36,7 +36,7 @@ class AssertionsTest < Test::Unit::TestCase
   def assert_assertion_fails
     yield
     raise "assertion did not fail!"
-  rescue Testicle::TestFailure
+  rescue Kintama::TestFailure
     # nothing
   end
 end

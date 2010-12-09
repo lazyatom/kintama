@@ -55,7 +55,7 @@ Examples
 
 These will all be very familiar to most people who are already users of [shoulda][]:
 
-    require 'testicle'
+    require 'kintama'
 
     context "A thing" do
       setup do
@@ -135,7 +135,7 @@ These work as you'd expect based on shoulda or RSpec:
 
 You can also add (several) global `setup` and `teardown` blocks, which will be run before (or after) every test. For example:
 
-    Testicle.setup do
+    Kintama.setup do
       @app = ThingApp.new
     end
 
@@ -180,11 +180,11 @@ Ideally I would've liked to make this syntatically similar to defining a private
 
 Or, if you're going to use the method in all your tests, you can add the module globally:
 
-    Testicle.add FaceHelper
+    Kintama.add FaceHelper
 
 or just define the method globally:
 
-    Testicle.add do
+    Kintama.add do
       def create_face
         # etc ...
       end

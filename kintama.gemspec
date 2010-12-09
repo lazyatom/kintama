@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{testicle}
+  s.name = %q{kintama}
   s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Adam"]
-  s.date = %q{2010-12-08}
+  s.date = %q{2010-12-09}
   s.email = %q{james@lazyatom.com}
   s.extra_rdoc_files = ["README.md"]
-  s.files = ["README.md", "test/aliases_test.rb", "test/assertions_test.rb", "test/automatic_running_test.rb", "test/exceptions_test.rb", "test/method_behaviour_test.rb", "test/runner_test.rb", "test/setup_test.rb", "test/teardown_test.rb", "test/test_and_subcontext_access_test.rb", "test/test_helper.rb", "test/testicle_test.rb", "lib/testicle/aliases.rb", "lib/testicle/assertions.rb", "lib/testicle/context.rb", "lib/testicle/runner.rb", "lib/testicle/test.rb", "lib/testicle/test_environment.rb", "lib/testicle.rb"]
+  s.files = ["README.md", "test/aliases_test.rb", "test/assertions_test.rb", "test/automatic_running_test.rb", "test/exceptions_test.rb", "test/kintama_test.rb", "test/method_behaviour_test.rb", "test/runner_test.rb", "test/setup_test.rb", "test/teardown_test.rb", "test/test_and_subcontext_access_test.rb", "test/test_helper.rb", "lib/kintama/aliases.rb", "lib/kintama/assertions.rb", "lib/kintama/context.rb", "lib/kintama/runner.rb", "lib/kintama/test.rb", "lib/kintama/test_environment.rb", "lib/kintama.rb"]
   s.homepage = %q{http://github.com/lazyatom}
   s.rdoc_options = ["--main", "README.md"]
   s.require_paths = ["lib"]

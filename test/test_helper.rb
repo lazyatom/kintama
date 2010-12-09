@@ -2,11 +2,11 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require 'test/unit'
 
 ENV["JTEST_EXPLICITLY_DONT_RUN"] = "true"
-require 'testicle'
+require 'kintama'
 
-class Testicle_TestUnit_TestCase < Test::Unit::TestCase
+class Kintama_TestUnit_TestCase < Test::Unit::TestCase
   def setup
-    Testicle.reset
+    Kintama.reset
   end
 
   def test_an_empty_test_so_that_test_unit_doesnt_complain

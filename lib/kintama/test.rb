@@ -1,4 +1,4 @@
-module Testicle
+module Kintama
   class TestFailure < StandardError; end
 
   class Test
@@ -13,14 +13,14 @@ module Testicle
     def run(runner=nil)
       @failure = nil
       runner.test_started(self) if runner
-      environment = Testicle::TestEnvironment.new(@context)
+      environment = Kintama::TestEnvironment.new(@context)
       @context.include_modules(environment)
       begin
-        Testicle.run_global_setups(environment)
+        Kintama.run_global_setups(environment)
         @context.run_setups(environment)
         environment.instance_eval(&@test_block)
         @context.run_teardowns(environment)
-        Testicle.run_global_teardowns(environment)
+        Kintama.run_global_teardowns(environment)
       rescue Exception => e
         @failure = e
       end

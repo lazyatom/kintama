@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ExceptionsTest < Testicle_TestUnit_TestCase
+class ExceptionsTest < Kintama_TestUnit_TestCase
 
   def test_should_capture_exceptions_in_tests_as_failing_tests
     x = context "Given a test" do

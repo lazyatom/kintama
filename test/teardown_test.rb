@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TeardownTest < Testicle_TestUnit_TestCase
+class TeardownTest < Kintama_TestUnit_TestCase
 
   def test_should_run_teardown_after_the_test_finishes
     $called = false
@@ -40,9 +40,9 @@ class TeardownTest < Testicle_TestUnit_TestCase
     assert $called
   end
 
-  def test_should_run_teardown_defined_on_testicle_itself_after_other_teardowns
+  def test_should_run_teardown_defined_on_kintama_itself_after_other_teardowns
     ran = false
-    Testicle.teardown do
+    Kintama.teardown do
       ran = true
       assert_equal 'blah', @thing
     end

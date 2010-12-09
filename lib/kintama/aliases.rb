@@ -1,8 +1,8 @@
-module Testicle
+module Kintama
   module Aliases
     module Context
       def context(name, parent=self, &block)
-        Testicle::Context.new(name, parent, &block)
+        Kintama::Context.new(name, parent, &block)
       end
 
       def given(name, parent=self, &block)

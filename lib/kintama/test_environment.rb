@@ -1,4 +1,4 @@
-module Testicle
+module Kintama
   class TestEnvironment
     include Assertions
 

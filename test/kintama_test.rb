@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TesticleTest < Testicle_TestUnit_TestCase
+class KintamaTest < Kintama_TestUnit_TestCase
 
   def test_should_pass_when_all_tests_pass
     x = context "Given something" do

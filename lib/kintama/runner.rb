@@ -1,8 +1,8 @@
-module Testicle
+module Kintama
   class Runner
 
     def self.default
-      new(*Testicle.contexts)
+      new(*Kintama.contexts)
     end
 
     INDENT = "  "

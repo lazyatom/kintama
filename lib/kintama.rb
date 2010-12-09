@@ -1,11 +1,11 @@
-module Testicle
-  autoload :Context, 'testicle/context'
-  autoload :Test, 'testicle/test'
-  autoload :TestFailure, 'testicle/test'
-  autoload :TestEnvironment, 'testicle/test_environment'
-  autoload :Runner, 'testicle/runner'
-  autoload :Assertions, 'testicle/assertions'
-  autoload :Aliases, 'testicle/aliases'
+module Kintama
+  autoload :Context, 'kintama/context'
+  autoload :Test, 'kintama/test'
+  autoload :TestFailure, 'kintama/test'
+  autoload :TestEnvironment, 'kintama/test_environment'
+  autoload :Runner, 'kintama/runner'
+  autoload :Assertions, 'kintama/assertions'
+  autoload :Aliases, 'kintama/aliases'
 
   extend Aliases::Context
 
@@ -41,11 +41,11 @@ module Testicle
     #     def blah
     #     end
     #   end
-    #   Testicle.add SomeModule
+    #   Kintama.add SomeModule
     #
     # or a block:
     #
-    #   Testicle.add do
+    #   Kintama.add do
     #     def blah
     #     end
     #   end
@@ -117,10 +117,10 @@ module Testicle
   end
 end
 
-Testicle::Aliases::Context.instance_methods.each do |method|
+Kintama::Aliases::Context.instance_methods.each do |method|
   unless self.respond_to?(method)
-    eval %|def #{method}(name, &block); Testicle.#{method}(name, nil, &block); end|
+    eval %|def #{method}(name, &block); Kintama.#{method}(name, nil, &block); end|
   end
 end
 
-Testicle.add_exit_hook if Testicle.should_run_on_exit?
+Kintama.add_exit_hook if Kintama.should_run_on_exit?

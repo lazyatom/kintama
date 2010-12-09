@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MethodBehaviourTest < Testicle_TestUnit_TestCase
+class MethodBehaviourTest < Kintama_TestUnit_TestCase
 
   def test_should_allow_methods_defined_in_the_context_to_be_called_in_tests
     x = context "Given I ran a method" do
@@ -129,7 +129,7 @@ class MethodBehaviourTest < Testicle_TestUnit_TestCase
   end
 
   def test_should_allow_including_default_behaviour_in_all_contexts
-    Testicle.add DefaultBehaviour
+    Kintama.add DefaultBehaviour
     c = context "Given a context" do
       should "be able to call a method from the globally shared behaviour" do
         assert_equal 'abc', something
@@ -140,7 +140,7 @@ class MethodBehaviourTest < Testicle_TestUnit_TestCase
   end
 
   def test_should_allow_including_default_behaviour_in_all_contexts_via_a_block
-    Testicle.add do
+    Kintama.add do
       def something
         'hij'
       end

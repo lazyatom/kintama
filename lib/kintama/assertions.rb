@@ -1,7 +1,7 @@
-module Testicle
+module Kintama
   module Assertions
     def assert(expression, message="failed")
-      raise Testicle::TestFailure, message unless expression
+      raise Kintama::TestFailure, message unless expression
     end
 
     def flunk
@@ -30,7 +30,7 @@ module Testicle
 
     def assert_raises(message="should raise an exception", &block)
       yield
-      raise Testicle::TestFailure, message
+      raise Kintama::TestFailure, message
     rescue
       # do nothing, we expected this, but now no TestFailure was raised.
     end

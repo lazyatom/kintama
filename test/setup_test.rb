@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SetupTest < Testicle_TestUnit_TestCase
+class SetupTest < Kintama_TestUnit_TestCase
 
   def test_should_allow_setup_to_provide_instance_variables
     x = context "Given something" do
@@ -72,8 +72,8 @@ class SetupTest < Testicle_TestUnit_TestCase
     assert x.passed?
   end
 
-  def test_should_run_setup_defined_on_testicle_itself_before_other_setups
-    Testicle.setup do
+  def test_should_run_setup_defined_on_kintama_itself_before_other_setups
+    Kintama.setup do
       @thing = 'well then'
     end
     c = context "Given a context" do

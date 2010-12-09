@@ -1,4 +1,4 @@
-module Testicle
+module Kintama
   class Context
     include Aliases::Context
 
@@ -12,7 +12,7 @@ module Testicle
       if @parent
         @parent.add_subcontext(self)
       else
-        Testicle.contexts << self
+        Kintama.contexts << self
       end
       @modules = []
       instance_eval(&block)
@@ -84,7 +84,7 @@ module Testicle
     end
 
     def include_modules(environment)
-      (Testicle.modules + all_modules).each { |mod| environment.extend(mod) }
+      (Kintama.modules + all_modules).each { |mod| environment.extend(mod) }
     end
 
     def all_modules
