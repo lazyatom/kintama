@@ -33,6 +33,18 @@ class BaseRunnerTest < Kintama_TestUnit_TestCase
     assert_equal "2 tests, 0 failures", r.test_summary
   end
 
+  def test_should_print_out_summary_when_a_pending_test_exists
+    c = context "given something" do
+      should "pass" do
+        assert true
+      end
+      should "not be implemented yet"
+    end
+    r = runner(c)
+    capture_stdout { r.run }
+    assert_equal "2 tests, 0 failures, 1 pending", r.test_summary
+  end
+
   def test_should_print_out_failure_details_if_tests_fail
     c = context "given something" do
       should "fail" do

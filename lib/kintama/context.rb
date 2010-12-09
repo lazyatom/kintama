@@ -81,6 +81,10 @@ module Kintama
       tests.select { |t| !t.passed? } + subcontexts.map { |s| s.failures }.flatten
     end
 
+    def pending
+      tests.select { |t| t.pending? } + subcontexts.map { |s| s.pending }.flatten
+    end
+
     def [](name)
       @subcontexts[name] || @tests[name]
     end

@@ -37,8 +37,14 @@ module Kintama
         @contexts.map { |c| c.failures }.flatten
       end
 
+      def pending
+        @contexts.map { |c| c.pending }.flatten
+      end
+
       def test_summary
-        "#{@test_count} tests, #{failures.length} failures"
+        output = ["#{@test_count} tests", "#{failures.length} failures"]
+        output += ["#{pending.length} pending"] if pending.any?
+        output.join(", ")
       end
 
       def show_results
