@@ -24,7 +24,7 @@ module Kintama
 
     def run(runner=nil)
       runner.context_started(self) if runner
-      all_tests.each { |t| t.run(runner) }
+      tests.each { |t| t.run(runner) }
       subcontexts.each { |s| s.run(runner) }
       runner.context_finished(self) if runner
       passed?
@@ -71,7 +71,7 @@ module Kintama
     end
 
     def failures
-      all_tests.select { |t| !t.passed? } + subcontexts.map { |s| s.failures }.flatten
+      tests.select { |t| !t.passed? } + subcontexts.map { |s| s.failures }.flatten
     end
 
     def include(mod=nil, &block)
@@ -122,13 +122,17 @@ module Kintama
     end
 
     def inspect
-      test_names = all_tests.map { |t| t.name }
+      test_names = tests.map { |t| t.name }
       context_names = subcontexts.map { |c| c.name }
       "<Context:#{@name.inspect} @tests=#{test_names.inspect} @subcontexts=#{context_names.inspect}>"
     end
 
     def subcontexts
       @subcontexts.values.uniq.sort_by { |c| c.name }
+    end
+
+    def tests
+      @tests.values.uniq.sort_by { |t| t.name }
     end
 
     private
@@ -141,10 +145,6 @@ module Kintama
 
     def methodize(name)
       name.gsub(" ", "_").to_sym
-    end
-
-    def all_tests
-      @tests.values.uniq.sort_by { |t| t.name }
     end
   end
 end
