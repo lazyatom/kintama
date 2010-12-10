@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InlineRunnerTest < Kintama_TestUnit_TestCase
+class InlineRunnerTest < Test::Unit::TestCase
   def test_should_print_out_dots_when_a_test_passes
     c = context "given something" do
       should "pass" do

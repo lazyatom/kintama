@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TeardownTest < Kintama_TestUnit_TestCase
+class TeardownTest < Test::Unit::TestCase
 
   def test_should_run_teardown_after_the_test_finishes
     $called = false

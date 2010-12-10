@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SetupTest < Kintama_TestUnit_TestCase
+class SetupTest < Test::Unit::TestCase
 
   def test_should_allow_setup_to_provide_instance_variables
     x = context "Given something" do
@@ -30,7 +30,7 @@ class SetupTest < Kintama_TestUnit_TestCase
       end
     end
     x.run
-    assert x.passed?, x.failures
+    assert x.passed?, x.failures.join(", ")
   end
 
   def test_should_allow_call_all_setup_methods_when_running_tests_in_a_nested_context

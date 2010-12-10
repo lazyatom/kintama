@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestAndSubcontextAccessTest < Kintama_TestUnit_TestCase
+class TestAndSubcontextAccessTest < Test::Unit::TestCase
 
   def test_should_stash_all_defined_contexts_so_they_can_be_accessed_later
     c1 = context "Given some context" do

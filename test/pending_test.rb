@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PendingTest < Kintama_TestUnit_TestCase
+class PendingTest < Test::Unit::TestCase
   
   def test_should_pass_any_pending_tests
     c = context "Given a context" do

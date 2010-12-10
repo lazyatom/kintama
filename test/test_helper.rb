@@ -6,13 +6,9 @@ require 'kintama'
 
 require 'stringio'
 
-class Kintama_TestUnit_TestCase < Test::Unit::TestCase
+class Test::Unit::TestCase
   def setup
     Kintama.reset
-  end
-
-  def test_an_empty_test_so_that_test_unit_doesnt_complain
-    # stupid no-op test
   end
 
   private

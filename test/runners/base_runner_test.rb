@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BaseRunnerTest < Kintama_TestUnit_TestCase
+class BaseRunnerTest < Test::Unit::TestCase
 
   def test_assert_output_works
     assert_output("yes\n") do

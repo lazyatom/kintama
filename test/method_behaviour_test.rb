@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MethodBehaviourTest < Kintama_TestUnit_TestCase
+class MethodBehaviourTest < Test::Unit::TestCase
 
   def test_should_allow_methods_defined_in_the_context_to_be_called_in_tests
     x = context "Given I ran a method" do

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AliasesTest < Kintama_TestUnit_TestCase
+class AliasesTest < Test::Unit::TestCase
 
   def test_should_provide_given_and_it_aliases_for_context_and_should
     x = context "In a world without hope" do

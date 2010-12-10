@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class VerboseRunnerTest < Kintama_TestUnit_TestCase
+class VerboseRunnerTest < Test::Unit::TestCase
   def test_should_print_out_test_names
     c = context "given something" do
       should "also pass" do
