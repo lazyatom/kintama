@@ -16,7 +16,7 @@ class BaseRunnerTest < Kintama_TestUnit_TestCase
     end
     r = runner(c)
     capture_stdout { r.run }
-    assert_equal "1 tests, 0 failures", r.test_summary
+    assert_match /^1 tests, 0 failures/, r.test_summary
   end
 
   def test_should_print_out_summary_when_multiple_tests_pass
@@ -30,7 +30,7 @@ class BaseRunnerTest < Kintama_TestUnit_TestCase
     end
     r = runner(c)
     capture_stdout { r.run }
-    assert_equal "2 tests, 0 failures", r.test_summary
+    assert_match /^2 tests, 0 failures/, r.test_summary
   end
 
   def test_should_print_out_summary_when_a_pending_test_exists
@@ -42,7 +42,7 @@ class BaseRunnerTest < Kintama_TestUnit_TestCase
     end
     r = runner(c)
     capture_stdout { r.run }
-    assert_equal "2 tests, 0 failures, 1 pending", r.test_summary
+    assert_match /^2 tests, 0 failures, 1 pending/, r.test_summary
   end
 
   def test_should_print_out_failure_details_if_tests_fail
@@ -59,6 +59,17 @@ class BaseRunnerTest < Kintama_TestUnit_TestCase
     assert_match /^1\) given something should fail:\n  flunked\./, r.failure_messages[0]
   end
 
+  def test_should_print_out_the_test_duration
+    c = context "given something" do
+      should "pass" do
+        assert true
+      end
+    end
+    r = runner(c)
+    capture_stdout { r.run }
+    assert_match /^1 tests, 0 failures \(0\.\d+ seconds\)/, r.test_summary
+  end
+
   def test_should_be_able_to_run_tests_from_several_contexts
     c1 = context "given something" do
       should "pass" do
@@ -72,7 +83,7 @@ class BaseRunnerTest < Kintama_TestUnit_TestCase
     end
     r = runner(c1, c2)
     capture_stdout { r.run }
-    assert_equal "2 tests, 0 failures", r.test_summary
+    assert_match /^2 tests, 0 failures/, r.test_summary
   end
 
   def test_should_return_true_if_all_tests_pass

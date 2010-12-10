@@ -13,11 +13,13 @@ module Kintama
       def run(colour=$stdin.tty?)
         @colour = colour
         @test_count = 0
+        start = Time.now
         @contexts.each do |c|
           @current_indent = -1
           c.run(self)
           puts if c != @contexts.last
         end
+        @duration = Time.now - start
         show_results
         passed?
       end
@@ -43,8 +45,8 @@ module Kintama
 
       def test_summary
         output = ["#{@test_count} tests", "#{failures.length} failures"]
-        output += ["#{pending.length} pending"] if pending.any?
-        output.join(", ")
+        output << "#{pending.length} pending" if pending.any?
+        output.join(", ") + " (#{format("%.4f", @duration)} seconds)"
       end
 
       def show_results
