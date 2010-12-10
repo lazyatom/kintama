@@ -95,14 +95,15 @@ class VerboseRunnerTest < Kintama_TestUnit_TestCase
 
   def test_should_print_out_test_names_in_colour_if_colour_is_set
     c = context "given something" do
-      should "fail" do
+      should "be red" do
         flunk
       end
-      should "pass" do
+      should "be green" do
         assert true
       end
+      should "be yellow"
     end
-    assert_output(/^given something\n\e\[31m  should fail\e\[0m\n\e\[32m  should pass\e\[0m/) do
+    assert_output(/^given something\n\e\[32m  should be green\e\[0m\n\e\[31m  should be red\e\[0m\n\e\[33m  should be yellow\e\[0m/) do
       runner(c).run(colour=true)
     end
   end

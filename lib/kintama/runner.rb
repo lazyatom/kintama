@@ -111,18 +111,24 @@ module Kintama
 
       def test_finished(test)
         if @colour
-          test_name = indent + INDENT + test.name
-          if test.passed?
-            print green(test_name)
-          else
-            print red(test_name)
-          end
+          puts coloured_name(test)
+        else
+          puts character_status_of(test)
         end
-        print(character_status_of(test)) unless @colour
-        puts
       end
 
       private
+
+      def coloured_name(test)
+        test_name = indent + INDENT + test.name
+        if test.pending?
+          yellow(test_name)
+        elsif test.passed?
+          green(test_name)
+        else
+          red(test_name)
+        end
+      end
 
       def color(text, color_code)
         "#{color_code}#{text}\e[0m"
@@ -134,6 +140,10 @@ module Kintama
 
       def red(text)
         color(text, "\e[31m")
+      end
+
+      def yellow(text)
+        color(text, "\e[33m")
       end
     end
 
