@@ -21,11 +21,11 @@ class MethodBehaviourTest < Test::Unit::TestCase
       context "in a subcontext" do
         should "set something" do
           assert self.respond_to?(:do_something)
-          assert_equal 123, do_something
+          assert_equal 234, do_something
         end
       end
       def do_something
-        123
+        234
       end
     end
     x.run
@@ -171,5 +171,54 @@ class MethodBehaviourTest < Test::Unit::TestCase
     assert $ran
 
     assert_not_nil x.should_have_created_this_test
+  end
+
+  def test_should_be_able_to_call_methods_in_subcontexts_that_create_tests
+    x = context "Given a subcontext" do
+      def with_a_method
+        should "create this test in the subcontext" do
+          flunk
+        end
+      end
+      context "which calls a method defined at the top level" do
+        with_a_method
+      end
+    end
+    x.run
+    subcontext = x.subcontexts.first
+    assert_equal ["should create this test in the subcontext"], subcontext.tests.map { |t| t.name }
+  end
+
+  def test_should_be_able_to_call_methods_in_subcontexts_that_create_tests_when_defined_in_modules
+    x = context "Given a subcontext" do
+      extend do
+        def with_a_method
+          should "create this test in the subcontext" do
+            flunk
+          end
+        end
+      end
+      context "which calls a method defined at the top level" do
+        with_a_method
+      end
+    end
+    x.run
+    subcontext = x.subcontexts.first
+    assert_equal ["should create this test in the subcontext"], subcontext.tests.map { |t| t.name }
+  end
+
+  def test_should_be_able_to_add_behaviour_to_kintama
+    Kintama.extend do
+      def define_a_test
+        should "define a test" do
+          flunk
+        end
+      end
+    end
+    x = context "A context" do
+      define_a_test
+    end
+    x.run
+    assert !x.passed?
   end
 end

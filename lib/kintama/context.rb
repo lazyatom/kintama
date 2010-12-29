@@ -11,6 +11,7 @@ module Kintama
       @parent = parent
       @parent.add_subcontext(self) if @parent
       @modules = []
+      @extend_modules = []
       instance_eval(&block)
     end
 
@@ -34,6 +35,15 @@ module Kintama
         mod.class_eval(&block)
       end
       @modules << mod
+    end
+
+    alias :__extend :extend
+    def extend(mod=nil, &block)
+      if mod.nil?
+        mod = Module.new
+        mod.class_eval(&block)
+      end
+      @extend_modules << mod
     end
 
     # Define a test to run in this context. The test name will start with "should "
@@ -97,7 +107,7 @@ module Kintama
       else
         begin
           super
-        rescue NoMethodError => e
+        rescue NameError, NoMethodError => e
           if @parent
             @parent.send(name, *args, &block)
           else
@@ -144,6 +154,7 @@ module Kintama
     protected
 
     def add_subcontext(subcontext)
+      @extend_modules.each { |mod| subcontext.__extend(mod) }
       @subcontexts[subcontext.name] = subcontext
       @subcontexts[methodize(subcontext.name)] = subcontext
     end

@@ -40,6 +40,10 @@ module Kintama
       default_context.include(mod, &block)
     end
 
+    def extend(mod=nil, &block)
+      default_context.extend(mod, &block)
+    end
+
     # Add a setup which will run at the start of every test. Multiple global
     # setup blocks can be added, and will be run in order of adding.
     def setup(&block)
