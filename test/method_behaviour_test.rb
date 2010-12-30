@@ -84,44 +84,6 @@ class MethodBehaviourTest < Test::Unit::TestCase
     assert c.passed?, "Thing was not defined!"
   end
 
-  def test_should_allow_defined_methods_to_refer_to_instance_variables_defined_in_setup_when_defined_in_include_blocks
-    c = context "Given I define an instance variable in my setup" do
-      setup do
-        @thing = 456
-      end
-      should "be able to call a method that refers to that variable in a test" do
-        assert_equal 456, get_thing
-      end
-      include do
-        def get_thing
-          @thing
-        end
-      end
-    end
-    c.run
-    assert c.passed?, "Thing was not defined!"
-  end
-
-  def test_should_be_able_to_access_helpers_from_tests_in_nested_contexts
-    c = context "Withing a nested context" do
-      context "Given I define an instance variable in my setup" do
-        setup do
-          @thing = 456
-        end
-        should "be able to call a method from the outer context helpers" do
-          assert_equal 456, get_thing
-        end
-      end
-      include do
-        def get_thing
-          @thing
-        end
-      end
-    end
-    c.run
-    assert c.passed?, "Thing was not defined!"
-  end
-
   module DefaultBehaviour
     def something
       'abc'
@@ -139,25 +101,10 @@ class MethodBehaviourTest < Test::Unit::TestCase
     assert c.passed?, "something was not defined!"
   end
 
-  def test_should_allow_including_default_behaviour_in_all_contexts_via_a_block
-    Kintama.include do
-      def something
-        'hij'
-      end
-    end
-    c = context "Given a context" do
-      should "be able to call a method from the globally shared behaviour" do
-        assert_equal 'hij', something
-      end
-    end
-    c.run
-    assert c.passed?, "something was not defined!"
-  end
-
   def test_should_be_able_to_compose_shoulds_into_methods
     $ran = false
     x = context "Given a context" do
-      def should_create_a_should_from_a_method
+      def self.should_create_a_should_from_a_method
         should "have created this test" do
           $ran = true
           assert true
@@ -175,7 +122,7 @@ class MethodBehaviourTest < Test::Unit::TestCase
 
   def test_should_be_able_to_call_methods_in_subcontexts_that_create_tests
     x = context "Given a subcontext" do
-      def with_a_method
+      def self.with_a_method
         should "create this test in the subcontext" do
           flunk
         end
@@ -189,15 +136,18 @@ class MethodBehaviourTest < Test::Unit::TestCase
     assert_equal ["should create this test in the subcontext"], subcontext.tests.map { |t| t.name }
   end
 
+  module TestCreatingBehaviour
+    def with_a_method
+      should "create this test in the subcontext" do
+        flunk
+      end
+    end
+  end
+
   def test_should_be_able_to_call_methods_in_subcontexts_that_create_tests_when_defined_in_modules
     x = context "Given a subcontext" do
-      extend do
-        def with_a_method
-          should "create this test in the subcontext" do
-            flunk
-          end
-        end
-      end
+      extend TestCreatingBehaviour
+
       context "which calls a method defined at the top level" do
         with_a_method
       end
@@ -207,14 +157,16 @@ class MethodBehaviourTest < Test::Unit::TestCase
     assert_equal ["should create this test in the subcontext"], subcontext.tests.map { |t| t.name }
   end
 
-  def test_should_be_able_to_add_behaviour_to_kintama
-    Kintama.extend do
-      def define_a_test
-        should "define a test" do
-          flunk
-        end
+  module NewKintamaBehaviour
+    def define_a_test
+      should "define a test" do
+        flunk
       end
     end
+  end
+
+  def test_should_be_able_to_add_behaviour_to_kintama
+    Kintama.extend NewKintamaBehaviour
     x = context "A context" do
       define_a_test
     end

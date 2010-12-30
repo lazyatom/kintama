@@ -36,8 +36,9 @@ class TestAndSubcontextAccessTest < Test::Unit::TestCase
         flunk
       end
     end
-    x.should_fail_when_run.run
-    assert !x.passed?
+    t = x.should_fail_when_run.new
+    t.run
+    assert !t.passed?
   end
 
   def test_should_allow_running_of_specific_subcontexts_using_hashlike_syntax
@@ -62,8 +63,9 @@ class TestAndSubcontextAccessTest < Test::Unit::TestCase
         flunk
       end
     end
-    x["should fail when run"].run
-    assert !x.passed?
+    t = x["should fail when run"].new
+    t.run
+    assert !t.passed?
   end
 
   def test_should_return_true_if_running_a_subcontext_passes

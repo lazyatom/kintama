@@ -2,7 +2,11 @@ module Kintama
   module Aliases
     module Context
       def context(name, parent=self, &block)
-        Kintama::Context.new(name, parent, &block)
+        c = Class.new(parent)
+        c.send(:include, Kintama::Context)
+        c.name = name
+        c.class_eval(&block)
+        c
       end
 
       def given(name, parent=self, &block)

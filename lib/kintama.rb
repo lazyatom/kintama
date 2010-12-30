@@ -1,8 +1,8 @@
 module Kintama
+  autoload :Runnable, 'kintama/runnable'
   autoload :Context, 'kintama/context'
   autoload :Test, 'kintama/test'
   autoload :TestFailure, 'kintama/test'
-  autoload :TestEnvironment, 'kintama/test_environment'
   autoload :Runner, 'kintama/runner'
   autoload :Assertions, 'kintama/assertions'
   autoload :Aliases, 'kintama/aliases'
@@ -10,14 +10,24 @@ module Kintama
   extend Aliases::Context
 
   class << self
-    # Resets the global state of the test system, removing all contexts, setups,
-    # teardowns and included modules
     def reset
-      @default_context = Context.new(nil) {}
+      @default_context = Class.new(Runnable)
+      @default_context.send(:include, Kintama::Context)
     end
 
     def default_context
-      @default_context ||= Context.new(nil) {}
+      reset unless @default_context
+      @default_context
+    end
+
+    # Add a setup which will run at the start of every test.
+    def setup(&block)
+      default_context.setup(&block)
+    end
+
+    # Add a teardown which will be run at the end of every test.
+    def teardown(&block)
+      default_context.teardown(&block)
     end
 
     # Makes behaviour available within tests. You can either pass a module:
@@ -36,29 +46,12 @@ module Kintama
     #   end
     #
     # Any methods will then be available within setup, teardown or tests.
-    def include(mod=nil, &block)
-      default_context.include(mod, &block)
+    def include(mod)
+      default_context.send(:include, mod)
     end
 
-    def extend(mod=nil, &block)
-      default_context.extend(mod, &block)
-    end
-
-    # Add a setup which will run at the start of every test. Multiple global
-    # setup blocks can be added, and will be run in order of adding.
-    def setup(&block)
-      default_context.setup(&block)
-    end
-
-    # Add a teardown which will be run at the end of every test. Multiple global
-    # teardown blocks can be added, and will be run in reverse order of adding.
-    def teardown(&block)
-      default_context.teardown(&block)
-    end
-
-    # Runs all of the known contexts and tests using the default Runner
-    def run(*args)
-      default_context.run(*args)
+    def extend(mod)
+      default_context.extend(mod)
     end
 
     # Adds the hook to automatically run all known tests using #run when

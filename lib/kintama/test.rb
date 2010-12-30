@@ -1,24 +1,32 @@
 module Kintama
   class TestFailure < StandardError; end
 
-  class Test
-    attr_accessor :name, :failure
+  module Test
+    include Kintama::Assertions
 
-    def initialize(name, context, &block)
-      @name = name
-      @context = context
-      @test_block = block
+    def self.included(base)
+      class << base
+        attr_accessor :block
+
+        def pending?
+          @block.nil?
+        end
+
+        def run
+          new.run
+        end
+      end
+      base.send :attr_reader, :failure
     end
 
     def run(runner=nil)
       @failure = nil
       runner.test_started(self) if runner
-      environment = Kintama::TestEnvironment.new(@context)
       unless pending?
         begin
-          @context.run_setups(environment)
-          environment.instance_eval(&@test_block)
-          @context.run_teardowns(environment)
+          setup
+          instance_eval(&self.class.block)
+          teardown
         rescue Exception => e
           @failure = e
         end
@@ -28,15 +36,19 @@ module Kintama
     end
 
     def pending?
-      @test_block.nil?
+      self.class.pending?
     end
 
     def passed?
       @failure.nil?
     end
 
+    def name
+      self.class.name
+    end
+
     def full_name
-      [@context.full_name, @name].compact.join(" ")
+      self.class.full_name
     end
 
     def failure_message
