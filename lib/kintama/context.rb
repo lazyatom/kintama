@@ -13,12 +13,20 @@ module Kintama
 
     module ClassMethods
 
+      def setup_blocks
+        @setup_blocks ||= []
+      end
+
       # Define the setup for this context.
       # It will also be run for any subcontexts, before their own setup blocks
       def setup(&block)
+        self.setup_blocks << block
+
+        # redefine setup for the current set of blocks
+        blocks = self.setup_blocks
         define_method(:setup) do
           super
-          instance_eval(&block)
+          blocks.each { |b| instance_eval(&b) }
         end
       end
 

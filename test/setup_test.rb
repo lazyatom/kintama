@@ -88,4 +88,20 @@ class SetupTest < Test::Unit::TestCase
     c.run
     assert c.passed?, "@thing was not defined!"
   end
+
+  def test_should_allow_multiple_setups_to_be_registered
+    Kintama.setup do
+      @thing = 1
+    end
+    Kintama.setup do
+      @thing += 1
+    end
+    c = context "Given multiple setups" do
+      should "run them all" do
+        assert_equal 2, @thing
+      end
+    end
+    c.run
+    assert c.passed?, "both setups didn't run - #{c.failures.inspect}"
+  end
 end
