@@ -17,6 +17,10 @@ module Kintama
         @setup_blocks ||= []
       end
 
+      def teardown_blocks
+        @teardown_blocks ||= []
+      end
+
       # Define the setup for this context.
       # It will also be run for any subcontexts, before their own setup blocks
       def setup(&block)
@@ -33,8 +37,12 @@ module Kintama
       # Define the teardown for this context.
       # It will also be run for any subcontexts, after their own teardown blocks
       def teardown(&block)
+        self.teardown_blocks << block
+
+        # redefine teardown for the current set of blocks
+        blocks = self.teardown_blocks
         define_method(:teardown) do
-          instance_eval(&block)
+          blocks.each { |b| instance_eval(&b) }
           super
         end
       end
