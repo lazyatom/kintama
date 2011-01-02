@@ -21,5 +21,25 @@ module Kintama
         context(name, parent, &block)
       end
     end
+
+    module Test
+      # Define a test to run in this context.
+      def test(name, &block)
+        c = Class.new(self)
+        c.send(:include, Kintama::Test)
+        c.name = name
+        c.block = block if block_given?
+      end
+
+      # Define a test to run in this context. The test name will start with "should "
+      def should(name, &block)
+        test("should " + name, &block)
+      end
+
+      # Define a test to run in this context. The test name will start with "it "
+      def it(name, &block)
+        test("it " + name, &block)
+      end
+    end
   end
 end

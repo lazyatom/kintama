@@ -9,6 +9,7 @@ module Kintama
     def self.included(base)
       base.extend(ClassMethods)
       base.extend(Aliases::Context)
+      base.extend(Aliases::Test)
     end
 
     module ClassMethods
@@ -47,31 +48,12 @@ module Kintama
         end
       end
 
-      # Define a test to run in this context.
-      def test(name, &block)
-        c = Class.new(self)
-        c.send(:include, Test)
-        c.name = name
-        c.block = block if block_given?
-      end
-
-      # Define a test to run in this context. The test name will start with "should "
-      def should(name, &block)
-        test("should " + name, &block)
-      end
-
-      # Define a test to run in this context. The test name will start with "it "
-      def it(name, &block)
-        test("it " + name, &block)
-      end
-
       def inherited(child)
-        @children ||= []
-        @children << child
+        children << child
       end
 
       def children
-        @children || []
+        @children ||= []
       end
 
       def tests
