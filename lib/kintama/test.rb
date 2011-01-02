@@ -26,9 +26,14 @@ module Kintama
         begin
           setup
           instance_eval(&self.class.block)
-          teardown
         rescue Exception => e
           @failure = e
+        ensure
+          begin
+            teardown
+          rescue Exception => e
+            @failure = e
+          end
         end
       end
       runner.test_finished(self) if runner

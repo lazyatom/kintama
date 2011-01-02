@@ -74,4 +74,19 @@ class TeardownTest < Test::Unit::TestCase
     c.run
     assert_equal 2, $ran, "both teardowns didn't run"
   end
+
+  def test_should_run_teardowns_even_after_exceptions
+    ran = false
+    c = context "Given a test that fails" do
+      should "still run teardown" do
+        raise "argh"
+      end
+      teardown do
+        ran = true
+      end
+    end
+    c.run
+    assert !c.passed?
+    assert ran
+  end
 end
