@@ -58,4 +58,20 @@ class TeardownTest < Test::Unit::TestCase
     assert c.passed?, "@thing was not redefined!"
     assert ran
   end
+
+  def test_should_allow_multiple_teardowns_to_be_registered
+    Kintama.teardown do
+      $ran = 1
+    end
+    Kintama.teardown do
+      $ran += 1
+    end
+    c = context "Given multiple setups" do
+      should "run them all" do
+        assert true
+      end
+    end
+    c.run
+    assert_equal 2, $ran, "both teardowns didn't run"
+  end
 end
