@@ -30,7 +30,7 @@ module Kintama
       default_context.teardown(&block)
     end
 
-    # Makes behaviour available within tests. You can either pass a module:
+    # Makes behaviour available within tests:
     #
     #   module SomeModule
     #     def blah
@@ -38,18 +38,13 @@ module Kintama
     #   end
     #   Kintama.include SomeModule
     #
-    # or a block:
-    #
-    #   Kintama.include do
-    #     def blah
-    #     end
-    #   end
-    #
     # Any methods will then be available within setup, teardown or tests.
     def include(mod)
       default_context.send(:include, mod)
     end
 
+    # Make new testing behaviour available for the definition of tests.
+    # Methods included in this way are available during the definition of tests.
     def extend(mod)
       default_context.extend(mod)
     end
