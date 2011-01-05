@@ -63,6 +63,11 @@ module Kintama
         end
       end
 
+      # Defines the subject of any matcher-based tests.
+      def subject(&block)
+        define_method(:subject, &block)
+      end
+
       # Define a test to run in this context.
       def test(name, &block)
         c = Class.new(self)
@@ -72,8 +77,27 @@ module Kintama
       end
 
       # Define a test to run in this context. The test name will start with "should "
-      def should(name, &block)
-        test("should " + name, &block)
+      # You can either supply a name and block, or a matcher. In the latter case, a test
+      # will be generated using that matcher.
+      def should(name_or_matcher, &block)
+        if name_or_matcher.respond_to?(:matches?)
+          test("should " + name_or_matcher.description) do
+            assert name_or_matcher.matches?(subject), name_or_matcher.failure_message
+          end
+        else
+          test("should " + name_or_matcher, &block)
+        end
+      end
+
+      # Define a test using a negated matcher, e.g.
+      #
+      #   subject { 'a' }
+      #   should_not equal('b')
+      #
+      def should_not(matcher)
+        test("should not " + matcher.description) do
+          assert !matcher.matches?(subject), matcher.negative_failure_message
+        end
       end
 
       # Define a test to run in this context. The test name will start with "it "
