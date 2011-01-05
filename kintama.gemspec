@@ -2,14 +2,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{kintama}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Adam"]
-  s.date = %q{2010-12-09}
+  s.date = %q{2011-01-05}
   s.email = %q{james@lazyatom.com}
   s.extra_rdoc_files = ["README.md"]
-  s.files = ["README.md", "test/aliases_test.rb", "test/assertions_test.rb", "test/automatic_running_test.rb", "test/exceptions_test.rb", "test/kintama_test.rb", "test/method_behaviour_test.rb", "test/runner_test.rb", "test/setup_test.rb", "test/teardown_test.rb", "test/test_and_subcontext_access_test.rb", "test/test_helper.rb", "lib/kintama/aliases.rb", "lib/kintama/assertions.rb", "lib/kintama/context.rb", "lib/kintama/runner.rb", "lib/kintama/test.rb", "lib/kintama/test_environment.rb", "lib/kintama.rb"]
+  s.files = ["README.md", "test/aliases_test.rb", "test/assertions_test.rb", "test/automatic_running_test.rb", "test/exceptions_test.rb", "test/kintama_test.rb", "test/matcher_test.rb", "test/method_behaviour_test.rb", "test/pending_test.rb", "test/runners", "test/runners/base_runner_test.rb", "test/runners/inline_runner_test.rb", "test/runners/verbose_runner_test.rb", "test/setup_test.rb", "test/teardown_test.rb", "test/test_and_subcontext_access_test.rb", "test/test_helper.rb", "lib/kintama", "lib/kintama/assertions.rb", "lib/kintama/context.rb", "lib/kintama/runnable.rb", "lib/kintama/runner.rb", "lib/kintama/test.rb", "lib/kintama.rb"]
   s.homepage = %q{http://github.com/lazyatom}
   s.rdoc_options = ["--main", "README.md"]
   s.require_paths = ["lib"]
