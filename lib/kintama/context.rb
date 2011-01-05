@@ -8,11 +8,26 @@ module Kintama
 
     def self.included(base)
       base.extend(ClassMethods)
-      base.extend(Aliases::Context)
-      base.extend(Aliases::Test)
     end
 
     module ClassMethods
+
+      # Create a new context. If this is called within a context, a new subcontext
+      # will be created. Aliases are 'testcase' and 'describe'
+      def context(name, parent=self, &block)
+        c = Class.new(parent)
+        c.send(:include, Kintama::Context)
+        c.name = name.to_s
+        c.class_eval(&block)
+        c
+      end
+      alias_method :testcase, :context
+      alias_method :describe, :context
+
+      # Create a new context starting with "given "
+      def given(name, parent=self, &block)
+        context("given " + name, parent, &block)
+      end
 
       def setup_blocks
         @setup_blocks ||= []
@@ -46,6 +61,24 @@ module Kintama
           blocks.each { |b| instance_eval(&b) }
           super
         end
+      end
+
+      # Define a test to run in this context.
+      def test(name, &block)
+        c = Class.new(self)
+        c.send(:include, Kintama::Test)
+        c.name = name
+        c.block = block if block_given?
+      end
+
+      # Define a test to run in this context. The test name will start with "should "
+      def should(name, &block)
+        test("should " + name, &block)
+      end
+
+      # Define a test to run in this context. The test name will start with "it "
+      def it(name, &block)
+        test("it " + name, &block)
       end
 
       def inherited(child)

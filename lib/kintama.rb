@@ -5,9 +5,6 @@ module Kintama
   autoload :TestFailure, 'kintama/test'
   autoload :Runner, 'kintama/runner'
   autoload :Assertions, 'kintama/assertions'
-  autoload :Aliases, 'kintama/aliases'
-
-  extend Aliases::Context
 
   class << self
     def reset
@@ -18,6 +15,18 @@ module Kintama
     def default_context
       reset unless @default_context
       @default_context
+    end
+
+    # Create a new context. Aliases are 'testcase' and 'describe'
+    def context(name, parent=default_context, &block)
+      default_context.context(name, parent, &block)
+    end
+    alias_method :testcase, :context
+    alias_method :describe, :context
+
+    # Create a new context starting with "given "
+    def given(name, parent=default_context, &block)
+      default_context.given(name, parent, &block)
     end
 
     # Add a setup which will run at the start of every test.
@@ -82,9 +91,9 @@ module Kintama
   end
 end
 
-Kintama::Aliases::Context.instance_methods.each do |method|
+[:context, :given, :describe, :testcase].each do |method|
   unless self.respond_to?(method)
-    eval %|def #{method}(name, &block); Kintama.#{method}(name, Kintama.default_context, &block); end|
+    eval %|def #{method}(*args, &block); Kintama.#{method}(*args, &block); end|
   end
 end
 

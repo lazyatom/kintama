@@ -13,4 +13,14 @@ class AliasesTest < Test::Unit::TestCase
     x.run
     assert x.passed?
   end
+
+  def test_should_provide_testcase_alias_for_context
+    x = testcase "In a world without hope" do
+      should "work out well in the end" do
+        assert true
+      end
+    end
+    x.run
+    assert x.passed?
+  end
 end
