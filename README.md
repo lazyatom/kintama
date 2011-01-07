@@ -149,21 +149,19 @@ You can also add (several) global `setup` and `teardown` blocks, which will be r
 Helpers
 -------
 
-If you want to make methods available in your tests, you have a few options. You can define them inline:
+If you want to make methods available in your tests, you can define them thusly:
 
     context "my face" do
       should "be awesome" do
         assert_equal "awesome", create_face.status
       end
 
-      helpers do
-        def create_face
-          Face.new(:name => "james", :eyes => "blue", :something => "something else")
-        end
+      def create_face
+        Face.new(:name => "james", :eyes => "blue", :something => "something else")
       end
     end
 
-Ideally I would've liked to make this syntatically similar to defining a private method in a class, but for various reasons that was not possible. Anyway, your other options are including a module:
+Your other options are including a module:
 
     module FaceHelper
       def create_face
@@ -180,33 +178,71 @@ Ideally I would've liked to make this syntatically similar to defining a private
 
 Or, if you're going to use the method in all your tests, you can add the module globally:
 
-    Kintama.add FaceHelper
+    Kintama.include FaceHelper
 
-or just define the method globally:
 
-    Kintama.add do
-      def create_face
-        # etc ...
+Extending
+---------
+
+If you want to add behaviour to Kintama itself (rather than to tests),
+you can use extend:
+
+    module Doing
+      def doing(&block)
+        @doing = block
       end
-    end
 
-### Aside: what happens if you do define a method in the context?
-
-It becomes available within context (and subcontext) definitions. Here's an example:
-
-    context "blah" do
-      def generate_tests_for(thing)
-        it "should work with #{thing}" do
-          assert thing.works
+      def should_change(&block)
+        doing_block = @doing
+        should "change something" do
+          previous_value = instance_eval(&block)
+          instance_eval(&doing_block)
+          subsequent_value = instance_eval(&block)
+          assert subsequent_value != previous_value, "it didn't change"
         end
       end
 
-      [Monkey.new, Tiger.new].each do |t|
-        generate_tests_for(t)
+      def expect(name, &block)
+        doing_block = @doing
+        test "expects #{name}" do
+          instance_eval(&block)
+          instance_eval(&doing_block)
+        end
       end
     end
 
-This is a bit like defining a 'class method' in a `TestCase` and then being able to call it to generate contexts or tests within that `TestCase`. It's not that tricky once you get used to it.
+    class Thing
+      attr_reader :total
+      def initialize
+        @total = 0
+      end
+      def increment
+        @total += 1
+      end
+    end
+
+    context "Given something" do
+      extend Doing
+
+      setup { @thing = Thing.new }
+
+      doing { @thing.increment }
+
+      should_change { @thing.total }
+
+      # NOTE: this assumes Mocha is present
+      expect("increment to be called} { @thing.expects(:increment) }
+
+      # etc...
+    end
+
+As you can see, extending makes the method available at the context
+level, so it can be used to construct tests, new context types, and so
+on. This is really where the exciting stuff is.
+
+Oh, and of course, behaviour can be added to all tests as above:
+
+    Kintama.extend Doing
 
 
 And now, the more experimental stuff
