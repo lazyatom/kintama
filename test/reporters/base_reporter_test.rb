@@ -1,6 +1,10 @@
 require 'test_helper'
 
-class BaseRunnerTest < Test::Unit::TestCase
+class BaseReporterTest < Test::Unit::TestCase
+
+  def setup
+    @reporter = Kintama::Reporter::Base.new
+  end
 
   def test_assert_output_works
     assert_output("yes\n") do
@@ -15,8 +19,8 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run }
-    assert_match /^1 tests, 0 failures/, r.test_summary
+    capture_stdout { r.run(@reporter) }
+    assert_match /^1 tests, 0 failures/, @reporter.test_summary
   end
 
   def test_should_print_out_summary_when_multiple_tests_pass
@@ -29,8 +33,8 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run }
-    assert_match /^2 tests, 0 failures/, r.test_summary
+    capture_stdout { r.run(@reporter) }
+    assert_match /^2 tests, 0 failures/, @reporter.test_summary
   end
 
   def test_should_print_out_summary_when_a_pending_test_exists
@@ -41,8 +45,8 @@ class BaseRunnerTest < Test::Unit::TestCase
       should "not be implemented yet"
     end
     r = runner(c)
-    capture_stdout { r.run }
-    assert_match /^2 tests, 0 failures, 1 pending/, r.test_summary
+    capture_stdout { r.run(@reporter) }
+    assert_match /^2 tests, 0 failures, 1 pending/, @reporter.test_summary
   end
 
   def test_should_print_out_failure_details_if_tests_fail
@@ -55,8 +59,8 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run }
-    assert_match /^1\) given something should fail:\n  flunked\./, r.failure_messages[0]
+    capture_stdout { r.run(@reporter) }
+    assert_match /^1\) given something should fail:\n  flunked\./, @reporter.failure_messages[0]
   end
 
   def test_should_print_out_the_test_duration
@@ -66,8 +70,8 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run }
-    assert_match /^1 tests, 0 failures \(0\.\d+ seconds\)/, r.test_summary
+    capture_stdout { r.run(@reporter) }
+    assert_match /^1 tests, 0 failures \(0\.\d+ seconds\)/, @reporter.test_summary
   end
 
   def test_should_be_able_to_run_tests_from_several_contexts
@@ -82,8 +86,8 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     r = runner(c1, c2)
-    capture_stdout { r.run }
-    assert_match /^2 tests, 0 failures/, r.test_summary
+    capture_stdout { r.run(@reporter) }
+    assert_match /^2 tests, 0 failures/, @reporter.test_summary
   end
 
   def test_should_return_true_if_all_tests_pass
@@ -92,7 +96,7 @@ class BaseRunnerTest < Test::Unit::TestCase
       should("also pass") { assert true }
     end
     capture_stdout do
-      assert_equal true, runner(c).run
+      assert_equal true, runner(c).run(@reporter)
     end
   end
 
@@ -102,7 +106,7 @@ class BaseRunnerTest < Test::Unit::TestCase
       should("fail") { flunk }
     end
     capture_stdout do
-      assert_equal false, runner(c).run
+      assert_equal false, runner(c).run(@reporter)
     end
   end
 
@@ -118,7 +122,7 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     capture_stdout do
-      assert runner(c).run, "should not have run the context twice"
+      assert runner(c).run(@reporter), "should not have run the context twice"
     end
   end
 
@@ -129,8 +133,8 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run }
-    assert_match /^1\) given something should fail:\n  flunked\./, r.failure_messages[0]
+    capture_stdout { r.run(@reporter) }
+    assert_match /^1\) given something should fail:\n  flunked\./, @reporter.failure_messages[0]
   end
 
   def test_should_include_line_in_test_of_error_in_failure_message
@@ -140,14 +144,14 @@ class BaseRunnerTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run }
-    assert_match /at #{Regexp.escape(__FILE__)}:#{$line}/, r.failure_messages.first
+    capture_stdout { r.run(@reporter) }
+    assert_match /at #{Regexp.escape(__FILE__)}:#{$line}/, @reporter.failure_messages.first
   end
 
   private
 
   def runner(*args)
-    Kintama::Runner::Base.new(*args)
+    Kintama::Runner.new(*args)
   end
 
 end

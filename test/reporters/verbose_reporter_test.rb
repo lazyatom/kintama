@@ -1,6 +1,11 @@
 require 'test_helper'
 
-class VerboseRunnerTest < Test::Unit::TestCase
+class VerboseReporterTest < Test::Unit::TestCase
+
+  def setup
+    @reporter = Kintama::Reporter::Verbose.new(false)
+  end
+
   def test_should_print_out_test_names
     c = context "given something" do
       should "also pass" do
@@ -11,7 +16,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
       end
     end
     assert_output(/^given something\n  should also pass: \.\n  should pass: \./) do
-      runner(c).run(false)
+      runner(c).run(@reporter)
     end
   end
 
@@ -23,7 +28,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
       end
     end
     assert_output(/^given something\n  should not be implemented: P\n  should pass: \./) do
-      runner(c).run(false)
+      runner(c).run(@reporter)
     end
   end
 
@@ -44,7 +49,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
       end
     end
     assert_output(/^given something\n  should pass: \.\n  and something else\n    should pass: \.\n  and then this\n    should also pass: \./) do
-      runner(c).run(false)
+      runner(c).run(@reporter)
     end
   end
 
@@ -54,7 +59,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
         assert 1 == 2, "1 should equal 2"
       end
     end
-    assert_output(/given something should fail:\n  1 should equal 2/) { runner(c).run(false) }
+    assert_output(/given something should fail:\n  1 should equal 2/) { runner(c).run(@reporter) }
   end
 
   def test_should_print_out_a_summary_of_the_failing_tests_if_an_exception_occurs_in_a_test
@@ -63,7 +68,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
         raise "unexpected issue!"
       end
     end
-    assert_output(/given something should fail:\n  unexpected issue!/) { runner(c).run(false) }
+    assert_output(/given something should fail:\n  unexpected issue!/) { runner(c).run(@reporter) }
   end
 
   def test_should_print_out_a_summary_of_the_failing_tests_if_a_nested_test_fails
@@ -74,7 +79,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
         end
       end
     end
-    assert_output(/given something and something else should fail:\n  1 should equal 2/) { runner(c).run(false) }
+    assert_output(/given something and something else should fail:\n  1 should equal 2/) { runner(c).run(@reporter) }
   end
 
   def test_should_nest_verbose_output_properly_when_running_tests_from_several_contexts
@@ -89,7 +94,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
       end
     end
     assert_output(/^given something\n  should pass: \.\n\ngiven another thing\n  should also pass: \./) do
-      runner(c1, c2).run(false)
+      runner(c1, c2).run(@reporter)
     end
   end
 
@@ -104,7 +109,7 @@ class VerboseRunnerTest < Test::Unit::TestCase
       should "be yellow"
     end
     assert_output(/^given something\n\e\[32m  should be green\e\[0m\n\e\[31m  should be red\e\[0m\n\e\[33m  should be yellow\e\[0m/) do
-      runner(c).run(colour=true)
+      runner(c).run(Kintama::Reporter::Verbose.new(true))
     end
   end
 
@@ -117,13 +122,13 @@ class VerboseRunnerTest < Test::Unit::TestCase
       end
     end
     assert_output(/^In a world without hope\n  given a massive gun\n    it should work out well in the end: \./) do
-      runner(c).run(false)
+      runner(c).run(@reporter)
     end
   end
 
   private
 
   def runner(*args)
-    Kintama::Runner::Verbose.new(*args)
+    Kintama::Runner.new(*args)
   end
 end

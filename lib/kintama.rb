@@ -3,6 +3,7 @@ module Kintama
   autoload :Context, 'kintama/context'
   autoload :Test, 'kintama/test'
   autoload :TestFailure, 'kintama/test'
+  autoload :Reporter, 'kintama/reporter'
   autoload :Runner, 'kintama/runner'
   autoload :Assertions, 'kintama/assertions'
 
@@ -63,7 +64,7 @@ module Kintama
     # line or from within an editor
     def add_exit_hook
       return if @__added_exit_hook
-      at_exit { exit(Runner.default.run ? 0 : 1) }
+      at_exit { exit(Runner.new(*Kintama.default_context.subcontexts).run ? 0 : 1) }
       @__added_exit_hook = true
     end
 

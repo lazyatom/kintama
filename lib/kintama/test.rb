@@ -19,9 +19,9 @@ module Kintama
       base.send :attr_reader, :failure
     end
 
-    def run(runner=nil)
+    def run(reporter=nil)
       @failure = nil
-      runner.test_started(self) if runner
+      reporter.test_started(self) if reporter
       unless pending?
         begin
           setup
@@ -36,7 +36,7 @@ module Kintama
           end
         end
       end
-      runner.test_finished(self) if runner
+      reporter.test_finished(self) if reporter
       passed?
     end
 

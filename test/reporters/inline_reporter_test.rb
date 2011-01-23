@@ -1,6 +1,10 @@
 require 'test_helper'
 
-class InlineRunnerTest < Test::Unit::TestCase
+class InlineReporterTest < Test::Unit::TestCase
+  def setup
+    @reporter = Kintama::Reporter::Inline.new
+  end
+
   def test_should_print_out_dots_when_a_test_passes
     c = context "given something" do
       should "pass" do
@@ -9,7 +13,7 @@ class InlineRunnerTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^\.\n/) do
-      r.run
+      r.run(@reporter)
     end
   end
 
@@ -24,7 +28,7 @@ class InlineRunnerTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^\.\.\n/) do
-      r.run
+      r.run(@reporter)
     end
   end
 
@@ -39,7 +43,7 @@ class InlineRunnerTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^F\./) do
-      r.run
+      r.run(@reporter)
     end
   end
 
@@ -52,13 +56,13 @@ class InlineRunnerTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^P\./) do
-      r.run
+      r.run(@reporter)
     end
   end
 
   private
 
   def runner(*args)
-    Kintama::Runner::Inline.new(*args)
+    Kintama::Runner.new(*args)
   end
 end
