@@ -45,7 +45,7 @@ module Kintama
         # redefine setup for the current set of blocks
         blocks = self.setup_blocks
         define_method(:setup) do
-          super
+          super()
           blocks.each { |b| instance_eval(&b) }
         end
       end
@@ -59,7 +59,7 @@ module Kintama
         blocks = self.teardown_blocks
         define_method(:teardown) do
           blocks.each { |b| instance_eval(&b) }
-          super
+          super()
         end
       end
 
