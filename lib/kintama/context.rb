@@ -18,6 +18,7 @@ module Kintama
         c = Class.new(parent)
         c.send(:include, Kintama::Context)
         c.name = name.to_s
+        c.definition = caller.find { |line| line =~ /^#{block.__file__}:(\d+)$/ }
         c.class_eval(&block)
         c
       end
@@ -73,6 +74,7 @@ module Kintama
         c = Class.new(self)
         c.send(:include, Kintama::Test)
         c.name = name
+        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)$/ }
         c.block = block if block_given?
       end
 
@@ -119,6 +121,10 @@ module Kintama
 
       def subcontexts
         children.select { |c| c.is_a_context? }.sort_by { |s| s.name }
+      end
+
+      def all_runnables
+        tests + subcontexts + subcontexts.map { |s| s.all_runnables }.flatten
       end
 
       # Returns true if this context has no known failed tests.
@@ -171,6 +177,21 @@ module Kintama
         subcontexts.each { |s| s.run(reporter) }
         reporter.context_finished(self) if reporter
         passed?
+      end
+
+      def runnable_on_line(line)
+        sorted_runnables = all_runnables.delete_if { |r| r.line_defined.nil? }.sort_by { |r| r.line_defined }
+        if line >= sorted_runnables.first.line_defined
+          next_runnable = sorted_runnables.find { |r| r.line_defined > line }
+          index = sorted_runnables.index(next_runnable)
+          if index != nil && index > 0
+            sorted_runnables[index-1]
+          else
+            sorted_runnables.last
+          end
+        else
+          nil
+        end
       end
 
       private

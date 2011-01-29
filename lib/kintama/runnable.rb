@@ -1,10 +1,10 @@
 module Kintama
   class Runnable
     class << self
-      attr_accessor :name
+      attr_accessor :name, :definition
 
       def to_s
-        "<#{name} #{super}/#{is_a_test? ? 'Test' : 'Context'}>"
+        "<#{is_a_test? ? 'Test' : 'Context'}:#{name}>"
       end
 
       def is_a_test?
@@ -27,6 +27,10 @@ module Kintama
         else
           nil
         end
+      end
+
+      def line_defined
+        definition ? definition.split(":").last.to_i : nil
       end
     end
   end
