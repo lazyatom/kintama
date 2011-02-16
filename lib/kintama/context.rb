@@ -1,22 +1,20 @@
 module Kintama
-  module Context
+  class Context
+    include Kintama::Assertions
+
     def setup # noop
     end
 
     def teardown # noop
     end
 
-    def self.included(base)
-      base.extend(ClassMethods)
-    end
-
-    module ClassMethods
+    class << self
+      include Kintama::Runnable
 
       # Create a new context. If this is called within a context, a new subcontext
       # will be created. Aliases are 'testcase' and 'describe'
       def context(name, parent=self, &block)
         c = Class.new(parent)
-        c.send(:include, Kintama::Context)
         c.name = name.to_s
         c.definition = caller.find { |line| line =~ /^#{block.__file__}:(\d+)$/ }
         c.class_eval(&block)
@@ -71,11 +69,11 @@ module Kintama
 
       # Define a test to run in this context.
       def test(name, &block)
-        c = Class.new(self)
-        c.send(:include, Kintama::Test)
-        c.name = name
-        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)$/ }
-        c.block = block if block_given?
+        test = Kintama::Test.new(name, self, &block)
+        test.definition = caller.find { |line| line =~ /^[^:]+:(\d+)$/ }
+        @tests ||= []
+        @tests << test
+        test
       end
 
       # Define a test to run in this context. The test name will start with "should "
@@ -116,11 +114,11 @@ module Kintama
       end
 
       def tests
-        children.select { |c| c.is_a_test? }.sort_by { |t| t.name }
+        (@tests || []).sort_by { |t| t.name }
       end
 
       def subcontexts
-        children.select { |c| c.is_a_context? }.sort_by { |s| s.name }
+        children.sort_by { |s| s.name }
       end
 
       def all_runnables
@@ -162,6 +160,14 @@ module Kintama
         end
       end
 
+      def to_s
+        "<Context:#{name}>"
+      end
+
+      def parent
+        superclass
+      end
+
       def respond_to?(name)
         self[name] ||
         super ||
@@ -173,7 +179,7 @@ module Kintama
       def run(reporter=nil)
         @ran_tests = []
         reporter.context_started(self) if reporter
-        tests.each { |t| instance = t.new; instance.run(reporter); ran_tests << instance }
+        tests.each { |t| t.run(reporter); ran_tests << t }
         subcontexts.each { |s| s.run(reporter) }
         reporter.context_finished(self) if reporter
         passed?

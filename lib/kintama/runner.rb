@@ -34,13 +34,7 @@ module Kintama
 
     def run_test_on_line(line, reporter)
       runnable = @contexts.map { |c| c.runnable_on_line(line.to_i) }.first
-      if runnable
-        if runnable.is_a_test?
-          runnable.new.run(reporter)
-        else
-          runnable.run(reporter)
-        end
-      end
+      runnable.run(reporter) if runnable
     end
 
     def run_all_tests(reporter)

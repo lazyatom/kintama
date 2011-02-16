@@ -36,7 +36,7 @@ class TestAndSubcontextAccessTest < Test::Unit::TestCase
         flunk
       end
     end
-    t = x.should_fail_when_run.new
+    t = x.should_fail_when_run
     t.run
     assert !t.passed?
   end
@@ -63,7 +63,7 @@ class TestAndSubcontextAccessTest < Test::Unit::TestCase
         flunk
       end
     end
-    t = x["should fail when run"].new
+    t = x["should fail when run"]
     t.run
     assert !t.passed?
   end

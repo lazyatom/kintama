@@ -9,8 +9,7 @@ module Kintama
 
   class << self
     def reset
-      @default_context = Class.new(Runnable)
-      @default_context.send(:include, Kintama::Context)
+      @default_context = Class.new(Context)
     end
 
     def default_context
