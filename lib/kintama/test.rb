@@ -20,23 +20,13 @@ module Kintama
       "<Test:#{name}>"
     end
 
-    def run(reporter=nil)
+    def run(context_instance, reporter=nil)
       @failure = nil
       reporter.test_started(self) if reporter
-      unless pending?
-        begin
-          @context = @context_class.new
-          @context.setup
-          @context.instance_eval(&@block)
-        rescue Exception => e
-          @failure = e
-        ensure
-          begin
-            @context.teardown
-          rescue Exception => e
-            @failure = e
-          end
-        end
+      begin
+        context_instance.instance_eval(&@block)
+      rescue Exception => e
+        @failure = e
       end
       reporter.test_finished(self) if reporter
       passed?

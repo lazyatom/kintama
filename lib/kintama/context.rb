@@ -179,7 +179,31 @@ module Kintama
       def run(reporter=nil)
         @ran_tests = []
         reporter.context_started(self) if reporter
-        tests.each { |t| t.run(reporter); ran_tests << t }
+        begin
+          @context = self.new
+          @context.setup
+        rescue Exception => e
+          puts "issue running setup: #{e}"
+          @failure = e # hmm
+        end
+
+        pids = []
+        tests.each do |test|
+          pids << fork do # TODO - get the output of the test back into here.
+            test.run(@context, reporter) unless test.pending?
+          end
+          ran_tests << test
+        end
+
+        pids.each { |pid| Process.wait(pid) }
+
+        begin
+          @context.teardown
+        rescue Exception => e
+          puts "issue running teardown: #{e}"
+          @failure = e # hmm
+        end
+
         subcontexts.each { |s| s.run(reporter) }
         reporter.context_finished(self) if reporter
         passed?
