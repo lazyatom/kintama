@@ -64,6 +64,22 @@ module Kintama
         end
       end
 
+      def on_start_blocks
+        @on_start_blocks ||= []
+      end
+
+      def on_start(&block)
+        self.on_start_blocks << block
+      end
+
+      def on_finish_blocks
+        @on_finish_blocks ||= []
+      end
+
+      def on_finish(&block)
+        self.on_finish_blocks << block
+      end
+
       # Defines the subject of any matcher-based tests.
       def subject(&block)
         define_method(:subject, &block)
@@ -173,8 +189,10 @@ module Kintama
       def run(reporter=nil)
         @ran_tests = []
         reporter.context_started(self) if reporter
+        on_start_blocks.each { |b| instance_eval(&b) }
         tests.each { |t| instance = t.new; instance.run(reporter); ran_tests << instance }
         subcontexts.each { |s| s.run(reporter) }
+        on_finish_blocks.each { |b| instance_eval(&b) }
         reporter.context_finished(self) if reporter
         passed?
       end
