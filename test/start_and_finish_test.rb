@@ -79,4 +79,16 @@ class StartAndFinishTest < Test::Unit::TestCase
     c.run
     assert c.passed?
   end
+
+  def test_should_be_able_to_use_rspec_like_aliases
+    $ran = 0
+    c = context "A context with a startup block" do
+      before_all { $ran += 1 }
+      should "have run the on_start block" do
+      end
+      after_all { $ran += 1 }
+    end
+    c.run
+    assert_equal 2, $ran
+  end
 end

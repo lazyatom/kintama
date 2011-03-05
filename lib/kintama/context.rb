@@ -71,6 +71,7 @@ module Kintama
       def on_start(&block)
         self.on_start_blocks << block
       end
+      alias_method :before_all, :on_start
 
       def on_finish_blocks
         @on_finish_blocks ||= []
@@ -79,6 +80,7 @@ module Kintama
       def on_finish(&block)
         self.on_finish_blocks << block
       end
+      alias_method :after_all, :on_start
 
       # Defines the subject of any matcher-based tests.
       def subject(&block)
