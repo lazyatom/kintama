@@ -12,7 +12,10 @@ class LineBasedRunningTest < Test::Unit::TestCase
         end
       end}
     assert_match /^#{passing("should run this test")}\n\n1 tests/, run_test(test_file, "--line 3")
+    assert_match /^1 tests, 0 failures/, run_test(test_file, "--line 3")
+
     assert_match /^#{failing("should not run this test")}\n\n1 tests/, run_test(test_file, "--line 6")
+    assert_match /^1 tests, 1 failures/, run_test(test_file, "--line 6")
   end
 
   def test_should_be_able_to_run_the_test_by_giving_the_line_number_within_the_test_definition
@@ -65,10 +68,18 @@ class LineBasedRunningTest < Test::Unit::TestCase
   end
 
   def passing(test_name)
-    /\e\[32m\s*#{test_name}\e\[0m/
+    if $stdin.tty?
+      /\e\[32m\s*#{test_name}\e\[0m/
+    else
+      /\s*#{test_name}: ./
+    end
   end
 
   def failing(test_name)
-    /\e\[31m\s*#{test_name}\e\[0m/
+    if $stdin.tty?
+      /\e\[31m\s*#{test_name}\e\[0m/
+    else
+      /\s*#{test_name}: F/
+    end
   end
 end
