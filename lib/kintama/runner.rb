@@ -7,6 +7,7 @@ module Kintama
     end
 
     def run(reporter=Kintama::Reporter.default, args=ARGV)
+      @ran_runnables = []
       reporter.started(self)
       if args[0] == "--line"
         run_test_on_line(args[1], reporter)
@@ -23,11 +24,11 @@ module Kintama
     end
 
     def failures
-      @runnables.map { |r| r.failures }.flatten
+      @ran_runnables.map { |r| r.failures }.flatten
     end
 
     def pending
-      @runnables.map { |r| r.pending }.flatten
+      @ran_runnables.map { |r| r.pending }.flatten
     end
 
     private
@@ -36,9 +37,11 @@ module Kintama
       runnable = @runnables.map { |r| r.runnable_on_line(line.to_i) }.first
       if runnable
         if runnable.is_a_test?
-          runnable.new.run(reporter)
+          runnable.parent.run_tests([runnable], reporter)
+          @ran_runnables = [runnable.parent]
         else
           runnable.run(reporter)
+          @ran_runnables = [runnable]
         end
       end
     end
@@ -47,6 +50,7 @@ module Kintama
       @runnables.each do |r|
         r.run(reporter)
       end
+      @ran_runnables = @runnables
     end
   end
 end
