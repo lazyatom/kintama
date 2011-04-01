@@ -1,9 +1,9 @@
 module Kintama
   class Runner
-    attr_reader :contexts
+    attr_reader :runnables
 
-    def initialize(*contexts)
-      @contexts = contexts
+    def initialize(*runnables)
+      @runnables = runnables
     end
 
     def run(reporter=Kintama::Reporter.default, args=ARGV)
@@ -23,17 +23,17 @@ module Kintama
     end
 
     def failures
-      @contexts.map { |c| c.failures }.flatten
+      @runnables.map { |r| r.failures }.flatten
     end
 
     def pending
-      @contexts.map { |c| c.pending }.flatten
+      @runnables.map { |r| r.pending }.flatten
     end
 
     private
 
     def run_test_on_line(line, reporter)
-      runnable = @contexts.map { |c| c.runnable_on_line(line.to_i) }.first
+      runnable = @runnables.map { |r| r.runnable_on_line(line.to_i) }.first
       if runnable
         if runnable.is_a_test?
           runnable.new.run(reporter)
@@ -44,8 +44,8 @@ module Kintama
     end
 
     def run_all_tests(reporter)
-      @contexts.each do |c|
-        c.run(reporter)
+      @runnables.each do |r|
+        r.run(reporter)
       end
     end
   end

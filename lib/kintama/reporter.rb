@@ -96,7 +96,7 @@ module Kintama
 
       def context_finished(context)
         @current_indent_level -= 1
-        puts if @current_indent_level == 0 && context != runner.contexts.last
+        puts if @current_indent_level == 0 && context != runner.runnables.last
       end
 
       def test_started(test)
