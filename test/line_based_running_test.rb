@@ -48,6 +48,20 @@ class LineBasedRunningTest < Test::Unit::TestCase
     assert_match /#{passing("should run this test")}\n#{passing("should run this test too")}\n\n\n2 tests/, run_test(test_file, "--line 6")
   end
 
+  def test_should_be_able_to_run_a_test_defined_in_a_second_top_level_context
+    test_file = %{
+      context "given a thing" do
+        should "not run this test" do
+          flunk
+        end
+      end
+      context "and another thing" do
+        should "run this test" do
+        end
+      end}
+    assert_match /#{passing("should run this test")}\n\n\n1 tests/, run_test(test_file, "--line 8")
+  end
+
   private
 
   def write_test(string, path)
@@ -59,7 +73,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
 
   def run_test(test_content, options)
     path = "/tmp/kintama_tmp_test.rb"
-    write_test(test_content, path)
+    write_test(test_content.strip, path)
     prev = ENV["KINTAMA_EXPLICITLY_DONT_RUN"]
     ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = nil
     output = `ruby #{path} #{options}`

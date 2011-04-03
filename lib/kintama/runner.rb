@@ -34,10 +34,10 @@ module Kintama
     private
 
     def run_test_on_line(line, reporter)
-      runnable = @runnables.map { |r| r.runnable_on_line(line.to_i) }.first
+      runnable = @runnables.map { |r| r.runnable_on_line(line.to_i) }.compact.first
       if runnable
         if runnable.is_a_test?
-          runnable.parent.run_tests([runnable], reporter)
+          runnable.parent.run_tests([runnable], false, reporter)
           @ran_runnables = [runnable.parent]
         else
           runnable.run(reporter)

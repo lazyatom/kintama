@@ -189,16 +189,16 @@ module Kintama
       # Runs all tests in this context and any subcontexts.
       # Returns true if all tests passed; otherwise false
       def run(reporter=nil)
-        run_tests(tests, reporter)
+        run_tests(tests, true, reporter)
       end
 
       # Run a specific set of tests using the given the reporter
-      def run_tests(test_set, reporter)
+      def run_tests(test_set, run_subcontexts, reporter)
         @ran_tests = []
         reporter.context_started(self) if reporter
         on_start_blocks.each { |b| instance_eval(&b) }
         test_set.each { |t| instance = t.new; instance.run(reporter); ran_tests << instance }
-        subcontexts.each { |s| s.run(reporter) }
+        subcontexts.each { |s| s.run(reporter) } if run_subcontexts
         on_finish_blocks.each { |b| instance_eval(&b) }
         reporter.context_finished(self) if reporter
         passed?
