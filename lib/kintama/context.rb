@@ -157,7 +157,7 @@ module Kintama
       end
 
       def pending
-        tests.select { |t| t.pending? } + subcontexts.map { |s| s.pending }.flatten
+        ran_tests.select { |t| t.pending? } + subcontexts.map { |s| s.pending }.flatten
       end
 
       def [](name)

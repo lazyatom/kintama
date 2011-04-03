@@ -73,6 +73,16 @@ class LineBasedRunningTest < Test::Unit::TestCase
     assert_match /given a test\n  that is nested deeply\n/, run_test(test_file, "--line 5")
   end
 
+  def test_should_not_show_pending_tests_in_the_same_context_as_pending_when_not_targeted
+    test_file = %{
+      context "given a context with a pending test" do
+        should "only show the run test" do
+        end
+        should "ignore the pending test"
+      end}
+    assert_no_match /1 pending/, run_test(test_file, "--line 3")
+  end
+
   private
 
   def write_test(string, path)
