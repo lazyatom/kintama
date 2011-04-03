@@ -62,6 +62,17 @@ class LineBasedRunningTest < Test::Unit::TestCase
     assert_match /#{passing("should run this test")}\n\n\n1 tests/, run_test(test_file, "--line 8")
   end
 
+  def test_should_print_out_the_full_nested_test_name
+    test_file = %{
+      context "given a test" do
+        context "that is nested deeply" do
+          should "print the full nesting name" do
+          end
+        end
+      end}
+    assert_match /given a test\n  that is nested deeply\n/, run_test(test_file, "--line 5")
+  end
+
   private
 
   def write_test(string, path)

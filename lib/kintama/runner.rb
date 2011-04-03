@@ -1,56 +1,77 @@
 module Kintama
   class Runner
-    attr_reader :runnables
-
-    def initialize(*runnables)
-      @runnables = runnables
-    end
-
-    def run(reporter=Kintama::Reporter.default, args=ARGV)
-      @ran_runnables = []
-      reporter.started(self)
+    def self.from_args(args, runnables)
       if args[0] == "--line"
-        run_test_on_line(args[1], reporter)
+        Kintama::Runner::Line.new(args[1], runnables)
       else
-        run_all_tests(reporter)
+        Kintama::Runner::Default.new(runnables)
       end
-      reporter.finished
-      reporter.show_results
-      passed?
     end
 
-    def passed?
-      failures.empty?
+    class Base
+      attr_reader :runnables
+
+      def initialize(runnables)
+        @runnables = runnables
+      end
+
+      def run(reporter=Kintama::Reporter.default, args=ARGV)
+        reporter.started(self)
+        @ran_runnables = run_tests(reporter)
+        reporter.finished
+        reporter.show_results
+        passed?
+      end
+
+      def passed?
+        failures.empty?
+      end
+
+      def failures
+        @ran_runnables.map { |r| r.failures }.flatten
+      end
+
+      def pending
+        @ran_runnables.map { |r| r.pending }.flatten
+      end
     end
 
-    def failures
-      @ran_runnables.map { |r| r.failures }.flatten
+    # Runs every test provided as part of the constructor
+    class Default < Base
+      def run_tests(reporter)
+        @runnables.each do |r|
+          r.run(reporter)
+        end
+        @runnables
+      end
     end
 
-    def pending
-      @ran_runnables.map { |r| r.pending }.flatten
-    end
+    # Runs only the test or context which contains the provided line
+    class Line < Base
+      def initialize(line, runnables)
+        super(runnables)
+        @line = line.to_i
+      end
 
-    private
-
-    def run_test_on_line(line, reporter)
-      runnable = @runnables.map { |r| r.runnable_on_line(line.to_i) }.compact.first
-      if runnable
-        if runnable.is_a_test?
-          runnable.parent.run_tests([runnable], false, reporter)
-          @ran_runnables = [runnable.parent]
-        else
-          runnable.run(reporter)
-          @ran_runnables = [runnable]
+      def run_tests(reporter)
+        runnable = @runnables.map { |r| r.runnable_on_line(@line) }.compact.first
+        if runnable
+          if runnable.is_a_test?
+            heirarchy = []
+            parent = runnable.parent.parent
+            until parent == Kintama.default_context do
+              heirarchy.unshift parent
+              parent = parent.parent
+            end
+            heirarchy.each { |context| reporter.context_started(context) }
+            runnable.parent.run_tests([runnable], false, reporter)
+            [runnable.parent]
+          else
+            runnable.run(reporter)
+            [runnable]
+          end
         end
       end
-    end
-
-    def run_all_tests(reporter)
-      @runnables.each do |r|
-        r.run(reporter)
-      end
-      @ran_runnables = @runnables
     end
   end
 end
