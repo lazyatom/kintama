@@ -1,0 +1,4 @@
+<li class="failure">
+  <p><%=h test.full_name %>: <a class="reRun" id="reRun_<%= test.full_name %>" data-file="<%= @file %>" data-line="<%= test.class.line_defined %>" href="#">run again</a></p>
+  <pre><%=h test.failure_message %></pre>
+</li>

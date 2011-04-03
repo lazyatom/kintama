@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <script type="text/javascript" src="tm-file://<%= path_to "jquery-1.5.2.min.js" %>"></script>
+    <script>
+      function reRun(options) {
+        var extra_command;
+        if (options.line != undefined) {
+          extra_command = "--only-single-test -- --line " + options.line
+        } else {
+          extra_command = "--only-results"
+        }
+        var cmd = "<%= ENV["TM_RUBY"] %> '<%= path_to "run_kintama.rb" %>' '" + options.file + "' " + extra_command;
+        $("#cmd").text(cmd);
+        var res = TextMate.system(cmd, null).outputString;
+        $("#lastOutput").text(res);
+        if (options.target) {
+          $(options.target).replaceWith(res);
+        }
+      }
+
+      function reRunSingle() {
+        reRun({file:$(this).attr("data-file"), line: $(this).attr("data-line"), target:$(this).closest("li.failure")})
+      }
+
+      function reRunFile() {
+        reRun({file:$(this).attr("data-file"), target:$("#results")})
+      }
+
+      $(document).ready(function() {
+        $("a.reRun").live("click", reRunSingle);
+        $("a.reRunFile").click(reRunFile);
+      });
+    </script>
+    <link rel="stylesheet" href="tm-file://<%= path_to "kintama.css" %>" type="text/css" media="screen" />
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <p><%= Time.now %></p>
+      </div>
+      <%= results %>
+      <a class="reRunFile" href="#" data-file="<%= @file %>">Re-run all tests</a>
+      <p id="cmd"></p>
+      <pre id="lastOutput"></pre>
+    </div>
+  </body>
+</html>
