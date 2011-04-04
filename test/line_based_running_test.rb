@@ -96,6 +96,15 @@ class LineBasedRunningTest < Test::Unit::TestCase
   end
   end
 
+  def test_raise_an_exception_if_nothing_runnable_can_be_found_for_that_line
+    test_file = %{
+      context "given a short context" do
+        should "not run this" do
+        end
+      end}
+    assert_match /Nothing runnable found on line 1/, run_test(test_file, "--line 1")
+  end
+
   private
 
   def write_test(string, path)

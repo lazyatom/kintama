@@ -72,6 +72,9 @@ module Kintama
             runnable.run(reporter)
             [runnable]
           end
+        else
+          puts "Nothing runnable found on line #{@line}"
+          exit -1
         end
       end
     end
