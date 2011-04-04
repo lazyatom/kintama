@@ -95,7 +95,7 @@ module Kintama
     # line or from within an editor
     def add_exit_hook
       return if @__added_exit_hook
-      at_exit { exit(options.runner.with(Kintama.default_context.subcontexts).run(options.reporter) ? 0 : 1) }
+      at_exit { exit(options.runner.with(Kintama.default_context).run(options.reporter) ? 0 : 1) }
       @__added_exit_hook = true
     end
 

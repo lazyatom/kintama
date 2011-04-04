@@ -12,7 +12,7 @@ module Kintama
         @runnables = []
       end
 
-      def with(runnables)
+      def with(*runnables)
         @runnables = runnables
         self
       end

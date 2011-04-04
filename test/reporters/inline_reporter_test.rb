@@ -63,6 +63,6 @@ class InlineReporterTest < Test::Unit::TestCase
   private
 
   def runner(*args)
-    Kintama::Runner::Default.new.with(args)
+    Kintama::Runner::Default.new.with(*args)
   end
 end

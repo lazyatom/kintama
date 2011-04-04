@@ -45,7 +45,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
           end
         end
       end}
-    assert_match /#{passing("should run this test")}\n#{passing("should run this test too")}\n\n\n2 tests/, run_test(test_file, "--line 6")
+    assert_match /#{passing("should run this test")}\n#{passing("should run this test too")}\n\n2 tests/, run_test(test_file, "--line 6")
   end
 
   def test_should_be_able_to_run_a_test_defined_in_a_second_top_level_context
@@ -59,7 +59,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
         should "run this test" do
         end
       end}
-    assert_match /#{passing("should run this test")}\n\n\n1 tests/, run_test(test_file, "--line 8")
+    assert_match /#{passing("should run this test")}\n\n1 tests/, run_test(test_file, "--line 8")
   end
 
   def test_should_print_out_the_full_nested_test_name
@@ -81,6 +81,19 @@ class LineBasedRunningTest < Test::Unit::TestCase
         should "ignore the pending test"
       end}
     assert_no_match /1 pending/, run_test(test_file, "--line 3")
+  end
+
+  def test_should_be_able_to_target_a_top_level_context
+  def test_should_not_show_pending_tests_in_the_same_context_as_pending_when_not_targeted
+    test_file = %{
+      context "given a context with a pending test" do
+        should "run this" do
+        end
+        should "run this too" do
+        end
+      end}
+    assert_match /2 tests/, run_test(test_file, "--line 2")
+  end
   end
 
   private

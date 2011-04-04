@@ -52,7 +52,6 @@ module Kintama
       end
 
       def show_results
-        puts
         puts test_summary
         puts "\n" + failure_messages.join("\n\n") if runner.failures.any?
       end
@@ -101,13 +100,17 @@ module Kintama
       end
 
       def context_started(context)
-        print indent + context.name + "\n" if context.name
-        @current_indent_level += 1
+        unless context == Kintama.default_context
+          print indent + context.name + "\n" if context.name
+          @current_indent_level += 1
+        end
       end
 
       def context_finished(context)
-        @current_indent_level -= 1
-        puts if @current_indent_level == 0 && context != runner.runnables.last
+        unless context == Kintama.default_context
+          @current_indent_level -= 1
+          puts if @current_indent_level == 0 && context != runner.runnables.last
+        end
       end
 
       def test_started(test)
