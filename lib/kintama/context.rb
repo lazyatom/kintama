@@ -84,7 +84,9 @@ module Kintama
 
       # Defines the subject of any matcher-based tests.
       def subject(&block)
-        define_method(:subject, &block)
+        define_method(:subject) do
+          @__subject ||= yield
+        end
       end
 
       # Define a test to run in this context.

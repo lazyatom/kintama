@@ -35,6 +35,21 @@ class MatcherTest < Test::Unit::TestCase
     assert_match /^Expected 456, but got 123/, c.failures.first.failure_message
   end
 
+  def test_should_use_a_single_instance_of_the_subject_within_a_test
+    c = context "x" do
+      subject { Array.new }
+      should "allow me to poke around with subject like it was a variable" do
+        subject << 1
+        assert_equal [1], subject
+      end
+      should "now be empty again" do
+        assert subject.empty?
+      end
+    end
+    c.run
+    assert c.passed?
+  end
+
   def test_should_allow_negation_of_matchers
     c = context "x" do
       subject { 123 }
