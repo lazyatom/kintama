@@ -96,7 +96,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
   end
   end
 
-  def test_raise_an_exception_if_nothing_runnable_can_be_found_for_that_line
+  def test_should_report_if_nothing_runnable_can_be_found_for_that_line
     test_file = %{
       context "given a short context" do
         should "not run this" do
