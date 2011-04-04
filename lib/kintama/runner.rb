@@ -65,6 +65,7 @@ module Kintama
             end
             heirarchy.each { |context| reporter.context_started(context) }
             runnable.parent.run_tests([runnable], false, reporter)
+            heirarchy.reverse.each { |context| reporter.context_finished(context) }
             [runnable.parent]
           else
             runnable.run(reporter)
