@@ -98,6 +98,19 @@ class VerboseReporterTest < Test::Unit::TestCase
     end
   end
 
+  def test_should_treat_a_context_as_transparent_if_it_has_no_name
+    c1 = context "given something" do
+      context do
+        should "pass" do
+          assert true
+        end
+      end
+    end
+    assert_output(/^given something\n  should pass: \./) do
+      runner(c1).run(@reporter)
+    end
+  end
+
   def test_should_print_out_test_names_in_colour_if_colour_is_set
     c = context "given something" do
       should "be red" do

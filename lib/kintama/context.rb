@@ -14,10 +14,10 @@ module Kintama
 
       # Create a new context. If this is called within a context, a new subcontext
       # will be created. Aliases are 'testcase' and 'describe'
-      def context(name, parent=self, &block)
+      def context(name=nil, parent=self, &block)
         c = Class.new(parent)
         c.send(:include, Kintama::Context)
-        c.name = name.to_s
+        c.name = name.to_s if name
         c.definition = caller.find { |line| line =~ /^#{block.__file__}:(\d+)$/ }
         c.class_eval(&block)
         c
