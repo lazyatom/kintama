@@ -129,6 +129,6 @@ class VerboseReporterTest < Test::Unit::TestCase
   private
 
   def runner(*args)
-    Kintama::Runner::Default.new(args)
+    Kintama::Runner::Default.new.with(args)
   end
 end

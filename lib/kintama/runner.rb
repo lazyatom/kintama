@@ -1,21 +1,23 @@
 module Kintama
   class Runner
-    def self.from_args(args, runnables)
-      if args[0] == "--line"
-        Kintama::Runner::Line.new(args[1], runnables)
-      else
-        Kintama::Runner::Default.new(runnables)
-      end
+
+    def self.default
+      Default.new
     end
 
     class Base
       attr_reader :runnables
 
-      def initialize(runnables)
-        @runnables = runnables
+      def initialize
+        @runnables = []
       end
 
-      def run(reporter=Kintama::Reporter.default, args=ARGV)
+      def with(runnables)
+        @runnables = runnables
+        self
+      end
+
+      def run(reporter=Kintama::Reporter.default)
         reporter.started(self)
         @ran_runnables = run_tests(reporter)
         reporter.finished
@@ -48,8 +50,7 @@ module Kintama
 
     # Runs only the test or context which contains the provided line
     class Line < Base
-      def initialize(line, runnables)
-        super(runnables)
+      def initialize(line)
         @line = line.to_i
       end
 

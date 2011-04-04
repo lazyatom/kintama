@@ -1,3 +1,6 @@
+require "ostruct"
+require "optparse"
+
 module Kintama
   autoload :Runnable, 'kintama/runnable'
   autoload :Context, 'kintama/context'
@@ -59,12 +62,40 @@ module Kintama
       default_context.extend(mod)
     end
 
+    def options
+      options = OpenStruct.new(
+        :reporter => Kintama::Reporter.default,
+        :runner => Kintama::Runner.default
+      )
+      opts = OptionParser.new do |opts|
+        opts.banner = "Usage: ruby <test_file> [options]"
+
+        opts.separator ""
+        opts.separator "Specific options:"
+
+        opts.on("-r", "--reporter NAME", [:inline, :verbose],
+                "Use the given reporter (inline or verbose)") do |reporter|
+          options.reporter = Kintama::Reporter.called(reporter)
+        end
+        opts.on("-l", "--line LINE",
+                "Run the test or context on the given line") do |line|
+          options.runner = Kintama::Runner::Line.new(line)
+        end
+        opts.on_tail("-h", "--help", "Show this message") do
+          puts opts
+          exit
+        end
+      end
+      opts.parse!(ARGV)
+      options
+    end
+
     # Adds the hook to automatically run all known tests using #run when
     # ruby exits; this is most useful when running a test file from the command
     # line or from within an editor
     def add_exit_hook
       return if @__added_exit_hook
-      at_exit { exit(Runner.from_args(ARGV, Kintama.default_context.subcontexts).run ? 0 : 1) }
+      at_exit { exit(options.runner.with(Kintama.default_context.subcontexts).run(options.reporter) ? 0 : 1) }
       @__added_exit_hook = true
     end
 

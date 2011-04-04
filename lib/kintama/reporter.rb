@@ -5,6 +5,17 @@ module Kintama
       Verbose.new(colour=$stdin.tty?)
     end
 
+    def self.called(name)
+      case name.to_s
+      when /verbose/i
+        default
+      when /inline/i
+        Inline.new
+      else
+        default
+      end
+    end
+
     class Base
       attr_reader :runner
 
