@@ -57,12 +57,12 @@ module Kintama
     end
 
     def failure_message
-      "#{@failure.message} (at #{failure_line})"
+      "#{@failure.message}\n#{failure_backtrace}"
     end
 
-    def failure_line
+    def failure_backtrace
       base_dir = File.expand_path("../..", __FILE__)
-      @failure.backtrace.find { |line| File.expand_path(line).index(base_dir).nil? }
+      @failure.backtrace.select { |line| File.expand_path(line).index(base_dir).nil? }.map { |l| " "*4 + File.expand_path(l) }.join("\n")
     end
   end
 end

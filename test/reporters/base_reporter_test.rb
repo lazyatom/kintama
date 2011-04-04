@@ -145,7 +145,7 @@ class BaseReporterTest < Test::Unit::TestCase
     end
     r = runner(c)
     capture_stdout { r.run(@reporter) }
-    assert_match /at #{Regexp.escape(__FILE__)}:#{$line}/, @reporter.failure_messages.first
+    assert_match /#{Regexp.escape(File.expand_path(__FILE__))}:#{$line}/, @reporter.failure_messages.first
   end
 
   private
