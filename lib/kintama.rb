@@ -63,31 +63,35 @@ module Kintama
     end
 
     def options
-      options = OpenStruct.new(
-        :reporter => Kintama::Reporter.default,
-        :runner => Kintama::Runner.default
-      )
-      opts = OptionParser.new do |opts|
-        opts.banner = "Usage: ruby <test_file> [options]"
+      unless @options
+        @options = OpenStruct.new(
+          :reporter => Kintama::Reporter.default,
+          :runner => Kintama::Runner.default
+        )
+        opts = OptionParser.new do |opts|
+          opts.banner = "Usage: ruby <test_file> [options]"
 
-        opts.separator ""
-        opts.separator "Specific options:"
+          opts.separator ""
+          opts.separator "Specific options:"
 
-        opts.on("-r", "--reporter NAME", [:inline, :verbose],
-                "Use the given reporter (inline or verbose)") do |reporter|
-          options.reporter = Kintama::Reporter.called(reporter)
+          opts.on("-r", "--reporter NAME",
+                  "Use the given reporter (inline or verbose)") do |reporter|
+                  puts "reporter!"
+            options.reporter = Kintama::Reporter.called(reporter)
+            p options.reporter
+          end
+          opts.on("-l", "--line LINE",
+                  "Run the test or context on the given line") do |line|
+            options.runner = Kintama::Runner::Line.new(line)
+          end
+          opts.on_tail("-h", "--help", "Show this message") do
+            puts opts
+            exit
+          end
         end
-        opts.on("-l", "--line LINE",
-                "Run the test or context on the given line") do |line|
-          options.runner = Kintama::Runner::Line.new(line)
-        end
-        opts.on_tail("-h", "--help", "Show this message") do
-          puts opts
-          exit
-        end
+        opts.parse!(ARGV)
       end
-      opts.parse!(ARGV)
-      options
+      @options
     end
 
     # Adds the hook to automatically run all known tests using #run when
