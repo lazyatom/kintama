@@ -4,8 +4,8 @@ module Kintama
       raise Kintama::TestFailure, message unless expression
     end
 
-    def flunk
-      assert false, "flunked."
+    def flunk(message="flunked.")
+      assert false, message
     end
 
     def assert_equal(expected, actual, message="Expected #{expected.inspect} but got #{actual.inspect}")
