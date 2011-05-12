@@ -18,7 +18,7 @@ module Kintama
         c = Class.new(parent)
         c.send(:include, Kintama::Context)
         c.name = name.to_s if name
-        c.definition = caller.find { |line| line =~ /^#{block.__file__}:(\d+)$/ }
+        c.definition = caller.find { |line| line =~ /^#{block.__file__}:(\d+)$/ rescue nil }
         c.class_eval(&block)
         c
       end
