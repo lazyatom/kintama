@@ -12,7 +12,7 @@ module Kintama
       assert actual == expected, message
     end
 
-    def assert_not_equal(expected, actual, message)
+    def assert_not_equal(expected, actual, message="Expected #{expected.inspect} to not be equal to #{actual.inspect}")
       assert actual != expected, message
     end
 
@@ -25,14 +25,31 @@ module Kintama
     end
 
     def assert_kind_of(klass, thing, message="should be a kind of #{klass}")
-      assert thing.is_a?(klass)
+      assert thing.is_a?(klass), message
     end
 
-    def assert_raises(message="should raise an exception", &block)
+    def assert_nothing_raised(message="should not raise anything", &block)
       yield
-      raise Kintama::TestFailure, message
-    rescue
-      # do nothing, we expected this, but now no TestFailure was raised.
+    rescue Exception => e
+      raise Kintama::TestFailure, message + " (#{e} was raised)"
+    end
+
+    def assert_raises(klass_or_message=Exception, message="should raise an exception", &block)
+      if klass_or_message.respond_to?(:ancestors)
+        klass = klass_or_message
+      else
+        message = klass_or_message
+      end
+      yield
+      raised = false
+    rescue => e
+      if e.class.ancestors.include?(klass)
+        raised = true
+      else
+        raised = false
+      end
+    ensure
+      raise Kintama::TestFailure, message unless raised
     end
   end
 end
