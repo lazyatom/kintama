@@ -66,7 +66,7 @@ module Kintama
       unless @options
         @options = OpenStruct.new(
           :reporter => Kintama::Reporter.default,
-          :runner => Kintama::Runner.default
+          :runner => Kintama::Runner::Default
         )
         opts = OptionParser.new do |opts|
           opts.banner = "Usage: ruby <test_file> [options]"
@@ -80,10 +80,10 @@ module Kintama
             options.reporter = Kintama::Reporter.called(reporter)
             p options.reporter
           end
-          opts.on("-l", "--line LINE",
-                  "Run the test or context on the given line") do |line|
-            options.runner = Kintama::Runner::Line.new(line)
-          end
+          # opts.on("-l", "--line LINE",
+          #         "Run the test or context on the given line") do |line|
+          #   options.runner = Kintama::Runner::Line.new(line)
+          # end
           opts.on_tail("-h", "--help", "Show this message") do
             puts opts
             exit
@@ -99,7 +99,7 @@ module Kintama
     # line or from within an editor
     def add_exit_hook
       return if @__added_exit_hook
-      at_exit { exit(options.runner.with(Kintama.default_context).run(options.reporter) ? 0 : 1) }
+      at_exit { exit(options.runner.new(Kintama.default_context).run(options.reporter) ? 0 : 1) }
       @__added_exit_hook = true
     end
 
