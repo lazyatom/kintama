@@ -1,10 +1,6 @@
 module Kintama
   class Runner
 
-    def self.default
-      Default.new
-    end
-
     class Base
       attr_reader :runnables
 
