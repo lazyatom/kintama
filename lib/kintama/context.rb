@@ -190,36 +190,37 @@ module Kintama
 
       # Runs all tests in this context and any subcontexts.
       # Returns true if all tests passed; otherwise false
-      def run(reporter=nil)
-        run_tests(tests, true, reporter)
+      def run(options={})
+        run_tests(tests, true, options)
       end
 
       # Run a specific set of tests using the given the reporter
-      def run_tests(test_set, run_subcontexts, reporter)
+      def run_tests(test_set, run_subcontexts, options)
         @ran_tests = []
+        reporter = options[:reporter]
         reporter.context_started(self) if reporter
         on_start_blocks.each { |b| instance_eval(&b) }
         test_set.each { |t| instance = t.new; instance.run(reporter); ran_tests << instance }
-        subcontexts.each { |s| s.run(reporter) } if run_subcontexts
+        subcontexts.each { |s| s.run(options) } if run_subcontexts
         on_finish_blocks.each { |b| instance_eval(&b) }
         reporter.context_finished(self) if reporter
         passed?
       end
 
-      def runnable_on_line(line)
-        sorted_runnables = all_runnables.delete_if { |r| r.line_defined.nil? }.sort_by { |r| r.line_defined }
-        if line >= sorted_runnables.first.line_defined
-          next_runnable = sorted_runnables.find { |r| r.line_defined > line }
-          index = sorted_runnables.index(next_runnable)
-          if index != nil && index > 0
-            sorted_runnables[index-1]
-          else
-            sorted_runnables.last
-          end
-        else
-          nil
-        end
-      end
+      # def runnable_on_line(line)
+      #   sorted_runnables = all_runnables.delete_if { |r| r.line_defined.nil? }.sort_by { |r| r.line_defined }
+      #   if line >= sorted_runnables.first.line_defined
+      #     next_runnable = sorted_runnables.find { |r| r.line_defined > line }
+      #     index = sorted_runnables.index(next_runnable)
+      #     if index != nil && index > 0
+      #       sorted_runnables[index-1]
+      #     else
+      #       sorted_runnables.last
+      #     end
+      #   else
+      #     nil
+      #   end
+      # end
 
       private
 

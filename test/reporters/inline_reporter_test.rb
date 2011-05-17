@@ -13,7 +13,7 @@ class InlineReporterTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^\.\n/) do
-      r.run(@reporter)
+      r.run(:reporter => @reporter)
     end
   end
 
@@ -28,7 +28,7 @@ class InlineReporterTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^\.\.\n/) do
-      r.run(@reporter)
+      r.run(:reporter => @reporter)
     end
   end
 
@@ -43,7 +43,7 @@ class InlineReporterTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^F\./) do
-      r.run(@reporter)
+      r.run(:reporter => @reporter)
     end
   end
 
@@ -56,7 +56,7 @@ class InlineReporterTest < Test::Unit::TestCase
     end
     r = runner(c)
     assert_output(/^P\./) do
-      r.run(@reporter)
+      r.run(:reporter => @reporter)
     end
   end
 

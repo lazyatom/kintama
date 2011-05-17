@@ -19,7 +19,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /^1 tests, 0 failures/, @reporter.test_summary
   end
 
@@ -33,7 +33,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /^2 tests, 0 failures/, @reporter.test_summary
   end
 
@@ -45,7 +45,7 @@ class BaseReporterTest < Test::Unit::TestCase
       should "not be implemented yet"
     end
     r = runner(c)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /^2 tests, 0 failures, 1 pending/, @reporter.test_summary
   end
 
@@ -59,7 +59,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /^1\) given something should fail:\n  flunked\./, @reporter.failure_messages[0]
   end
 
@@ -70,7 +70,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /^1 tests, 0 failures \(0\.\d+ seconds\)/, @reporter.test_summary
   end
 
@@ -86,7 +86,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     r = runner(c1, c2)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /^2 tests, 0 failures/, @reporter.test_summary
   end
 
@@ -96,7 +96,7 @@ class BaseReporterTest < Test::Unit::TestCase
       should("also pass") { assert true }
     end
     capture_stdout do
-      assert_equal true, runner(c).run(@reporter)
+      assert_equal true, runner(c).run(:reporter => @reporter)
     end
   end
 
@@ -106,7 +106,7 @@ class BaseReporterTest < Test::Unit::TestCase
       should("fail") { flunk }
     end
     capture_stdout do
-      assert_equal false, runner(c).run(@reporter)
+      assert_equal false, runner(c).run(:reporter => @reporter)
     end
   end
 
@@ -122,7 +122,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     capture_stdout do
-      assert runner(c).run(@reporter), "should not have run the context twice"
+      assert runner(c).run(:reporter => @reporter), "should not have run the context twice"
     end
   end
 
@@ -133,7 +133,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /^1\) given something should fail:\n  flunked\./, @reporter.failure_messages[0]
   end
 
@@ -144,7 +144,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
     end
     r = runner(c)
-    capture_stdout { r.run(@reporter) }
+    capture_stdout { r.run(:reporter => @reporter) }
     assert_match /#{Regexp.escape(File.expand_path(__FILE__))}:#{$line}/, @reporter.failure_messages.first
   end
 

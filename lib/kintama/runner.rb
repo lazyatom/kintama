@@ -8,9 +8,10 @@ module Kintama
         @runnables = runnables
       end
 
-      def run(reporter=Kintama::Reporter.default)
+      def run(options={:reporter=>Kintama::Reporter.default})
+        reporter = options[:reporter]
         reporter.started(self)
-        @ran_runnables = run_tests(reporter)
+        @ran_runnables = run_tests(options)
         reporter.finished
         reporter.show_results
         passed?
@@ -31,9 +32,9 @@ module Kintama
 
     # Runs every test provided as part of the constructor
     class Default < Base
-      def run_tests(reporter)
+      def run_tests(options)
         @runnables.each do |r|
-          r.run(reporter)
+          r.run(options)
         end
         @runnables
       end
