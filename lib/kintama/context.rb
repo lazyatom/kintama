@@ -191,17 +191,12 @@ module Kintama
       # Runs all tests in this context and any subcontexts.
       # Returns true if all tests passed; otherwise false
       def run(options={})
-        run_tests(tests, true, options)
-      end
-
-      # Run a specific set of tests using the given the reporter
-      def run_tests(test_set, run_subcontexts, options)
         @ran_tests = []
         reporter = options[:reporter]
         reporter.context_started(self) if reporter
         on_start_blocks.each { |b| instance_eval(&b) }
-        test_set.each { |t| instance = t.new; instance.run(reporter); ran_tests << instance }
-        subcontexts.each { |s| s.run(options) } if run_subcontexts
+        tests.each { |t| instance = t.new; instance.run(reporter); ran_tests << instance }
+        subcontexts.each { |s| s.run(options) }
         on_finish_blocks.each { |b| instance_eval(&b) }
         reporter.context_finished(self) if reporter
         passed?
