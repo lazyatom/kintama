@@ -57,6 +57,7 @@ class AssertionsTest < Test::Unit::TestCase
     assert_passed { @test.assert_raises(StandardError) { raise StandardError, "urgh" } }
     assert_failed("no way") { @test.assert_raises("no way") { false } }
     assert_failed { @test.assert_raises(RuntimeError) { raise StandardError, "urgh" } }
+    assert_passed { @test.assert_raises("woah") { this_method_doesnt_exist } }
   end
 
   private

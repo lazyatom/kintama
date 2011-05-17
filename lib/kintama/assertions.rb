@@ -39,6 +39,7 @@ module Kintama
         klass = klass_or_message
       else
         message = klass_or_message
+        klass = Exception
       end
       yield
       raised = false
