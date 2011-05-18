@@ -195,7 +195,7 @@ module Kintama
         reporter = options[:reporter]
         reporter.context_started(self) if reporter
         on_start_blocks.each { |b| instance_eval(&b) }
-        tests.each { |t| instance = t.new; instance.run(reporter); ran_tests << instance }
+        tests.each { |t| instance = t.new; instance.run(options); ran_tests << instance }
         subcontexts.each { |s| s.run(options) }
         on_finish_blocks.each { |b| instance_eval(&b) }
         reporter.context_finished(self) if reporter
