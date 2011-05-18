@@ -18,7 +18,7 @@ module Kintama
         c = Class.new(parent)
         c.send(:include, Kintama::Context)
         c.name = name.to_s if name
-        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)$/ }
+        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)(:in `__script__')?$/ }
         c.class_eval(&block)
         c
       end
@@ -94,7 +94,7 @@ module Kintama
         c = Class.new(self)
         c.send(:include, Kintama::Test)
         c.name = name
-        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)$/ }
+        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)(:in `__script__')?$/ }
         c.block = block if block_given?
       end
 
