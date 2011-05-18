@@ -100,16 +100,16 @@ module Kintama
       end
 
       def context_started(context)
-        unless context == Kintama.default_context || context.name == nil
+        if context.name != nil
           print indent + context.name + "\n" if context.name
           @current_indent_level += 1
         end
       end
 
       def context_finished(context)
-        unless context == Kintama.default_context || context.name == nil
+        if context.name != nil
           @current_indent_level -= 1
-          puts if @current_indent_level == 0 #&& context != runner.runnables.last
+          puts if @current_indent_level == 0
         end
       end
 
