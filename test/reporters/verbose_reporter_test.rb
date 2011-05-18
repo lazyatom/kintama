@@ -83,7 +83,7 @@ class VerboseReporterTest < Test::Unit::TestCase
   end
 
   def test_should_nest_verbose_output_properly_when_running_tests_from_several_contexts
-    c1 = context "given something" do
+    c1 = context "given a thing" do
       should "pass" do
         assert true
       end
@@ -93,13 +93,13 @@ class VerboseReporterTest < Test::Unit::TestCase
         assert true
       end
     end
-    assert_output(/^given something\n  should pass: \.\n\ngiven another thing\n  should also pass: \./) do
-      runner(c1, c2).run(:reporter => @reporter)
+    assert_output(/^given a thing\n  should pass: \.\n\ngiven another thing\n  should also pass: \./) do
+      runner.run(:reporter => @reporter)
     end
   end
 
   def test_should_treat_a_context_as_transparent_if_it_has_no_name
-    c1 = context "given something" do
+    c = context "given something" do
       context do
         should "pass" do
           assert true
@@ -107,7 +107,7 @@ class VerboseReporterTest < Test::Unit::TestCase
       end
     end
     assert_output(/^given something\n  should pass: \./) do
-      runner(c1).run(:reporter => @reporter)
+      runner(c).run(:reporter => @reporter)
     end
   end
 
@@ -140,8 +140,4 @@ class VerboseReporterTest < Test::Unit::TestCase
   end
 
   private
-
-  def runner(*args)
-    Kintama::Runner::Default.new(*args)
-  end
 end

@@ -18,8 +18,7 @@ class BaseReporterTest < Test::Unit::TestCase
         assert true
       end
     end
-    r = runner(c)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner(c).run(:reporter => @reporter) }
     assert_match /^1 tests, 0 failures/, @reporter.test_summary
   end
 
@@ -32,8 +31,7 @@ class BaseReporterTest < Test::Unit::TestCase
         assert true
       end
     end
-    r = runner(c)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner(c).run(:reporter => @reporter) }
     assert_match /^2 tests, 0 failures/, @reporter.test_summary
   end
 
@@ -44,8 +42,7 @@ class BaseReporterTest < Test::Unit::TestCase
       end
       should "not be implemented yet"
     end
-    r = runner(c)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner(c).run(:reporter => @reporter) }
     assert_match /^2 tests, 0 failures, 1 pending/, @reporter.test_summary
   end
 
@@ -58,8 +55,7 @@ class BaseReporterTest < Test::Unit::TestCase
         assert true
       end
     end
-    r = runner(c)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner(c).run(:reporter => @reporter) }
     assert_match /^1\) given something should fail:\n  flunked\./, @reporter.failure_messages[0]
   end
 
@@ -69,24 +65,22 @@ class BaseReporterTest < Test::Unit::TestCase
         assert true
       end
     end
-    r = runner(c)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner(c).run(:reporter => @reporter) }
     assert_match /^1 tests, 0 failures \(0\.\d+ seconds\)/, @reporter.test_summary
   end
 
   def test_should_be_able_to_run_tests_from_several_contexts
-    c1 = context "given something" do
+    context "given something" do
       should "pass" do
         assert true
       end
     end
-    c2 = context "given another thing" do
+    context "given another thing" do
       should "also pass" do
         assert true
       end
     end
-    r = runner(c1, c2)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner.run(:reporter => @reporter) }
     assert_match /^2 tests, 0 failures/, @reporter.test_summary
   end
 
@@ -132,8 +126,7 @@ class BaseReporterTest < Test::Unit::TestCase
         flunk
       end
     end
-    r = runner(c)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner(c).run(:reporter => @reporter) }
     assert_match /^1\) given something should fail:\n  flunked\./, @reporter.failure_messages[0]
   end
 
@@ -143,15 +136,7 @@ class BaseReporterTest < Test::Unit::TestCase
         $line = __LINE__; flunk
       end
     end
-    r = runner(c)
-    capture_stdout { r.run(:reporter => @reporter) }
+    capture_stdout { runner(c).run(:reporter => @reporter) }
     assert_match /#{Regexp.escape(File.expand_path(__FILE__))}:#{$line}/, @reporter.failure_messages.first
   end
-
-  private
-
-  def runner(*args)
-    Kintama::Runner::Default.new(*args)
-  end
-
 end

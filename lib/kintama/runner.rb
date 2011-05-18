@@ -2,16 +2,14 @@ module Kintama
   class Runner
 
     class Base
-      attr_reader :runnables
-
-      def initialize(*runnables)
-        @runnables = runnables
+      def initialize(runnable=Kintama.default_context)
+        @runnable = runnable
       end
 
       def run(options={:reporter=>Kintama::Reporter.default})
         reporter = options[:reporter]
         reporter.started(self)
-        @ran_runnables = run_tests(options)
+        run_tests(options)
         reporter.finished
         reporter.show_results
         passed?
@@ -22,21 +20,18 @@ module Kintama
       end
 
       def failures
-        @ran_runnables.map { |r| r.failures }.flatten
+        @runnable.failures
       end
 
       def pending
-        @ran_runnables.map { |r| r.pending }.flatten
+        @runnable.pending
       end
     end
 
     # Runs every test provided as part of the constructor
     class Default < Base
       def run_tests(options)
-        @runnables.each do |r|
-          r.run(options)
-        end
-        @runnables
+        @runnable.run(options)
       end
     end
 

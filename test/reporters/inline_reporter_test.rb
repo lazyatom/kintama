@@ -59,10 +59,4 @@ class InlineReporterTest < Test::Unit::TestCase
       r.run(:reporter => @reporter)
     end
   end
-
-  private
-
-  def runner(*args)
-    Kintama::Runner::Default.new(*args)
-  end
 end

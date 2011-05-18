@@ -33,4 +33,8 @@ class Test::Unit::TestCase
       assert_equal expected, output
     end
   end
+
+  def runner(context=Kintama.default_context)
+    Kintama::Runner::Default.new(context)
+  end
 end
