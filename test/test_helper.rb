@@ -35,6 +35,6 @@ class Test::Unit::TestCase
   end
 
   def runner(context=Kintama.default_context)
-    Kintama::Runner::Default.new(context)
+    Kintama::Runner::Base.new(context)
   end
 end

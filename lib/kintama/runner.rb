@@ -1,7 +1,11 @@
+require "forwardable"
+
 module Kintama
   class Runner
 
     class Base
+      extend Forwardable
+
       def initialize(runnable=Kintama.default_context)
         @runnable = runnable
       end
@@ -15,24 +19,11 @@ module Kintama
         passed?
       end
 
-      def passed?
-        failures.empty?
-      end
-
-      def failures
-        @runnable.failures
-      end
-
-      def pending
-        @runnable.pending
-      end
-    end
-
-    # Runs every test provided as part of the constructor
-    class Default < Base
       def run_tests(options)
         @runnable.run(options)
       end
+
+      def_delegators :@runnable, :passed?, :failures, :pending
     end
 
     # Runs only the test or context which contains the provided line

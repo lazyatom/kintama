@@ -66,7 +66,7 @@ module Kintama
       unless @options
         @options = OpenStruct.new(
           :reporter => Kintama::Reporter.default,
-          :runner => Kintama::Runner::Default
+          :runner => Kintama::Runner::Base
         )
         opts = OptionParser.new do |opts|
           opts.banner = "Usage: ruby <test_file> [options]"
