@@ -84,6 +84,8 @@ class LineBasedRunningTest < Test::Unit::TestCase
   end
 
   def test_should_be_able_to_target_a_top_level_context
+  end
+
   def test_should_not_show_pending_tests_in_the_same_context_as_pending_when_not_targeted
     test_file = %{
       context "given a context with a pending test" do
@@ -93,7 +95,6 @@ class LineBasedRunningTest < Test::Unit::TestCase
         end
       end}
     assert_match /2 tests/, run_test(test_file, "--line 2")
-  end
   end
 
   def test_should_report_if_nothing_runnable_can_be_found_for_that_line

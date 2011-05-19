@@ -30,7 +30,7 @@ module Kintama
       end
 
       def line_defined
-        definition ? definition.gsub(":in `__script__')", "").split(":").last.to_i : nil
+        definition ? definition.last : nil
       end
     end
   end

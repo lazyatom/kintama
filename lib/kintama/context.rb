@@ -12,13 +12,35 @@ module Kintama
 
     module ClassMethods
 
+      def find_definition_1_8
+        line = caller.find { |line| line =~ /^[^:]+:(\d+)$/ }
+        if line
+          parts = line.split(":")
+          parts[1] = parts[1].to_i
+          parts
+        end
+      end
+
+      def find_definition_1_9(&block)
+        block ? block.source_location : nil
+      end
+
+      def find_definition(&block)
+        case RUBY_ENGINE
+        when "ruby"
+          RUBY_VERSION == "1.9.2" ? find_definition_1_9(&block) : find_definition_1_8
+        when "rbx"
+          find_definition_rbx
+        end
+      end
+
       # Create a new context. If this is called within a context, a new subcontext
       # will be created. Aliases are 'testcase' and 'describe'
       def context(name=nil, parent=self, &block)
         c = Class.new(parent)
         c.send(:include, Kintama::Context)
         c.name = name.to_s if name
-        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)(:in `__script__')?$/ }
+        c.definition = find_definition(&block)
         c.class_eval(&block)
         c
       end
@@ -94,7 +116,7 @@ module Kintama
         c = Class.new(self)
         c.send(:include, Kintama::Test)
         c.name = name
-        c.definition = caller.find { |line| line =~ /^[^:]+:(\d+)(:in `__script__')?$/ }
+        c.definition = find_definition(&block)
         c.block = block if block_given?
       end
 
@@ -207,8 +229,9 @@ module Kintama
       end
 
       def runnable_on_line(line)
-        sorted_runnables = all_runnables.delete_if { |r| r.line_defined.nil? }.sort_by { |r| r.line_defined }
-        if line >= sorted_runnables.first.line_defined
+        known_runnables = all_runnables.delete_if { |r| r.line_defined.nil? }
+        sorted_runnables = known_runnables.sort_by { |r| r.line_defined }
+        if sorted_runnables.first && line >= sorted_runnables.first.line_defined
           next_runnable = sorted_runnables.find { |r| r.line_defined > line }
           index = sorted_runnables.index(next_runnable)
           if index != nil && index > 0
