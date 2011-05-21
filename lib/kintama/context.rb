@@ -22,15 +22,26 @@ module Kintama
       end
 
       def find_definition_1_9(&block)
-        block ? block.source_location : nil
+        block.source_location if block
+      end
+
+      def find_definition_rbx(&block)
+        if block
+          m = block.block.code
+          [m.file, m.first_line]
+        end
       end
 
       def find_definition(&block)
-        case RUBY_ENGINE
-        when "ruby"
-          RUBY_VERSION == "1.9.2" ? find_definition_1_9(&block) : find_definition_1_8
-        when "rbx"
-          find_definition_rbx
+        if defined? RUBY_ENGINE
+          case RUBY_ENGINE
+          when "ruby"
+            RUBY_VERSION == "1.9.2" ? find_definition_1_9(&block) : find_definition_1_8
+          when "rbx"
+            find_definition_rbx(&block)
+          end
+        else
+          find_definition_1_8
         end
       end
 
