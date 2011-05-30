@@ -52,7 +52,7 @@ module Kintama
         c.send(:include, Kintama::Context)
         c.name = name.to_s if name
         c.definition = find_definition(&block)
-        c.class_eval(&block)
+        c.class_eval(&block) if block
         c
       end
       alias_method :testcase, :context

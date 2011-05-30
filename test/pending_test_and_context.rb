@@ -10,4 +10,11 @@ class PendingTest < Test::Unit::TestCase
     assert c.passed?
   end
 
+  def test_should_ignore_empty_contexts
+    c = context "Given an empty context" do
+      context "should ignore this"
+    end
+    c.run
+    assert c.passed?
+  end
 end
