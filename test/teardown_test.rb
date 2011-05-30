@@ -89,4 +89,18 @@ class TeardownTest < Test::Unit::TestCase
     assert !c.passed?
     assert ran
   end
+
+  def test_should_not_mask_exceptions_in_tests_with_ones_in_teardown
+    c = context "Given a test that fails" do
+      should "report this error" do
+        raise "this"
+      end
+      teardown do
+        raise "that"
+      end
+    end
+    c.run
+    assert !c.passed?
+    assert_equal "this", c.failures.first.failure.to_s
+  end
 end

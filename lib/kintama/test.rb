@@ -32,7 +32,7 @@ module Kintama
           begin
             teardown
           rescue Exception => e
-            @failure = e
+            @failure ||= e
           end
         end
       end
