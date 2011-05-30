@@ -24,6 +24,10 @@ module Kintama
       assert_not_equal nil, object, message
     end
 
+    def assert_match(regexp, string, message="expected #{string.inspect} to match #{regexp.inspect}")
+      assert (string =~ regexp), message
+    end
+
     def assert_kind_of(klass, thing, message="should be a kind of #{klass}")
       assert thing.is_a?(klass), message
     end

@@ -60,6 +60,11 @@ class AssertionsTest < Test::Unit::TestCase
     assert_passed { @test.assert_raises("woah") { this_method_doesnt_exist } }
   end
 
+  def test_should_provide_assert_match
+    assert_passed { @test.assert_match /jam/, "bluejam" }
+    assert_failed(%|expected "blah" to match /mm/|) { @test.assert_match /mm/, "blah" }
+  end
+
   private
 
   def assert_passed
