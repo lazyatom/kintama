@@ -65,6 +65,14 @@ class AssertionsTest < Test::Unit::TestCase
     assert_failed(%|expected "blah" to match /mm/|) { @test.assert_match /mm/, "blah" }
   end
 
+  def test_should_provide_assert_same_elements_to_compare_arrays
+    assert_passed { @test.assert_same_elements [1,2,3], [1,2,3] }
+    assert_passed { @test.assert_same_elements [1,2,3], [3,1,2] }
+    assert_failed("#{[1,3,4].inspect} does not contain the same elements as #{[1,2,3].inspect}") do
+      @test.assert_same_elements [1,2,3], [1,3,4]
+    end
+  end
+
   private
 
   def assert_passed

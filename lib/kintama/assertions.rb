@@ -1,3 +1,5 @@
+require "set"
+
 module Kintama
   module Assertions
     def assert(expression, message="failed")
@@ -30,6 +32,10 @@ module Kintama
 
     def assert_kind_of(klass, thing, message="should be a kind of #{klass}")
       assert thing.is_a?(klass), message
+    end
+
+    def assert_same_elements(expected, object, message = "#{object.inspect} does not contain the same elements as #{expected.inspect}")
+      assert Set.new(expected) == Set.new(object), message
     end
 
     def assert_nothing_raised(message="should not raise anything", &block)
