@@ -1,4 +1,4 @@
-require 'mocha/standalone'
+require 'mocha/api'
 
 Kintama.include Mocha::API
 Kintama.teardown do

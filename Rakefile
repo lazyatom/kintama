@@ -21,7 +21,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name              = "kintama"
-  s.version           = "0.1.9"
+  s.version           = "0.1.10"
   s.summary           = "It's for writing tests."
   s.author            = "James Adam"
   s.email             = "james@lazyatom.com"
