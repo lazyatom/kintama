@@ -2,3 +2,4 @@ pkg/*
 doc/*
 .DS_Store
 dogfood.rb
+Gemfile.lock

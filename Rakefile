@@ -21,7 +21,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name              = "kintama"
-  s.version           = "0.1.8"
+  s.version           = "0.1.9"
   s.summary           = "It's for writing tests."
   s.author            = "James Adam"
   s.email             = "james@lazyatom.com"
@@ -40,7 +40,8 @@ spec = Gem::Specification.new do |s|
   # s.add_dependency("some_other_gem", "~> 0.1.0")
 
   # If your tests use any gems, include them here
-  # s.add_development_dependency("mocha") # for example
+  s.add_development_dependency("mocha")
+  s.add_development_dependency("rake")
 end
 
 # This task actually builds the gem. We also regenerate a static
