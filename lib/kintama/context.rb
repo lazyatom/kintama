@@ -115,11 +115,16 @@ module Kintama
       end
       alias_method :after_all, :on_finish
 
+      def let(name, &block)
+        define_method(name) do
+          memo = "@__#{name}"
+          instance_variable_get(memo) || instance_variable_set(memo, yield)
+        end
+      end
+
       # Defines the subject of any matcher-based tests.
       def subject(&block)
-        define_method(:subject) do
-          @__subject ||= yield
-        end
+        let("subject", &block)
       end
 
       # Define a test to run in this context.
