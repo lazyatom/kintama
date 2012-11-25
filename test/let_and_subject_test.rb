@@ -39,6 +39,16 @@ class LetAndSubjectTest < Test::Unit::TestCase
     assert x.passed?
   end
 
+  def test_let_methods_should_be_callable_from_other_let_methods
+    x = context "" do
+      let(:alpha) { 123 }
+      let(:beta) { alpha == 123 }
+      it("a") { assert beta }
+    end
+    x.run
+    assert x.passed?
+  end
+
   def test_subject_should_work_just_like_lets
     x = context "" do
       subject { Object.new }
