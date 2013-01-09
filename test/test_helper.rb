@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require 'test/unit'
+require 'bundler/setup'
 
 ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = "true"
 require 'kintama'

@@ -1,9 +1,46 @@
 module Kintama
   module Context
-    def setup # noop
+    def setup
+      (setup_blocks + after_setup_blocks).each do |block|
+        instance_eval(&block)
+      end
     end
 
-    def teardown # noop
+    def teardown
+      blocks = teardown_blocks
+      blocks.each do |block|
+        instance_eval(&block)
+      end
+    end
+
+    def setup_blocks
+      context = self.class
+      blocks = context.setup_blocks
+      while(context.superclass.respond_to?(:setup_blocks))
+        context = context.superclass
+        blocks.unshift(*context.setup_blocks)
+      end
+      blocks
+    end
+
+    def after_setup_blocks
+      context = self.class
+      blocks = context.after_setup_blocks
+      while(context.superclass.respond_to?(:after_setup_blocks))
+        context = context.superclass
+        blocks.unshift(*context.after_setup_blocks)
+      end
+      blocks
+    end
+
+    def teardown_blocks
+      context = self.class
+      blocks = context.teardown_blocks
+      while(context.superclass.respond_to?(:teardown_blocks))
+        context = context.superclass
+        blocks.push(*context.teardown_blocks)
+      end
+      blocks
     end
 
     def self.included(base)
@@ -67,6 +104,10 @@ module Kintama
         @setup_blocks ||= []
       end
 
+      def after_setup_blocks
+        @after_setup_blocks ||= []
+      end
+
       def teardown_blocks
         @teardown_blocks ||= []
       end
@@ -75,26 +116,17 @@ module Kintama
       # It will also be run for any subcontexts, before their own setup blocks
       def setup(&block)
         self.setup_blocks << block
-
-        # redefine setup for the current set of blocks
-        blocks = self.setup_blocks
-        define_method(:setup) do
-          super()
-          blocks.each { |b| instance_eval(&b) }
-        end
       end
+
+      def after_setup(&block)
+        self.after_setup_blocks << block
+      end
+      alias_method :action, :after_setup
 
       # Define the teardown for this context.
       # It will also be run for any subcontexts, after their own teardown blocks
       def teardown(&block)
         self.teardown_blocks << block
-
-        # redefine teardown for the current set of blocks
-        blocks = self.teardown_blocks
-        define_method(:teardown) do
-          blocks.each { |b| instance_eval(&b) }
-          super()
-        end
       end
 
       def on_start_blocks
