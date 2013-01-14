@@ -1,6 +1,6 @@
 require "test_helper"
 
-class MatcherTest < Test::Unit::TestCase
+class MatcherTest < KintamaIntegrationTest
 
   class EqualMatcher
     def initialize(expected)
@@ -26,17 +26,20 @@ class MatcherTest < Test::Unit::TestCase
   end
 
   def test_should_allow_use_of_matchers_within_contexts
-    c = context "x" do
+    context "x" do
       subject { 123 }
       should EqualMatcher.new(456)
-    end
-    c.run
-    assert !c.passed?
-    assert_match /^Expected 456, but got 123/, c.failures.first.failure_message
+    end.
+    should_output(%{
+      x
+        should be equal to 456: F
+    }).
+    and_fail.
+    with_failure("Expected 456, but got 123")
   end
 
   def test_should_use_a_single_instance_of_the_subject_within_a_test
-    c = context "x" do
+    context "x" do
       subject { Array.new }
       should "allow me to poke around with subject like it was a variable" do
         subject << 1
@@ -45,19 +48,26 @@ class MatcherTest < Test::Unit::TestCase
       should "now be empty again" do
         assert subject.empty?
       end
-    end
-    c.run
-    assert c.passed?
+    end.
+    should_output(%{
+      x
+        should allow me to poke around with subject like it was a variable: .
+        should now be empty again: .
+    }).
+    and_pass
   end
 
   def test_should_allow_negation_of_matchers
-    c = context "x" do
+    context "x" do
       subject { 123 }
       should_not EqualMatcher.new(123)
-    end
-    c.run
-    assert !c.passed?
-    assert_match /^Didn't expect 123, but got it anyway/, c.failures.first.failure_message
+    end.
+    should_output(%{
+      x
+        should not be equal to 123: F
+    }).
+    and_fail.
+    with_failure("Didn't expect 123, but got it anyway")
   end
 
   module MatcherExtension
@@ -68,13 +78,16 @@ class MatcherTest < Test::Unit::TestCase
 
   def test_should_allow_definition_of_matchers_in_contexts
     Kintama.extend(MatcherExtension)
-    c = context "x" do
+    context "x" do
       subject { 'abc' }
       should be_equal_to('abc')
       should_not be_equal_to('def')
-    end
-    c.run
-    assert c.passed?
-    assert_equal ["should be equal to \"abc\"", "should not be equal to \"def\""], c.tests.map { |t| t.name }
+    end.
+    should_output(%{
+      x
+        should be equal to "abc": .
+        should not be equal to "def": .
+    }).
+    and_pass
   end
 end

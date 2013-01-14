@@ -19,7 +19,7 @@ module Kintama
     class Base
       attr_reader :runner
 
-      def initialize
+      def initialize(*args)
         @test_count = 0
       end
 

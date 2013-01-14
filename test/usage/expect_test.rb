@@ -1,13 +1,14 @@
 require 'test_helper'
 
-class ExpectTest < Test::Unit::TestCase
+class ExpectTest < KintamaIntegrationTest
+
   def setup
     # reload mocha because the reset removes the extensions
     require 'kintama/mocha'
   end
 
   def test_should_allow_setting_of_expectations_in_tests
-    x = context "Given an expectation" do
+    context "Given an expectation" do
       setup do
         @thing = stub('thing')
       end
@@ -16,13 +17,16 @@ class ExpectTest < Test::Unit::TestCase
         @thing.expects(:blah)
         @thing.blah
       end
-    end
-    x.run
-    assert x.passed?
+    end.
+    should_output(%{
+      Given an expectation
+        expect blah to be called
+    }).
+    and_pass
   end
 
   def test_should_report_failed_expectations_as_failures
-    x = context "Given an expectation" do
+    context "Given an expectation" do
       setup do
         @thing = stub('thing')
       end
@@ -30,14 +34,16 @@ class ExpectTest < Test::Unit::TestCase
       expect "blah to be called" do
         @thing.expects(:blah)
       end
-    end
-    x.run
-    refute x.passed?
-    assert_match /unsatisfied expectations/, x.failures.first.failure.message
+    end.
+    should_output(%{
+      unsatisfied expectations:
+      - expected exactly once, not yet invoked: #<Mock:thing>.blah
+    }).
+    and_fail
   end
 
   def test_should_set_expectations_before_action_is_called
-    x = context "Given an action" do
+    context "Given an action" do
       setup do
         @thing = stub('thing')
       end
@@ -47,13 +53,16 @@ class ExpectTest < Test::Unit::TestCase
       expect "go to be called on thing" do
         @thing.expects(:go)
       end
-    end
-    x.run
-    assert x.passed?
+    end.
+    should_output(%{
+      Given an action
+        expect go to be called on thing
+    }).
+    and_pass
   end
 
   def test_should_not_set_expectations_for_normal_tests_defined_near_the_expect
-    x = context "Given an expectation" do
+    context "Given an expectation" do
       setup do
         @thing = [1,2,3]
       end
@@ -66,8 +75,11 @@ class ExpectTest < Test::Unit::TestCase
       it "should retain original behaviour in other tests" do
         assert_equal "123", @thing.join
       end
-    end
-    x.run
-    assert x.passed?
+    end.should_output(%{
+      Given an expectation
+        it should retain original behaviour in other tests: .
+        expect blah to be called: .
+    }).
+    and_pass
   end
 end

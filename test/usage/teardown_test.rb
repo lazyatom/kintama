@@ -1,10 +1,13 @@
 require 'test_helper'
 
-class TeardownTest < Test::Unit::TestCase
+class TeardownTest < KintamaIntegrationTest
+
+  def setup
+    $called = false
+  end
 
   def test_should_run_teardown_after_the_test_finishes
-    $called = false
-    x = context "Given a teardown" do
+    context "Given a teardown" do
       teardown do
         raise "Argh" unless @result == 123
         $called = true
@@ -12,15 +15,13 @@ class TeardownTest < Test::Unit::TestCase
       should "run teardown after this test" do
         @result = 123
       end
-    end
-    x.run
-    assert x.passed?
+    end.should_pass
+
     assert $called
   end
 
   def test_should_run_all_teardowns_in_proximity_of_nesting_order_after_a_nested_test_finishes
-    $called = false
-    x = context "Given a teardown" do
+    context "Given a teardown" do
       teardown do
         raise "Argh" unless @result == 123
         $called = true
@@ -34,29 +35,26 @@ class TeardownTest < Test::Unit::TestCase
           @result = 456
         end
       end
-    end
-    x.run
-    assert x.passed?
+    end.should_pass
+
     assert $called
   end
 
   def test_should_run_teardown_defined_on_kintama_itself_after_other_teardowns
-    ran = false
     Kintama.teardown do
-      ran = true
+      $called = true
       assert_equal 'blah', @thing
     end
-    c = context "Given a context" do
+    context "Given a context" do
       should "have run the setup defined in the default behaviour" do
         # nothing
       end
       teardown do
         @thing = 'blah'
       end
-    end
-    c.run
-    assert c.passed?, "@thing was not redefined!"
-    assert ran
+    end.should_pass
+
+    assert $called
   end
 
   def test_should_allow_multiple_teardowns_to_be_registered
@@ -66,41 +64,47 @@ class TeardownTest < Test::Unit::TestCase
     Kintama.teardown do
       $ran += 1
     end
-    c = context "Given multiple setups" do
+    context "Given multiple setups" do
       should "run them all" do
         assert true
       end
-    end
-    c.run
+    end.should_pass
+
     assert_equal 2, $ran, "both teardowns didn't run"
   end
 
   def test_should_run_teardowns_even_after_exceptions
-    ran = false
-    c = context "Given a test that fails" do
+    context "Given a test that fails" do
       should "still run teardown" do
         raise "argh"
       end
       teardown do
-        ran = true
+        $called = true
       end
-    end
-    c.run
-    assert !c.passed?
-    assert ran
+    end.
+    should_output(%{
+      Given a test that fails
+        should still run teardown: F
+    }).
+    and_fail
+
+    assert $called
   end
 
   def test_should_not_mask_exceptions_in_tests_with_ones_in_teardown
-    c = context "Given a test that fails" do
-      should "report this error" do
-        raise "this"
+    context "Given a test and teardown that fails" do
+      should "report the error in the test" do
+        raise "exception from test"
       end
       teardown do
-        raise "that"
+        raise "exception from teardown"
       end
-    end
-    c.run
-    assert !c.passed?
-    assert_equal "this", c.failures.first.failure.to_s
+    end.
+    should_output(%{
+      Given a test and teardown that fails
+        should report the error in the test: F
+    }).
+    and_fail.
+    with_failure("exception from test")
   end
 end
