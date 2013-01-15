@@ -18,14 +18,32 @@ class AliasesTest < KintamaIntegrationTest
   end
 
   def test_provides_testcase_alias_for_context
-    testcase "A context defined using `testcase`" do
-      test "does not prefix anything to the context name" do
-        assert true
+    context "In a kintama test" do
+      testcase "a context defined using `testcase`" do
+        test "does not prefix anything to the context name" do
+          assert true
+        end
       end
     end.
     should_output(%{
-      A context defined using `testcase`
-        does not prefix anything to the context name: .
+      In a kintama test
+        a context defined using `testcase`
+          does not prefix anything to the context name: .
+    })
+  end
+
+  def test_provides_describe_alias_for_context
+    context "In a kintama test" do
+      describe "a context defined using `describe`" do
+        test "does not prefix anything to the context name" do
+          assert true
+        end
+      end
+    end.
+    should_output(%{
+      In a kintama test
+        a context defined using `describe`
+          does not prefix anything to the context name: .
     })
   end
 

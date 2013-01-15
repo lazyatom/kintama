@@ -198,7 +198,7 @@ class StartAndFinishTest < KintamaIntegrationTest
         spy.in_before_all
       end
 
-      should "run exactly as on_start and `on_finish` blocks" do
+      should "run exactly as `on_start` and `on_finish` blocks" do
         spy.in_test
       end
 
@@ -213,5 +213,4 @@ class StartAndFinishTest < KintamaIntegrationTest
   def test_spy
     stub('test spy', poke: nil)
   end
-
 end

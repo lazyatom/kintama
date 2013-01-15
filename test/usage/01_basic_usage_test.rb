@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class KintamaTest < KintamaIntegrationTest
+class BasicUsageTest < KintamaIntegrationTest
 
   def test_should_pass_when_all_tests_pass
     context "Given a test that passes" do
@@ -31,21 +31,22 @@ class KintamaTest < KintamaIntegrationTest
   def test_should_fail_when_any_tests_fail
     context "Given two tests" do
       should "pass the passing test" do
-        flunk
+        assert true
       end
 
       should "ultimately fail because there is one failing test" do
-        assert true
+        flunk
       end
     end.
     should_run_tests(2).
-    and_fail
+    and_fail.
+    with_failure("should ultimately fail because there is one failing test")
   end
 
   def test_should_fail_when_any_assertion_within_a_test_fails
     context "Given a test with two assertions" do
       should "fail because one of the assertions doesn't pass" do
-        flunk "fail here"
+        assert 1 == 2
         assert true
       end
     end.

@@ -1,9 +1,14 @@
 require 'test_helper'
 
-class ExpectTest < KintamaIntegrationTest
+class ExpectationsAndMockingTest < KintamaIntegrationTest
 
   def setup
-    # reload mocha because the reset removes the extensions
+    # In order to use the Mocha integration in Kintama, you need to
+    # require 'kintama/mocha'.
+    #
+    # We require it in the setup here to ensure that the behavious is
+    # available for every test that runs in this test case, because Kintama
+    # is thoroughly reset after each test by default.
     require 'kintama/mocha'
   end
 

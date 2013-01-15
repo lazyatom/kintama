@@ -68,10 +68,6 @@ class KintamaIntegrationTest < Test::Unit::TestCase
     ContextTestRunner.new(Kintama.context(name, &block), self)
   end
 
-  def testcase(name, &block)
-    ContextTestRunner.new(Kintama.testcase(name, &block), self)
-  end
-
   class ContextTestRunner
     def initialize(context, test_unit_test)
       @test_unit_test = test_unit_test

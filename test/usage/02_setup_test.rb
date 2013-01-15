@@ -16,7 +16,7 @@ class SetupTest < KintamaIntegrationTest
     and_pass
   end
 
-  def test_should_allow_call_all_setup_methods_when_running_tests_in_a_nested_context
+  def test_should_call_all_setup_methods_when_running_tests_in_a_nested_context
     context "Given a setup block in the outer context" do
       setup do
         @name = "james"
@@ -62,20 +62,20 @@ class SetupTest < KintamaIntegrationTest
 
   def test_should_run_setup_defined_on_kintama_itself_before_other_setups
     Kintama.setup do
-      @thing = 'well then'
+      @thing = 'abc'
     end
 
     context "Given a context with a setup block" do
       setup do
-        @thing += ' now then'
+        @thing += ' easy as 123'
       end
 
       should "have run the setup defined in the default behaviour before the context setup" do
-        assert_equal 'well then now then', @thing
+        assert_equal 'abc easy as 123', @thing
       end
     end.
     should_run_tests(1).
-    and_pass "@thing was not defined!"
+    and_pass
   end
 
   def test_should_allow_multiple_setups_to_be_registered

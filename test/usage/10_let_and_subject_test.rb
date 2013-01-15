@@ -115,15 +115,11 @@ class LetAndSubjectTest < KintamaIntegrationTest
         assert_equal [1], subject
       end
 
-      should "now be empty again" do
+      should "now be empty again because it's a new instance" do
         assert subject.empty?
       end
     end.
-    should_output(%{
-      Given a context with a subject
-        should allow me to poke around with subject like it was a variable: .
-        should now be empty again: .
-    }).
+    should_run_tests(2).
     and_pass
   end
 end
