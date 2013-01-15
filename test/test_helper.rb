@@ -77,9 +77,9 @@ class KintamaIntegrationTest < Test::Unit::TestCase
       @test_unit_test = test_unit_test
       @context = context
       @result = nil
-      reporter = @test_unit_test.reporter || test_unit_test.class.reporter_class.new(colour=false)
+      @reporter = @test_unit_test.reporter || test_unit_test.class.reporter_class.new(colour=false)
       @output = capture_stdout do
-        @result = Kintama::Runner.default.with(context).run(reporter)
+        @result = Kintama::Runner.default.with(context).run(@reporter)
       end.read
     end
 
@@ -87,13 +87,12 @@ class KintamaIntegrationTest < Test::Unit::TestCase
       if expected_output.is_a?(Regexp)
         processed_output = expected_output
       else
-        initial_indent = expected_output.gsub(/^\n/, '').match(/^(\s+)/)
-        initial_indent = initial_indent ? initial_indent[1] : ""
-        processed_output = expected_output.gsub("\n#{initial_indent}", "\n").gsub(/^\n/, '').gsub(/\s+$/, '')
+        processed_output = deindent_string_argument(expected_output)
       end
       @test_unit_test.assert_match processed_output, @output
       self
     end
+    alias_method :and_output, :should_output
 
     def should_pass(message=nil)
       @test_unit_test.assert(@result == true, message || "Expected a pass, but failed: #{@context.failures.map { |f| f.failure.message }.join(", ")}")
@@ -108,8 +107,21 @@ class KintamaIntegrationTest < Test::Unit::TestCase
     alias_method :and_fail, :should_fail
 
     def with_failure(failure)
-      @test_unit_test.assert_match failure, @output
+      @test_unit_test.assert_match deindent_string_argument(failure), @output
       self
+    end
+
+    def should_run_tests(number)
+      @test_unit_test.assert_equal number, @reporter.test_count, "Expected #{number} tests to run, but #{@reporter.test_count} actually did"
+      self
+    end
+
+    private
+
+    def deindent_string_argument(string)
+      initial_indent = string.gsub(/^\n/, '').match(/^(\s+)/)
+      initial_indent = initial_indent ? initial_indent[1] : ""
+      string.gsub("\n#{initial_indent}", "\n").gsub(/^\n/, '').gsub(/\s+$/, '')
     end
   end
 end

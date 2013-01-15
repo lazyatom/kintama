@@ -17,7 +17,7 @@ module Kintama
     end
 
     class Base
-      attr_reader :runner
+      attr_reader :runner, :test_count
 
       def initialize(*args)
         @test_count = 0

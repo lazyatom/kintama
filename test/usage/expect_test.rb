@@ -35,11 +35,11 @@ class ExpectTest < KintamaIntegrationTest
         @thing.expects(:blah)
       end
     end.
-    should_output(%{
+    should_fail.
+    with_failure(%{
       unsatisfied expectations:
       - expected exactly once, not yet invoked: #<Mock:thing>.blah
-    }).
-    and_fail
+    })
   end
 
   def test_should_set_expectations_before_action_is_called
@@ -47,17 +47,16 @@ class ExpectTest < KintamaIntegrationTest
       setup do
         @thing = stub('thing')
       end
+
       action do
         @thing.go
       end
+
       expect "go to be called on thing" do
         @thing.expects(:go)
       end
     end.
-    should_output(%{
-      Given an action
-        expect go to be called on thing
-    }).
+    should_run_tests(1).
     and_pass
   end
 
@@ -75,11 +74,8 @@ class ExpectTest < KintamaIntegrationTest
       it "should retain original behaviour in other tests" do
         assert_equal "123", @thing.join
       end
-    end.should_output(%{
-      Given an expectation
-        it should retain original behaviour in other tests: .
-        expect blah to be called: .
-    }).
+    end.
+    should_run_tests(2).
     and_pass
   end
 end

@@ -8,10 +8,7 @@ class ExceptionsTest < KintamaIntegrationTest
         raise "aaargh"
       end
     end.
-    should_output(%{
-      Given a test
-        should fail when there is an exception: F
-    }).
+    should_run_tests(1).
     and_fail
   end
 
@@ -20,14 +17,12 @@ class ExceptionsTest < KintamaIntegrationTest
       setup do
         raise "aargh"
       end
+
       should "fail even though it would otherwise pass" do
         assert true
       end
     end.
-    should_output(%{
-      Given a test with setup that fails
-        should fail even though it would otherwise pass: F
-    }).
+    should_run_tests(1).
     and_fail
   end
 
@@ -36,14 +31,12 @@ class ExceptionsTest < KintamaIntegrationTest
       teardown do
         raise "aargh"
       end
+
       should "fail even though it would otherwise pass" do
         assert true
       end
     end.
-    should_output(%{
-      Given a test with teardown that fails
-        should fail even though it would otherwise pass: F
-    }).
+    should_run_tests(1).
     and_fail
   end
 end
