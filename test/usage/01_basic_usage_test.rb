@@ -4,13 +4,18 @@ class BasicUsageTest < KintamaIntegrationTest
 
   def test_should_pass_when_all_tests_pass
     context "Given a test that passes" do
-      should "pass the test" do
+      should "pass this test" do
+        assert true
+      end
+
+      should "pass this test too" do
         assert true
       end
     end.
     should_output(%{
       Given a test that passes
-        should pass the test: .
+        should pass this test: .
+        should pass this test too: .
     }).
     and_pass
   end
