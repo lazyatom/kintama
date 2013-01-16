@@ -6,7 +6,7 @@ class ExpectationsAndMockingTest < KintamaIntegrationTest
     # In order to use the Mocha integration in Kintama, you need to
     # require 'kintama/mocha'.
     #
-    # We require it in the setup here to ensure that the behavious is
+    # We require it in the setup here to ensure that the behaviour is
     # available for every test that runs in this test case, because Kintama
     # is thoroughly reset after each test by default.
     require 'kintama/mocha'
