@@ -73,6 +73,14 @@ class AssertionsTest < Test::Unit::TestCase
     end
   end
 
+  def test_should_provide_assert_same
+    expected, actual = 'foo', 'foo'
+    assert_passed { @test.assert_same expected, expected }
+    assert_failed("Expected #{expected.inspect} (oid=#{expected.object_id}) to be the same as #{actual.inspect} (oid=#{actual.object_id})") do
+      @test.assert_same expected, actual
+    end
+  end
+
   private
 
   def assert_passed
