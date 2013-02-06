@@ -34,6 +34,10 @@ module Kintama
       assert thing.is_a?(klass), message
     end
 
+    def assert_same(expected, actual, message="Expected #{expected.inspect} (oid=#{expected.object_id}) to be the same as #{actual.inspect} (oid=#{actual.object_id})")
+      assert actual.equal?(expected), message
+    end
+
     def assert_same_elements(expected, object, message = "#{object.inspect} does not contain the same elements as #{expected.inspect}")
       assert Set.new(expected) == Set.new(object), message
     end
