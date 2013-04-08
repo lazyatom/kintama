@@ -11,6 +11,10 @@ module Kintama
   autoload :Assertions, 'kintama/assertions'
 
   class << self
+    def no_conflict?
+      ENV["KINTAMA_NO_CONFLICT"]
+    end
+
     def reset
       @default_context = Class.new(Runnable)
       @default_context.send(:include, Kintama::Context)
@@ -127,9 +131,11 @@ module Kintama
   end
 end
 
-[:context, :given, :describe, :testcase].each do |method|
-  unless self.respond_to?(method)
-    eval %|def #{method}(*args, &block); Kintama.#{method}(*args, &block); end|
+unless Kintama.no_conflict?
+  [:context, :given, :describe, :testcase].each do |method|
+    unless self.respond_to?(method)
+      eval %|def #{method}(*args, &block); Kintama.#{method}(*args, &block); end|
+    end
   end
 end
 
