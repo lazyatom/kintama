@@ -58,7 +58,7 @@ module Kintama
         end
       end
 
-      def find_definition_1_9(&block)
+      def find_definition_yarv(&block)
         block.source_location if block
       end
 
@@ -73,7 +73,7 @@ module Kintama
         if defined? RUBY_ENGINE
           case RUBY_ENGINE
           when "ruby"
-            RUBY_VERSION =~ /^1.9/ ? find_definition_1_9(&block) : find_definition_1_8
+            RUBY_VERSION =~ /^1\.9|2\.0/ ? find_definition_yarv(&block) : find_definition_1_8
           when "rbx"
             find_definition_rbx(&block)
           end

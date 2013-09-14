@@ -11,11 +11,11 @@ class LineBasedRunningTest < Test::Unit::TestCase
           flunk
         end
       end}
-    assert_match /^#{passing("should run this test")}\n\n1 tests/, run_test(test_file, "--line 3")
-    assert_match /^1 tests, 0 failures/, run_test(test_file, "--line 3")
+    assert_match /^#{passing("should run this test")}\n\n1 tests/, run_kintama_test(test_file, "--line 3")
+    assert_match /^1 tests, 0 failures/, run_kintama_test(test_file, "--line 3")
 
-    assert_match /^#{failing("should not run this test")}\n\n1 tests/, run_test(test_file, "--line 6")
-    assert_match /^1 tests, 1 failures/, run_test(test_file, "--line 6")
+    assert_match /^#{failing("should not run this test")}\n\n1 tests/, run_kintama_test(test_file, "--line 6")
+    assert_match /^1 tests, 1 failures/, run_kintama_test(test_file, "--line 6")
   end
 
   def test_should_be_able_to_run_the_test_by_giving_the_line_number_within_the_test_definition
@@ -28,8 +28,8 @@ class LineBasedRunningTest < Test::Unit::TestCase
           flunk
         end
       end}
-    assert_match /^#{passing("should run this test")}\n\n1 tests/, run_test(test_file, "--line 4")
-    assert_match /^#{failing("should not run this test")}\n\n1 tests/, run_test(test_file, "--line 7")
+    assert_match /^#{passing("should run this test")}\n\n1 tests/, run_kintama_test(test_file, "--line 4")
+    assert_match /^#{failing("should not run this test")}\n\n1 tests/, run_kintama_test(test_file, "--line 7")
   end
 
   def test_should_be_able_to_run_all_tests_within_a_context_when_line_falls_on_a_context
@@ -45,7 +45,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
           end
         end
       end}
-    assert_match /#{passing("should run this test")}\n#{passing("should run this test too")}\n\n2 tests/, run_test(test_file, "--line 6")
+    assert_match /#{passing("should run this test")}\n#{passing("should run this test too")}\n\n2 tests/, run_kintama_test(test_file, "--line 6")
   end
 
   def test_should_be_able_to_run_a_test_defined_in_a_second_top_level_context
@@ -59,7 +59,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
         should "run this test" do
         end
       end}
-    assert_match /#{passing("should run this test")}\n\n1 tests/, run_test(test_file, "--line 8")
+    assert_match /#{passing("should run this test")}\n\n1 tests/, run_kintama_test(test_file, "--line 8")
   end
 
   def test_should_print_out_the_full_nested_test_name
@@ -70,7 +70,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
           end
         end
       end}
-    assert_match /given a test\n  that is nested deeply\n/, run_test(test_file, "--line 5")
+    assert_match /given a test\n  that is nested deeply\n/, run_kintama_test(test_file, "--line 5")
   end
 
   def test_should_not_show_pending_tests_in_the_same_context_as_pending_when_not_targeted
@@ -80,7 +80,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
         end
         should "ignore the pending test"
       end}
-    assert_no_match /1 pending/, run_test(test_file, "--line 3")
+    assert_no_match /1 pending/, run_kintama_test(test_file, "--line 3")
   end
 
   def test_should_be_able_to_target_a_top_level_context
@@ -94,7 +94,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
         should "run this too" do
         end
       end}
-    assert_match /2 tests/, run_test(test_file, "--line 2")
+    assert_match /2 tests/, run_kintama_test(test_file, "--line 2")
   end
 
   def test_should_report_if_nothing_runnable_can_be_found_for_that_line
@@ -103,7 +103,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
         should "not run this" do
         end
       end}
-    assert_match /Nothing runnable found on line 1/, run_test(test_file, "--line 1")
+    assert_match /Nothing runnable found on line 1/, run_kintama_test(test_file, "--line 1")
   end
 
   private
@@ -115,7 +115,7 @@ class LineBasedRunningTest < Test::Unit::TestCase
     end
   end
 
-  def run_test(test_content, options)
+  def run_kintama_test(test_content, options)
     path = "/tmp/kintama_tmp_test.rb"
     write_test(test_content.strip, path)
     prev = ENV["KINTAMA_EXPLICITLY_DONT_RUN"]

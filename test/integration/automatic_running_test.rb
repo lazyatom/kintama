@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AutomaticRunningTest < Test::Unit::TestCase
 
-  def test_should_be_able_to_run_tests_automatically_when_file_is_loaded
+  def test_should_be_able_to_run_kintama_tests_automatically_when_file_is_loaded
     assert_passes write_test %{
       context "given a thing" do
         should "work" do
@@ -27,7 +27,7 @@ class AutomaticRunningTest < Test::Unit::TestCase
     "/tmp/kintama_tmp_test.rb"
   end
 
-  def run_test(path)
+  def run_kintama_test(path)
     prev = ENV["KINTAMA_EXPLICITLY_DONT_RUN"]
     ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = nil
     output = `ruby #{path}`
@@ -36,10 +36,10 @@ class AutomaticRunningTest < Test::Unit::TestCase
   end
 
   def assert_passes(path)
-    assert_equal 0, run_test(path).exitstatus
+    assert_equal 0, run_kintama_test(path).exitstatus
   end
 
   def assert_fails(path)
-    assert_equal 1, run_test(path).exitstatus
+    assert_equal 1, run_kintama_test(path).exitstatus
   end
 end
