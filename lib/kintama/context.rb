@@ -236,28 +236,6 @@ module Kintama
         subcontexts.find { |s| s.name == name } || tests.find { |t| t.name == name }
       end
 
-      def method_missing(name, *args, &block)
-        if self[de_methodize(name)]
-          self[de_methodize(name)]
-        else
-          begin
-            super
-          rescue NameError, NoMethodError => e
-            if parent
-              parent.send(name, *args, &block)
-            else
-              raise e
-            end
-          end
-        end
-      end
-
-      def respond_to?(name)
-        self[name] ||
-        super ||
-        (parent ? parent.respond_to?(name) : false)
-      end
-
       # Runs all tests in this context and any subcontexts.
       # Returns true if all tests passed; otherwise false
       def run(reporter=nil)
@@ -293,10 +271,6 @@ module Kintama
       end
 
       private
-
-      def de_methodize(name)
-        name.to_s.gsub("_", " ")
-      end
 
       def ran_tests
         @ran_tests || []
