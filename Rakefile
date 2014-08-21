@@ -69,7 +69,7 @@ end
 task :package => :gemspec
 
 # Generate documentation
-Rake::RDocTask.new do |rd|
+RDoc::Task.new do |rd|
   rd.main = "README.md"
   rd.rdoc_files.include("README.md", "lib/**/*.rb")
   rd.rdoc_dir = "rdoc"
