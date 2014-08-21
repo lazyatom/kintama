@@ -80,9 +80,7 @@ module Kintama
 
           opts.on("-r", "--reporter NAME",
                   "Use the given reporter (inline or verbose)") do |reporter|
-                  puts "reporter!"
             options.reporter = Kintama::Reporter.called(reporter)
-            p options.reporter
           end
           opts.on("-l", "--line LINE",
                   "Run the test or context on the given line") do |line|
