@@ -73,7 +73,7 @@ module Kintama
         if defined? RUBY_ENGINE
           case RUBY_ENGINE
           when "ruby", "jruby"
-            RUBY_VERSION =~ /^1\.9|2\.0/ ? find_definition_yarv(&block) : find_definition_1_8
+            Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('1.9') ? find_definition_yarv(&block) : find_definition_1_8
           when "rbx"
             find_definition_rbx(&block)
           end
