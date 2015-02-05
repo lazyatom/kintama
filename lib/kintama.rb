@@ -50,10 +50,12 @@ module Kintama
     def on_start(&block)
       default_context.on_start(&block)
     end
+    alias_method :before_all, :on_start
 
     def on_finish(&block)
       default_context.on_finish(&block)
     end
+    alias_method :after_all, :on_finish
 
     # Makes behaviour available within tests:
     #
