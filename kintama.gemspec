@@ -1,19 +1,20 @@
 # -*- encoding: utf-8 -*-
+# stub: kintama 0.1.12 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "kintama"
-  s.version = "0.1.11"
+  s.version = "0.1.12"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.require_paths = ["lib"]
   s.authors = ["James Adam"]
-  s.date = "2013-09-14"
+  s.date = "2015-02-05"
   s.email = "james@lazyatom.com"
   s.extra_rdoc_files = ["README.md"]
-  s.files = ["README.md", "test/integration", "test/integration/automatic_running_test.rb", "test/integration/line_based_running_test.rb", "test/reporters", "test/reporters/base_reporter_test.rb", "test/reporters/inline_reporter_test.rb", "test/reporters/verbose_reporter_test.rb", "test/test_helper.rb", "test/unit", "test/unit/assertions_test.rb", "test/unit/context_test.rb", "test/unit/runner_test.rb", "test/unit/test_and_subcontext_access_test.rb", "test/usage", "test/usage/01_basic_usage_test.rb", "test/usage/02_setup_test.rb", "test/usage/03_teardown_test.rb", "test/usage/04_pending_tests_test.rb", "test/usage/05_aliases_test.rb", "test/usage/06_defining_methods_in_tests_test.rb", "test/usage/07_exceptions_test.rb", "test/usage/08_start_and_finish_test.rb", "test/usage/09_expectations_and_mocking_test.rb", "test/usage/10_let_and_subject_test.rb", "test/usage/11_matcher_test.rb", "test/usage/12_action_test.rb", "lib/kintama", "lib/kintama/assertions.rb", "lib/kintama/context.rb", "lib/kintama/mocha.rb", "lib/kintama/no_conflict.rb", "lib/kintama/reporter.rb", "lib/kintama/runnable.rb", "lib/kintama/runner.rb", "lib/kintama/test.rb", "lib/kintama.rb"]
+  s.files = ["README.md", "lib/kintama", "lib/kintama.rb", "lib/kintama/assertions.rb", "lib/kintama/context.rb", "lib/kintama/mocha.rb", "lib/kintama/no_conflict.rb", "lib/kintama/reporter.rb", "lib/kintama/runnable.rb", "lib/kintama/runner.rb", "lib/kintama/test.rb", "test/integration", "test/integration/automatic_running_test.rb", "test/integration/line_based_running_test.rb", "test/reporters", "test/reporters/base_reporter_test.rb", "test/reporters/inline_reporter_test.rb", "test/reporters/verbose_reporter_test.rb", "test/test_helper.rb", "test/unit", "test/unit/assertions_test.rb", "test/unit/context_test.rb", "test/unit/runner_test.rb", "test/unit/test_and_subcontext_access_test.rb", "test/usage", "test/usage/01_basic_usage_test.rb", "test/usage/02_setup_test.rb", "test/usage/03_teardown_test.rb", "test/usage/04_pending_tests_test.rb", "test/usage/05_aliases_test.rb", "test/usage/06_defining_methods_in_tests_test.rb", "test/usage/07_exceptions_test.rb", "test/usage/08_start_and_finish_test.rb", "test/usage/09_expectations_and_mocking_test.rb", "test/usage/10_let_and_subject_test.rb", "test/usage/11_matcher_test.rb", "test/usage/12_action_test.rb"]
   s.homepage = "http://github.com/lazyatom"
   s.rdoc_options = ["--main", "README.md"]
-  s.require_paths = ["lib"]
-  s.rubygems_version = "2.0.3"
+  s.rubygems_version = "2.2.2"
   s.summary = "It's for writing tests."
 
   if s.respond_to? :specification_version then
