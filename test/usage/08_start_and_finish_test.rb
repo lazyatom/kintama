@@ -212,7 +212,7 @@ class StartAndFinishTest < KintamaIntegrationTest
     spy = test_spy
 
     spy.expects(:before_all_tests).once.in_sequence(order)
-    spy.expects(:in_test).in_sequence(order)
+    spy.expects(:in_test).twice.in_sequence(order)
 
     Kintama.reset
     Kintama.on_start do
@@ -223,13 +223,17 @@ class StartAndFinishTest < KintamaIntegrationTest
       should "have run the `before_all_tests` block before a test" do
         spy.in_test
       end
+
+      should "only run `before_all_tests` once" do
+        spy.in_test
+      end
     end
   end
 
   def test_should_be_able_to_run_things_after_all_tests_have_run
     spy = test_spy
 
-    spy.expects(:in_test).in_sequence(order)
+    spy.expects(:in_test).twice.in_sequence(order)
     spy.expects(:after_all_tests).once.in_sequence(order)
 
     Kintama.reset
@@ -239,6 +243,10 @@ class StartAndFinishTest < KintamaIntegrationTest
 
     running_default_context "A context" do
       should "have run the `before_all_tests` block before a test" do
+        spy.in_test
+      end
+
+      should "only run `after_all_tests` once all tests have finished" do
         spy.in_test
       end
     end
