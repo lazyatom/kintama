@@ -47,6 +47,14 @@ module Kintama
       default_context.teardown(&block)
     end
 
+    def on_start(&block)
+      default_context.on_start(&block)
+    end
+
+    def on_finish(&block)
+      default_context.on_finish(&block)
+    end
+
     # Makes behaviour available within tests:
     #
     #   module SomeModule

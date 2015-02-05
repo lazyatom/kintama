@@ -68,6 +68,11 @@ class KintamaIntegrationTest < Test::Unit::TestCase
     ContextTestRunner.new(Kintama.context(name, &block), self)
   end
 
+  def running_default_context(name, &block)
+    Kintama.context(name, &block)
+    ContextTestRunner.new(Kintama.default_context, self)
+  end
+
   class ContextTestRunner
     def initialize(context, test_unit_test)
       @test_unit_test = test_unit_test
