@@ -93,11 +93,17 @@ class LetAndSubjectTest < KintamaIntegrationTest
       end
 
       should "return one instance in one test" do
-        $object_id = subject.object_id
+        $object_id_in_test_one = subject.object_id
+        if $object_id_in_test_two # this test might run first
+          assert_not_equal $object_id_in_test_one, $object_id_in_test_two, "object ids should be different between tests"
+        end
       end
 
       should "return a different instance in a different test" do
-        assert $object_id && ($object_id != subject.object_id)
+        $object_id_in_test_two = subject.object_id
+        if $object_id_in_test_one # or this test might run first
+          assert_not_equal $object_id_in_test_one, $object_id_in_test_two, "object ids should be different between tests"
+        end
       end
     end.
     should_run_tests(2).
