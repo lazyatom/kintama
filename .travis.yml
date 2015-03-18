@@ -9,4 +9,3 @@ rvm:
   - rbx
   - ruby-head
   - jruby-head
-  - rbx-head
