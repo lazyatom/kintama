@@ -65,6 +65,11 @@ class AssertionsTest < Minitest::Test
     assert_failed(%|expected "blah" to match /mm/|) { @test.assert_match /mm/, "blah" }
   end
 
+  def test_should_provide_assert_no_match
+    assert_passed { @test.assert_no_match /jam/, "bluejay" }
+    assert_failed(%|expected "blah" not to match /ah/|) { @test.assert_no_match /ah/, "blah" }
+  end
+
   def test_should_provide_assert_same_elements_to_compare_arrays
     assert_passed { @test.assert_same_elements [1,2,3], [1,2,3] }
     assert_passed { @test.assert_same_elements [1,2,3], [3,1,2] }
@@ -78,6 +83,42 @@ class AssertionsTest < Minitest::Test
     assert_passed { @test.assert_same expected, expected }
     assert_failed("Expected #{expected.inspect} (oid=#{expected.object_id}) to be the same as #{actual.inspect} (oid=#{actual.object_id})") do
       @test.assert_same expected, actual
+    end
+  end
+
+  def test_should_provide_assert_output
+    assert_passed do
+      @test.assert_output 'foobar' do
+        puts 'foobar'
+      end
+    end
+    assert_passed do
+      @test.assert_output /oba/ do
+        puts 'foobar'
+      end
+    end
+    assert_failed('Expected output to match "foobar"') do
+      @test.assert_output 'foobar' do
+        puts 'whambam'
+      end
+    end
+  end
+
+  def test_should_provide_assert_not_output
+    assert_passed do
+      @test.assert_not_output 'foobar' do
+        puts 'whambam'
+      end
+    end
+    assert_passed do
+      @test.assert_not_output /oba/ do
+        puts 'whambam'
+      end
+    end
+    assert_failed('Expected output not to match "foobar"') do
+      @test.assert_not_output 'foobar' do
+        puts 'foobar'
+      end
     end
   end
 

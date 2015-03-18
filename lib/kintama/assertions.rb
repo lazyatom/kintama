@@ -1,4 +1,5 @@
 require "set"
+require "stringio"
 
 module Kintama
   module Assertions
@@ -28,6 +29,10 @@ module Kintama
 
     def assert_match(regexp, string, message="expected #{string.inspect} to match #{regexp.inspect}")
       assert (string =~ regexp), message
+    end
+
+    def assert_no_match(regexp, string, message="expected #{string.inspect} not to match #{regexp.inspect}")
+      assert !(string =~ regexp), message
     end
 
     def assert_kind_of(klass, thing, message="should be a kind of #{klass}")
@@ -65,6 +70,36 @@ module Kintama
       end
     ensure
       raise Kintama::TestFailure, message unless raised
+    end
+
+    def assert_output(expected, message="Expected output to match #{expected.inspect}", &block)
+      output = capture_output(&block).read.strip
+      if expected.is_a?(Regexp)
+        assert_match expected, output, message
+      else
+        assert_equal expected, output, message
+      end
+    end
+
+    def assert_not_output(not_expected, message="Expected output not to match #{not_expected.inspect}", &block)
+      output = capture_output(&block).read.strip
+      if not_expected.is_a?(Regexp)
+        assert_no_match not_expected, output, message
+      else
+        assert_not_equal not_expected, output, message
+      end
+    end
+
+    private
+
+    def capture_output(&block)
+      out = StringIO.new
+      $stdout = out
+      yield
+      out.rewind
+      return out
+    ensure
+      $stdout = STDOUT
     end
   end
 end
