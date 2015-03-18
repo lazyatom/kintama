@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ContextTest < Test::Unit::TestCase
+class ContextTest < Minitest::Test
   def test_should_clear_previous_failure_when_running_test_again
     $thing = 456
     x = context "Given something" do

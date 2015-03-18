@@ -66,7 +66,7 @@ These will all be very familiar to most people who are already users of [shoulda
       end
     end
 
-Simple, right? Note that we don't need an outer subclass of `Test::Unit::TestCase`; it's nice to lose that noise, but otherwise so far so same-old-same-old. That's kind-of the point. Anyway, here's what you get when you run this:
+Simple, right? Note that we don't need an outer subclass of `Minitest::Test` or `Test::Unit::TestCase`; it's nice to lose that noise, but otherwise so far so same-old-same-old. That's kind-of the point. Anyway, here's what you get when you run this:
 
     A thing
       should act like a thing: F

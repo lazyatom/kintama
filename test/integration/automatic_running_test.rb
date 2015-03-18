@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AutomaticRunningTest < Test::Unit::TestCase
+class AutomaticRunningTest < Minitest::Test
 
   def test_should_be_able_to_run_kintama_tests_automatically_when_file_is_loaded
     assert_passes write_test %{

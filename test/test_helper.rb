@@ -1,7 +1,6 @@
-
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require 'test/unit'
 require 'bundler/setup'
+require 'minitest/autorun'
 
 ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = "true"
 require 'kintama'
@@ -9,7 +8,7 @@ require 'kintama'
 require 'stringio'
 require 'mocha/setup'
 
-class Test::Unit::TestCase
+class Minitest::Test
   def setup
     Kintama.reset
   end
@@ -45,7 +44,7 @@ class Test::Unit::TestCase
   end
 end
 
-class KintamaIntegrationTest < Test::Unit::TestCase
+class KintamaIntegrationTest < Minitest::Test
   class << self
     def reporter_class
       @reporter_class || Kintama::Reporter::Verbose

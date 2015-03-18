@@ -1,6 +1,6 @@
 require "test_helper"
 
-class LineBasedRunningTest < Test::Unit::TestCase
+class LineBasedRunningTest < Minitest::Test
   def test_should_be_able_to_run_the_test_by_giving_the_line_number_the_test_is_defined_on
     test_file = %{
       context "given a thing" do

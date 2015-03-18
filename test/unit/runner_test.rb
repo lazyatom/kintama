@@ -1,6 +1,6 @@
 require "test_helper"
 
-class RunnerTest < Test::Unit::TestCase
+class RunnerTest < Minitest::Test
   def setup
     @reporter = Kintama::Reporter::Verbose.new(colour=false)
   end

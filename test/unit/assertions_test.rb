@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class AssertionsTest < Test::Unit::TestCase
+class AssertionsTest < Minitest::Test
 
   class PseudoTest
     include Kintama::Assertions
