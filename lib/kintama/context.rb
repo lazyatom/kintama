@@ -64,8 +64,8 @@ module Kintama
 
       def find_definition_rbx(&block)
         if block
-          m = block.block.code
-          [m.file, m.first_line]
+          block_environment = block.block
+          [block_environment.file, block_environment.line]
         end
       end
 
