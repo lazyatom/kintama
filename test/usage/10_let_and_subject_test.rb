@@ -97,7 +97,7 @@ class LetAndSubjectTest < KintamaIntegrationTest
       end
 
       should "return a different instance in a different test" do
-        assert $object_id && $object_id != subject.object_id
+        assert $object_id && ($object_id != subject.object_id)
       end
     end.
     should_run_tests(2).
