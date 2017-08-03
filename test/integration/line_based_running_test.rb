@@ -80,13 +80,13 @@ class LineBasedRunningTest < Minitest::Test
         end
         should "ignore the pending test"
       end}
-    assert_no_match /1 pending/, run_kintama_test(test_file, "--line 3")
+    refute_match /1 pending/, run_kintama_test(test_file, "--line 3")
   end
 
   def test_should_be_able_to_target_a_top_level_context
   end
 
-  def test_should_not_show_pending_tests_in_the_same_context_as_pending_when_not_targeted
+  def test_should_run_all_tests_when_context_is_on_target_line
     test_file = %{
       context "given a context with a pending test" do
         should "run this" do
