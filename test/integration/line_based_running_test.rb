@@ -109,7 +109,7 @@ class LineBasedRunningTest < Minitest::Test
   private
 
   def write_test(string, path)
-    f = File.open(path, "w") do |f|
+    File.open(path, "w") do |f|
       f.puts %|$LOAD_PATH.unshift "#{File.expand_path("../../lib", __FILE__)}"; require "kintama"|
       f.puts string.strip
     end
