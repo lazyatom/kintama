@@ -6,6 +6,8 @@ rvm:
   - 2.0.0
   - 1.9.3
   - jruby
-  - rbx
+  - rubinius
+  - rubinius-2
+  - rubinius-3
   - ruby-head
-  - jruby-head
+  - jruby
