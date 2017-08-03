@@ -50,7 +50,7 @@ module Kintama
     module ClassMethods
 
       def find_definition_1_8
-        line = caller.find { |line| line =~ /^[^:]+:(\d+)$/ }
+        line = caller.find { |l| l =~ /^[^:]+:(\d+)$/ }
         if line
           parts = line.split(":")
           parts[1] = parts[1].to_i
