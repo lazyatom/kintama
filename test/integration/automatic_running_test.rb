@@ -20,11 +20,12 @@ class AutomaticRunningTest < Minitest::Test
   private
 
   def write_test(string)
-    f = File.open("/tmp/kintama_tmp_test.rb", "w") do |f|
+    path = "/tmp/kintama_tmp_test.rb"
+    File.open(path, "w") do |f|
       f.puts %|$LOAD_PATH.unshift "#{File.expand_path("../../lib", __FILE__)}"; require "kintama"|
       f.puts string
     end
-    "/tmp/kintama_tmp_test.rb"
+    path
   end
 
   def run_kintama_test(path)
