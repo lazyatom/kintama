@@ -40,7 +40,7 @@ class AssertionsTest < Minitest::Test
   end
 
   def test_should_provide_assert_kind_of
-    assert_passed { @test.assert_kind_of Fixnum, 1 }
+    assert_passed { @test.assert_kind_of Integer, 1 }
     assert_passed { @test.assert_kind_of Object, 1 }
     assert_passed { @test.assert_kind_of String, "hello" }
     assert_failed("pa!") { @test.assert_kind_of String, 1, "pa!" }
