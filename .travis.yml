@@ -11,3 +11,8 @@ rvm:
   - rubinius-3
   - ruby-head
   - jruby
+matrix:
+  allow_failures:
+    - rvm: rubinius
+    - rvm: rubinius-2
+    - rvm: rubinius-3
