@@ -139,20 +139,20 @@ module Kintama
         end
       end
 
-      def color(text, color_code)
-        "#{color_code}#{text}\e[0m"
+      def colour(text, colour_code)
+        "#{colour_code}#{text}\e[0m"
       end
 
       def green(text)
-        color(text, "\e[32m")
+        colour(text, "\e[32m")
       end
 
       def red(text)
-        color(text, "\e[31m")
+        colour(text, "\e[31m")
       end
 
       def yellow(text)
-        color(text, "\e[33m")
+        colour(text, "\e[33m")
       end
     end
 
