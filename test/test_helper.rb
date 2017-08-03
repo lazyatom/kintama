@@ -125,4 +125,69 @@ class KintamaIntegrationTest < Minitest::Test
       string.gsub("\n#{initial_indent}", "\n").gsub(/^\n/, '').gsub(/\s+$/, '')
     end
   end
+
+  def test_with_content(content)
+    IntegrationTestRunner.new(self, content)
+  end
+
+  class IntegrationTestRunner
+    def initialize(test_unit_test, test_body)
+      @test_unit_test = test_unit_test
+      @test_body = test_body
+    end
+
+    def run(options = nil, &block)
+      path = write_test(@test_body)
+      prev = ENV["KINTAMA_EXPLICITLY_DONT_RUN"]
+      ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = nil
+      @output = `ruby #{path} #{options}`
+      ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = prev
+      @exit_status = $?
+      instance_eval(&block) if block_given?
+      self
+    end
+
+    def should_have_passing_exit_status
+      @test_unit_test.assert_equal 0, @exit_status.exitstatus
+    end
+
+    def should_have_failing_exit_status
+      @test_unit_test.assert_equal 1, @exit_status.exitstatus
+    end
+
+    private
+
+    def assert_output(match)
+      @test_unit_test.assert_match(match, @output)
+    end
+
+    def refute_output(match)
+      @test_unit_test.refute_match(match, @output)
+    end
+
+    def passing(test_name)
+      if $stdin.tty?
+        /\e\[32m\s*#{test_name}\e\[0m/
+      else
+        /\s*#{test_name}: ./
+      end
+    end
+
+    def failing(test_name)
+      if $stdin.tty?
+        /\e\[31m\s*#{test_name}\e\[0m/
+      else
+        /\s*#{test_name}: F/
+      end
+    end
+
+    def write_test(string)
+      path = "/tmp/kintama_tmp_test.rb"
+      File.open(path, "w") do |f|
+        f.puts %|$LOAD_PATH.unshift "#{File.expand_path("../../lib", __FILE__)}"; require "kintama"|
+        f.puts string.strip
+      end
+      path
+    end
+  end
 end

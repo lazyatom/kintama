@@ -1,46 +1,22 @@
 require 'test_helper'
 
-class AutomaticRunningTest < Minitest::Test
+class AutomaticRunningTest < KintamaIntegrationTest
 
   def test_should_be_able_to_run_kintama_tests_automatically_when_file_is_loaded
-    assert_passes write_test %{
+    test_with_content(%{
       context "given a thing" do
         should "work" do
           assert true
         end
-      end}
-    assert_fails write_test %{
+      end
+    }).run.should_have_passing_exit_status
+
+    test_with_content(%{
       context "given a thing" do
         should "not work" do
           flunk
         end
-      end}
-  end
-
-  private
-
-  def write_test(string)
-    path = "/tmp/kintama_tmp_test.rb"
-    File.open(path, "w") do |f|
-      f.puts %|$LOAD_PATH.unshift "#{File.expand_path("../../lib", __FILE__)}"; require "kintama"|
-      f.puts string
-    end
-    path
-  end
-
-  def run_kintama_test(path)
-    prev = ENV["KINTAMA_EXPLICITLY_DONT_RUN"]
-    ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = nil
-    output = `ruby #{path}`
-    ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = prev
-    $?
-  end
-
-  def assert_passes(path)
-    assert_equal 0, run_kintama_test(path).exitstatus
-  end
-
-  def assert_fails(path)
-    assert_equal 1, run_kintama_test(path).exitstatus
+      end
+    }).run.should_have_failing_exit_status
   end
 end
