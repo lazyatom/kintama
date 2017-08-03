@@ -112,7 +112,8 @@ class VerboseReporterTest < KintamaIntegrationTest
   end
 
   def test_should_print_out_test_names_in_colour_if_colour_is_set
-    use_reporter Kintama::Reporter::Verbose.new(colour=true)
+    use_colour = true
+    use_reporter Kintama::Reporter::Verbose.new(use_colour)
 
     context "given tests reported in colour" do
       should "show failures in red" do

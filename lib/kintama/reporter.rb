@@ -2,7 +2,8 @@ module Kintama
   class Reporter
 
     def self.default
-      Verbose.new(colour=$stdin.tty?)
+      colour = $stdin.tty?
+      Verbose.new(colour)
     end
 
     def self.called(name)
@@ -65,7 +66,7 @@ module Kintama
       end
 
       def character_status_of(test)
-        character = if test.pending?
+        if test.pending?
           'P'
         elsif test.passed?
           '.'

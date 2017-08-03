@@ -77,7 +77,8 @@ class KintamaIntegrationTest < Minitest::Test
       @test_unit_test = test_unit_test
       @context = context
       @result = nil
-      @reporter = @test_unit_test.reporter || test_unit_test.class.reporter_class.new(colour=false)
+      use_colour = false
+      @reporter = @test_unit_test.reporter || test_unit_test.class.reporter_class.new(use_colour)
       @output = capture_stdout do
         @result = Kintama::Runner.default.with(context).run(@reporter)
       end.read
