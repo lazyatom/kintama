@@ -82,7 +82,7 @@ module Kintama
           :reporter => Kintama::Reporter.default,
           :runner => Kintama::Runner.default
         )
-        opts = OptionParser.new do |opts|
+        options = OptionParser.new do |opts|
           opts.banner = "Usage: ruby <test_file> [options]"
 
           opts.separator ""
@@ -90,18 +90,18 @@ module Kintama
 
           opts.on("-r", "--reporter NAME",
                   "Use the given reporter (inline or verbose)") do |reporter|
-            options.reporter = Kintama::Reporter.called(reporter)
+            @options.reporter = Kintama::Reporter.called(reporter)
           end
           opts.on("-l", "--line LINE",
                   "Run the test or context on the given line") do |line|
-            options.runner = Kintama::Runner::Line.new(line)
+            @options.runner = Kintama::Runner::Line.new(line)
           end
           opts.on_tail("-h", "--help", "Show this message") do
             puts opts
             exit
           end
         end
-        opts.parse!(ARGV)
+        options.parse!(ARGV)
       end
       @options
     end
