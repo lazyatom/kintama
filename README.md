@@ -30,7 +30,7 @@ Probably the closest thing I've seen is [baretest][]. If you look around the cod
 
 Another alternative test framework is [riot][], which claims to be fast, but also appears to constrain the way that tests are written by avoiding instance variables in setups, for example.
 
-[Testy][] is interesting - it looks like its output is YAML!. [Tryouts][] is thinking outside the box, using comment examples.
+[Testy][] is interesting - it looks like its output is YAML! [Tryouts][] is thinking outside the box, using comment examples.
 
 [Zebra][] addresses the apparent duplication of the test name and the test body, but does it by introducing an [RSpec][]-esque method on every object. Wild. Also, it's an extension of [Test::Unit][], so that's strike two for me, personally.
 
