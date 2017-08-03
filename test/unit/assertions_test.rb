@@ -61,13 +61,13 @@ class AssertionsTest < Minitest::Test
   end
 
   def test_should_provide_assert_match
-    assert_passed { @test.assert_match /jam/, "bluejam" }
-    assert_failed(%|expected "blah" to match /mm/|) { @test.assert_match /mm/, "blah" }
+    assert_passed { @test.assert_match(/jam/, "bluejam") }
+    assert_failed(%|expected "blah" to match /mm/|) { @test.assert_match(/mm/, "blah") }
   end
 
   def test_should_provide_assert_no_match
-    assert_passed { @test.assert_no_match /jam/, "bluejay" }
-    assert_failed(%|expected "blah" not to match /ah/|) { @test.assert_no_match /ah/, "blah" }
+    assert_passed { @test.assert_no_match(/jam/, "bluejay") }
+    assert_failed(%|expected "blah" not to match /ah/|) { @test.assert_no_match(/ah/, "blah") }
   end
 
   def test_should_provide_assert_same_elements_to_compare_arrays
@@ -93,7 +93,7 @@ class AssertionsTest < Minitest::Test
       end
     end
     assert_passed do
-      @test.assert_output /oba/ do
+      @test.assert_output(/oba/) do
         puts 'foobar'
       end
     end
@@ -111,7 +111,7 @@ class AssertionsTest < Minitest::Test
       end
     end
     assert_passed do
-      @test.assert_not_output /oba/ do
+      @test.assert_not_output(/oba/) do
         puts 'whambam'
       end
     end
