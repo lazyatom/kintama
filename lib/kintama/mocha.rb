@@ -2,6 +2,9 @@ require 'kintama'
 require 'mocha/api'
 
 Kintama.include Mocha::API
+Kintama.setup do
+  mocha_setup
+end
 Kintama.teardown do
   begin
     mocha_verify
