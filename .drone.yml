@@ -1,0 +1,6 @@
+pipeline:
+  tests:
+    image: ruby
+    commands:
+      - bundle install
+      - bundle exec rake
