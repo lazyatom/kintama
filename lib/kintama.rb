@@ -21,7 +21,7 @@ module Kintama
     end
 
     def default_context
-      reset unless @default_context
+      reset unless instance_variable_defined?(:@default_context) && @default_context
       @default_context
     end
 

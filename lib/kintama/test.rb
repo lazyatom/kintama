@@ -9,7 +9,7 @@ module Kintama
         attr_accessor :block
 
         def pending?
-          @block.nil?
+          !instance_variable_defined?(:@block) || @block.nil?
         end
 
         def run

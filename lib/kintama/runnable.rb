@@ -22,7 +22,7 @@ module Kintama
 
       # Returns the full name of this context, taking any parent contexts into account
       def full_name
-        if @name
+        if instance_variable_defined?(:@name) && @name
           [parent ? parent.full_name : nil, @name].compact.join(" ")
         else
           nil

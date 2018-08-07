@@ -74,7 +74,7 @@ module Kintama
           end
         else
           puts "Nothing runnable found on line #{@line}"
-          exit -1
+          exit(-1)
         end
       end
     end

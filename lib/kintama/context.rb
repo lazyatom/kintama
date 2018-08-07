@@ -150,7 +150,11 @@ module Kintama
       def let(name, &block)
         define_method(name) do
           memo = "@__#{name}"
-          instance_variable_get(memo) || instance_variable_set(memo, instance_eval(&block))
+          if instance_variable_defined?(memo)
+            instance_variable_get(memo)
+          else
+            instance_variable_set(memo, instance_eval(&block))
+          end
         end
       end
 

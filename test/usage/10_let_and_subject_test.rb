@@ -87,6 +87,9 @@ class LetAndSubjectTest < KintamaIntegrationTest
   end
 
   def test_subject_should_work_just_like_lets
+    $object_id_in_test_one = nil
+    $object_id_in_test_two = nil
+
     context "Defining a `subject` attribute in a context" do
       subject do
         Object.new

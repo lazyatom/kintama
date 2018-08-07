@@ -13,12 +13,12 @@ class LineBasedRunningTest < KintamaIntegrationTest
       end
     })
     test.run('--line 3') do
-      assert_output /^#{passing("should run this test")}\n\n1 tests/
-      assert_output /^1 tests, 0 failures/
+      assert_output(/^#{passing("should run this test")}\n\n1 tests/)
+      assert_output(/^1 tests, 0 failures/)
     end
     test.run('--line 6') do
-      assert_output /^#{failing("should not run this test")}\n\n1 tests/
-      assert_output /^1 tests, 1 failures/
+      assert_output(/^#{failing("should not run this test")}\n\n1 tests/)
+      assert_output(/^1 tests, 1 failures/)
     end
   end
 
@@ -34,10 +34,10 @@ class LineBasedRunningTest < KintamaIntegrationTest
       end
     })
     test.run('--line 4') do
-      assert_output /^#{passing("should run this test")}\n\n1 tests/
+      assert_output(/^#{passing("should run this test")}\n\n1 tests/)
     end
     test.run('--line 7') do
-      assert_output /^#{failing("should not run this test")}\n\n1 tests/
+      assert_output(/^#{failing("should not run this test")}\n\n1 tests/)
     end
   end
 
@@ -55,7 +55,7 @@ class LineBasedRunningTest < KintamaIntegrationTest
         end
       end
     }).run('--line 6') do
-      assert_output /#{passing("should run this test")}\n#{passing("should run this test too")}\n\n2 tests/
+      assert_output(/#{passing("should run this test")}\n#{passing("should run this test too")}\n\n2 tests/)
     end
   end
 
@@ -71,7 +71,7 @@ class LineBasedRunningTest < KintamaIntegrationTest
         end
       end
     }).run('--line 8') do
-      assert_output /#{passing("should run this test")}\n\n1 tests/
+      assert_output(/#{passing("should run this test")}\n\n1 tests/)
     end
   end
 
@@ -84,7 +84,7 @@ class LineBasedRunningTest < KintamaIntegrationTest
         end
       end
     }).run('--line 5') do
-      assert_output /given a test\n  that is nested deeply\n/
+      assert_output(/given a test\n  that is nested deeply\n/)
     end
   end
 
@@ -96,7 +96,7 @@ class LineBasedRunningTest < KintamaIntegrationTest
         should "ignore the pending test"
       end
     }).run('--line 3') do
-      refute_output /1 pending/
+      refute_output(/1 pending/)
     end
   end
 
@@ -112,7 +112,7 @@ class LineBasedRunningTest < KintamaIntegrationTest
         end
       end
     }).run('--line 2') do
-      assert_output /2 tests/
+      assert_output(/2 tests/)
     end
   end
 
@@ -123,7 +123,7 @@ class LineBasedRunningTest < KintamaIntegrationTest
         end
       end
     }).run('--line 1') do
-      assert_output /Nothing runnable found on line 1/
+      assert_output(/Nothing runnable found on line 1/)
     end
   end
 end

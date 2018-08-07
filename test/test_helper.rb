@@ -47,7 +47,7 @@ end
 class KintamaIntegrationTest < Minitest::Test
   class << self
     def reporter_class
-      @reporter_class || Kintama::Reporter::Verbose
+      @reporter_class ||= Kintama::Reporter::Verbose
     end
 
     def report_with(reporter_class)
