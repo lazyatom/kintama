@@ -58,15 +58,15 @@ module Kintama
         runnable = @runnables.map { |r| r.runnable_on_line(@line) }.compact.first
         if runnable
           if runnable.is_a_test?
-            heirarchy = []
+            hierarchy = []
             parent = runnable.parent.parent
             until parent == Kintama.default_context do
-              heirarchy.unshift parent
+              hierarchy.unshift parent
               parent = parent.parent
             end
-            heirarchy.each { |context| reporter.context_started(context) }
+            hierarchy.each { |context| reporter.context_started(context) }
             runnable.parent.run_tests([runnable], false, reporter)
-            heirarchy.reverse.each { |context| reporter.context_finished(context) }
+            hierarchy.reverse.each { |context| reporter.context_finished(context) }
             [runnable.parent]
           else
             runnable.run(reporter)
