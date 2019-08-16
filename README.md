@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/lazyatom/kintama.svg?branch=master)](https://travis-ci.org/lazyatom/kintama)
-
 Hello
 =====
 
