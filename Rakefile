@@ -27,7 +27,6 @@ spec = Gem::Specification.new do |s|
   s.email             = "james@lazyatom.com"
   s.homepage          = "http://github.com/lazyatom"
 
-  s.has_rdoc          = true
   s.extra_rdoc_files  = %w(README.md)
   s.rdoc_options      = %w(--main README.md)
 
