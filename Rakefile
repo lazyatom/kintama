@@ -39,7 +39,7 @@ spec = Gem::Specification.new do |s|
   # s.add_dependency("some_other_gem", "~> 0.1.0")
 
   # If your tests use any gems, include them here
-  s.add_development_dependency("mocha", ">= 1.1.0")
+  s.add_development_dependency("mocha", ">= 1.11.2")
   s.add_development_dependency("rake")
   s.add_development_dependency("minitest")
 end
