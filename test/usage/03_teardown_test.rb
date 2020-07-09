@@ -3,6 +3,7 @@ require 'test_helper'
 class TeardownTest < KintamaIntegrationTest
 
   def setup
+    super
     @order = sequence('teardown order')
   end
   attr_reader :order

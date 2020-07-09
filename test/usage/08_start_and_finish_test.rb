@@ -3,6 +3,7 @@ require "test_helper"
 class StartAndFinishTest < KintamaIntegrationTest
 
   def setup
+    super
     @order = sequence('order')
   end
   attr_reader :order

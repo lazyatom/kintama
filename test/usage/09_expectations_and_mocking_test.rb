@@ -3,6 +3,7 @@ require 'test_helper'
 class ExpectationsAndMockingTest < KintamaIntegrationTest
 
   def setup
+    super
     # In order to use the Mocha integration in Kintama, you need to
     # require 'kintama/mocha'.
     #
