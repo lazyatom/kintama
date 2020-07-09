@@ -6,7 +6,7 @@ ENV["KINTAMA_EXPLICITLY_DONT_RUN"] = "true"
 require 'kintama'
 
 require 'stringio'
-require 'mocha/setup'
+require 'mocha/minitest'
 
 class Minitest::Test
   def setup

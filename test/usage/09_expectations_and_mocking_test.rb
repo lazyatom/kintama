@@ -1,16 +1,14 @@
 require 'test_helper'
+require 'kintama/mocha'
 
 class ExpectationsAndMockingTest < KintamaIntegrationTest
 
   def setup
     super
-    # In order to use the Mocha integration in Kintama, you need to
-    # require 'kintama/mocha'.
-    #
-    # We require it in the setup here to ensure that the behaviour is
-    # available for every test that runs in this test case, because Kintama
-    # is thoroughly reset after each test by default.
-    require 'kintama/mocha'
+    # This is normally called automatically when requiring 'kintama/mocha'
+    # but in these tests we totally reset Kintama, and so we need to
+    # ensure that the mocha integration is loaded properly.
+    Kintama::Mocha.setup
   end
 
   def test_should_allow_setting_of_expectations_in_tests
@@ -44,7 +42,7 @@ class ExpectationsAndMockingTest < KintamaIntegrationTest
     should_fail.
     with_failure(%{
       unsatisfied expectations:
-      - expected exactly once, not yet invoked: #<Mock:thing>.blah
+      - expected exactly once, invoked never: #<Mock:thing>.blah
     })
   end
 
